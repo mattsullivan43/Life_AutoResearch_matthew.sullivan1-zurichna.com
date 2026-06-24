@@ -1,0 +1,29 @@
+From: [EMAIL_ADDRESS_1]
+To: GBZ_Life Application Support
+Subject: [EXTERNAL] Policy cancellation - bereavement
+Date: [DATE_1] 14:22:36
+
+--------------------------------------------------
+
+Good afternoon, I am writing on behalf of my late mother to cancel her life insurance policy. The policy number is [HEALTHCARE_NUMBER_1].
+
+ZjQcmQRYFpfptBannerStart
+
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+
+ZjQcmQRYFpfptBannerEnd
+
+
+
+Good afternoon,
+
+I am writing on behalf of my late mother to cancel her life insurance policy as she sadly passed away on [DATE_2].
+
+Policy number: [HEALTHCARE_NUMBER_1]
+Name: [NAME_1]
+Date of birth: [DOB_1]
+
+Please confirm the policy is closed and any premiums taken after [DATE_2] are refunded.
+
+Kind regards
+[NAME_2]

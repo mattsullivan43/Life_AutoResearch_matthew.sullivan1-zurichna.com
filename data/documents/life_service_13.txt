@@ -1,0 +1,27 @@
+From: [EMAIL_ADDRESS_1]
+To: GBZ_Customer Web Service; GBZ_[USERNAME_1]
+Subject: [EXTERNAL] Policy Number [HEALTHCARE_NUMBER_1] - Mrs [NAME_1]
+Date: [DATE_1] 22:06:48
+
+--------------------------------------------------
+
+Dear Sirs, With regards to above policy, please note my change of address as follows: [LOCATION_1] Please update the new address in the policy details and your records accordingly including the Trust Forms. 
+ZjQcmQRYFpfptBannerStart
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+ZjQcmQRYFpfptBannerEnd
+
+Dear Sirs, 
+
+With regards to above policy, please note my change of address as follows:
+
+[LOCATION_2]
+
+Please update the new address in the policy details and your records accordingly including the Trust Forms. 
+
+Please confirm per return email once you amended your records. 
+
+Thanking you,
+
+Yours sincerely 
+
+[NAME_2]

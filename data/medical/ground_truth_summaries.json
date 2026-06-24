@@ -1,0 +1,145 @@
+{
+  "schema": {
+    "age": "integer or null",
+    "smoker": "one of: yes | no | ex | unknown",
+    "conditions": "list of the PATIENT's current diagnosed conditions (exclude family / resolved)",
+    "medications": "list of CURRENT medications (exclude discontinued)",
+    "family_history": "one of: yes | no | unknown",
+    "bmi": "number (compute from height & weight; 1 decimal place)",
+    "risk_level": "one of: low | moderate | high (your clinical judgement)"
+  },
+  "labels": {
+    "report_1": {
+      "age": 42,
+      "smoker": "no",
+      "conditions": [
+        "type 2 diabetes"
+      ],
+      "medications": [
+        "metformin"
+      ],
+      "family_history": "yes",
+      "risk_level": "moderate",
+      "bmi": 30.0
+    },
+    "report_2": {
+      "age": 35,
+      "smoker": "no",
+      "conditions": [
+        "asthma"
+      ],
+      "medications": [
+        "salbutamol"
+      ],
+      "family_history": "no",
+      "risk_level": "low",
+      "bmi": 22.0
+    },
+    "report_3": {
+      "age": 58,
+      "smoker": "yes",
+      "conditions": [
+        "hypertension",
+        "high cholesterol",
+        "transient ischaemic attack"
+      ],
+      "medications": [
+        "ramipril",
+        "amlodipine",
+        "atorvastatin"
+      ],
+      "family_history": "yes",
+      "risk_level": "high",
+      "bmi": 33.3
+    },
+    "report_4": {
+      "age": 29,
+      "smoker": "ex",
+      "conditions": [],
+      "medications": [],
+      "family_history": "no",
+      "risk_level": "low",
+      "bmi": 24.1
+    },
+    "report_5": {
+      "age": 46,
+      "smoker": "no",
+      "conditions": [
+        "recurrent depression",
+        "hypothyroidism"
+      ],
+      "medications": [
+        "sertraline",
+        "levothyroxine"
+      ],
+      "family_history": "unknown",
+      "risk_level": "moderate",
+      "bmi": 27.0
+    },
+    "report_6": {
+      "age": 63,
+      "smoker": "yes",
+      "conditions": [
+        "COPD",
+        "type 2 diabetes",
+        "myocardial infarction"
+      ],
+      "medications": [
+        "tiotropium",
+        "salbutamol",
+        "insulin"
+      ],
+      "family_history": "yes",
+      "risk_level": "high",
+      "bmi": 30.4
+    },
+    "report_7": {
+      "age": 51,
+      "smoker": "no",
+      "conditions": [
+        "osteoarthritis"
+      ],
+      "medications": [
+        "ibuprofen"
+      ],
+      "family_history": "yes",
+      "risk_level": "low",
+      "bmi": 26.0
+    },
+    "report_8": {
+      "age": 39,
+      "smoker": "no",
+      "conditions": [
+        "atrial fibrillation"
+      ],
+      "medications": [
+        "apixaban"
+      ],
+      "family_history": "no",
+      "risk_level": "moderate",
+      "bmi": 23.1
+    },
+    "report_9": {
+      "age": 47,
+      "smoker": "yes",
+      "conditions": [
+        "hypertension"
+      ],
+      "medications": [
+        "losartan"
+      ],
+      "family_history": "yes",
+      "risk_level": "moderate",
+      "bmi": 31.0
+    },
+    "report_10": {
+      "age": 25,
+      "smoker": "no",
+      "conditions": [],
+      "medications": [],
+      "family_history": "no",
+      "risk_level": "low",
+      "bmi": 20.8
+    }
+  }
+}

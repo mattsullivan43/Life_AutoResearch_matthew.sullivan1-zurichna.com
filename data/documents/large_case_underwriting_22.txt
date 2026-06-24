@@ -1,0 +1,14 @@
+From: [EMAIL_ADDRESS_1]
+To: [NAME_1] Large Case Underwriting
+Subject: [EXTERNAL] Your reference: [NUMERICAL_PII_1] - GenRe reference: [NUMERICAL_PII_2]
+Date: [DATE_1] 11:59:24
+Attachments: [FILENAME_1], [FILENAME_2], [FILENAME_3]
+
+--------------------------------------------------
+
+		
+This is a secure message.	
+To read it, open the attachment.	
+More Info <[URL_1]> 	
+Disclaimer: This email and its content are confidential and intended solely for the use of the addressee. Please notify the sender if you have received this email in error or simply delete it. 	
+Secured by Proofpoint Encryption, Copyright © [DATE_INTERVAL_1] Proofpoint, Inc. All rights reserved. 	

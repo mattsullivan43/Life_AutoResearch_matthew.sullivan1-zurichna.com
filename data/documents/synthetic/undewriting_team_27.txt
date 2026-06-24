@@ -1,0 +1,46 @@
+From: [EMAIL_ADDRESS_1]
+To: Underwriting Team
+Subject: SSG Underwriting, [NUMERICAL_PII_1]: Underwriting
+Date: [DATE_1] 10:52:51
+Attachments: [FILENAME_1]
+
+--------------------------------------------------
+
+Hi As requested please see attached clinic letter. I will forward the next letter in a moment with the results on too. Regards [NAME_1] From: [NAME_2] ([LOCATION_1] NHS FOUNDATION TRUST) Sent: 
+[PASSWORD_1]BannerStart
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+[NUMERICAL_PII_2]ptBannerEnd
+Hi 
+
+As requested please see attached clinic letter. I will forward the next letter in a moment with the results on too.
+
+Regards
+[NAME_1]
+________________________________
+
+From: [NAME_2] ([LOCATION_1] NHS FOUNDATION TRUST) 
+Sent: [DATE_2] 15:26
+To: [EMAIL_ADDRESS_1] 
+Subject: clinic letter. 
+
+Dear [NAME_1]
+
+This is the clinic letter.
+
+Regards
+
+Dr [NAME_3]
+
+
+
+************************************************************************************** ******************************
+
+This message may contain confidential information. If you are not the intended recipient please:
+i) inform the sender that you have received the message in error before deleting it; and 
+ii) do not disclose, copy or distribute information in this e-mail or take any action in relation to its content (to do so is strictly prohibited and may be unlawful). 
+Thank you for your co-operation.
+
+NHSmail is the secure email, collaboration and directory service available for all NHS staff in [LOCATION_2]. NHSmail is approved for exchanging patient data and other sensitive information with NHSmail and other accredited email services.
+
+For more information and to find out how you can switch visit Joining NHSmail – NHSmail Support <[URL_1]__[URL_2]$> 
+

@@ -1,0 +1,74 @@
+From: [EMAIL_ADDRESS_1]
+To: GBZ_Life Application Support
+Subject: [NUMERICAL_PII_1]
+Date: [DATE_1] 11:31:39
+Attachments: [FILENAME_1], [FILENAME_2], [FILENAME_3], [FILENAME_4], [FILENAME_5], [FILENAME_6], [FILENAME_7]
+
+--------------------------------------------------
+
+[NAME_1]
+
+Customer Services Representative
+
+		
+
+
+
+[LOCATION_1] Insurance Ltd
+
+
+
+[LOCATION_2]
+
+
+
+[PHONE_NUMBER_1]
+
+
+
+[EMAIL_ADDRESS_2] <mailto:[EMAIL_ADDRESS_2]> 
+
+		
+
+
+ <[URL_1]> 
+
+
+INTERNAL USE ONLY
+
+
+From: [NAME_2] 
+Sent: [DATE_2] 17:19
+To: Underwriting Team 
+Subject: [EXTERNAL] [NAME_3] & [NAME_4]
+
+Hi,
+
+Are you able to update the new application ([NUMERICAL_PII_2]) with he underwriting from [NUMERICAL_PII_3].
+
+I need the underwriting cross referenced and I also need the application for mr Amen[NAME_5] so that they match. For some reason I wasn't able to add in about his traumatic elbow injury on the newer app - [NUMERICAL_PII_2]
+
+Kind Regards,
+
+[NAME_2]
+
+Insurance Manager
+
+
+
+[LOCATION_3]
+
+Phone: [PHONE_NUMBER_2]
+
+Email: [EMAIL_ADDRESS_3] <[EMAIL_ADDRESS_4]> 
+
+Web: [URL_2] <[URL_3]__[URL_4]$>  
+
+				
+		 <[URL_3]__[URL_5]$> 
+
+	 <[URL_3]__[URL_6]$> 
+
+	
+
+The contents of this email are confidential to the intended recipient. It may not be disclosed to or used by anyone other than this addressee, nor may it be copied in anyway. If received in error, please contact [LOCATION_4] Mortgage Centre on [PHONE_NUMBER_2] quoting the name of the sender. It is the recipient’s responsibility to check any attachments for viruses. [LOCATION_4] Mortgage Centre recommends that all attachments be checked before use. Le[LOCATION_5] Mortgage Centre is a trading name of DSMA Ltd who is directly authorised and regulated by the Financial Conduct Authority. Registered in [LOCATION_6], Registered No. SC578310, Registered Address [LOCATION_3]

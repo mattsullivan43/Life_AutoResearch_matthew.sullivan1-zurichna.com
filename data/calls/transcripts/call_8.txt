@@ -1,0 +1,1 @@
+CALLER: Hiya, I'm just after a quick quote to add my partner onto the policy. AGENT: No problem — can I take their date of birth? CALLER: [DATE_1]. AGENT: Lovely, I'll run those figures and send them over. CALLER: Great stuff, no rush at all, cheers.

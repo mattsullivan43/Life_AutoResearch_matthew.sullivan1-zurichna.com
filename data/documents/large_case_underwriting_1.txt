@@ -1,0 +1,20 @@
+From: [EMAIL_ADDRESS_1]
+To: GBZ_Life ZIG Large Case Underwriting
+CC: [NAME_1]
+Subject: [EXTERNAL] Financial questionnaire- [NAME_2] [NUMERICAL_PII_1]
+Date: [DATE_1] 13:04:21
+Attachments: [FILENAME_1], Zuric insurance email and [FILENAME_2]
+
+--------------------------------------------------
+
+Good afternoon,
+
+Please see attached our client [NAME_2]'s financial questionnaire. Her application number is [NUMERICAL_PII_1].
+
+Kind Regards
+
+[NAME_3]
+Sales support team
+Contact number: [PHONE_NUMBER_1]
+
+

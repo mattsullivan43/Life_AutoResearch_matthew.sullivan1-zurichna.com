@@ -1,0 +1,116 @@
+From: [EMAIL_ADDRESS_1]
+To: GP_Chase_[USERNAME_1]
+Subject: [EXTERNAL] RE: [LOCATION_1] medical information request for insurance reports
+Date: [DATE_1] 08:08:10
+Attachments: [FILENAME_1]
+
+--------------------------------------------------
+
+Good morning, 
+
+Please see attached GP response for the further information requested. 
+
+Best Regards
+
+[NAME_1]
+
+Bank Admin/Receptionist
+
+[PHONE_1]
+
+IntraHealth Limited is a Limited Company Registered in [LOCATION_2], Company Registration Number: 3783310
+
+IntraHealth Pharmacy Limited is a Limited Company Registered in [LOCATION_2], Company Registration Number: 5739417
+
+Registered Office(s): [LOCATION_3]
+
+Unless expressly stated otherwise, the information contained in this e-mail and any files transmitted with it are confidential and is intended solely for the use of the individual or entity to whom it is addressed. If you are not the intended recipient you must not copy, distribute, or take any action or reliance upon it. If you have received this e-mail in error, please destroy it and notify the sender. Any unauthorised disclosure of the information contained in this e-mail is strictly prohibited.
+
+From: [EMAIL_ADDRESS_2] 
+Sent: [DATE_2] 11:32
+To: [NUMERICAL_PII_1] (NHS [LOCATION_4] ICB - [HEALTHCARE_NUMBER_1]) ; [NAME_2] (WINGATE MEDICAL PRACTICE INTRAHEALTH) 
+Subject: [LOCATION_1] medical information request for insurance reports
+
+This message originated from outside of [URL_1] Connect. Please do not click links or open attachments unless you recognise the sender and know the content is safe. 
+
+Dear Practice manager 
+
+Re: Further medical information request for insurance purposes
+
+Our reference: [NUMERICAL_PII_2]
+
+Patient name: Miss [NAME_3]
+
+Address: [LOCATION_5]
+
+Date of birth: [DOB_1]
+
+------------------------------------------------------------------------------------------------------
+
+We wrote to you recently to confirm that having assessed the medical information you kindly provided for your patient based on our original request, our underwriters had determined further information was needed to enable them to complete their assessment. We subsequently wrote to you [DATE_3] to ask for this additional information.
+
+If the application is linked to a mortgage the impact of delays can be significant, particularly if this is associated with a house move. As a result, we’d very much appreciate your immediate attention in providing this additional information, as a matter of urgency. 
+
+To help us manage our client’s expectation and minimise any calls to the practice at what we know is an incredibly busy time, we’d be really grateful if you could let us know an indicative timescale within which you expect to be able to complete our further information request. 
+
+This will prevent us contacting you unnecessarily, allowing you to focus on the important business of taking care of your patients.
+
+If there is further fee payable in respect of the additional information requested for which you require pre-payment or if you haven’t yet received our request, please simply email us at: [EMAIL_ADDRESS_2] <mail[EMAIL_ADDRESS_3]>  quoting the PUW reference noted above, and we’ll be happy to either provide payment or reissue our request. 
+
+We thank you in anticipation of your assistance and appreciate your help in providing the additional information requested at your earliest possible convenience.
+
+If you have already responded to us, please ignore this email.
+
+Yours sincerely,
+
+[LOCATION_1] Protection Support Team
+
+To make sure we provide the best possible service, please use the following email address for any correspondence and quote the PUW reference provided.
+
+[EMAIL_ADDRESS_2] <mailto:[EMAIL_ADDRESS_2]> 
+
+ <[URL_2]> 
+
+Confidential \ Personal Data
+
+________________________________
+
+All of the companies listed below are part of a group of companies of which the ultimate parent company is [LOCATION_1] Insurance Group Ltd, a company registered in [LOCATION_6] No. CH-020.3.023.083-6/a. [LOCATION_1] is a trading name of this group of companies.
+
+[LOCATION_1] Insurance Company Ltd. A public limited company incorporated in [LOCATION_6]. Registered in the Canton of [LOCATION_1], No. CHE-105.833.114, registered offices at [LOCATION_7]. [LOCATION_8] Branch registered in [LOCATION_2] and [LOCATION_9] no BR000105. [LOCATION_8] Branch Head Office: [LOCATION_10].
+
+[LOCATION_1] Insurance Company Ltd is authorised and regulated in [LOCATION_6] by the Swiss Financial Market Supervisory Authority FINMA. Authorised by the Prudential Regulation Authority. Subject to regulation by the Financial Conduct Authority and limited regulation by the Prudential Regulation Authority. Details about the extent of our regulation by the Prudential Regulation Authority are available from us on request. Our firm reference number is 959113.
+
+Zurich Insurance [LOCATION_11] AG. A stock corporation incorporated with limited liability in [LOCATION_12]. Registered in the Register Court of [LOCATION_13]., HRB No. 133359. Registered Office and Seat: [LOCATION_14]. [LOCATION_15] Branch registered in [LOCATION_15]. Registration No. 910127. [LOCATION_15] Branch Office: [LOCATION_16]. [LOCATION_8] Branch registered in [LOCATION_2] and [LOCATION_9]. Registration No. BR7985. [LOCATION_8] Branch Head Office: [LOCATION_10].
+
+Zurich Insurance [LOCATION_11] AG is authorised and regulated by BaFin - Federal Financial Supervisory Authority. Authorised by the Prudential Regulation Authority. Subject to regulation by the Financial Conduct Authority and limited regulation by the Prudential Regulation Authority. Details about the extent of our regulation by the Prudential Regulation Authority are available from us on request. Our firm reference number is 999465. 
+
+Zurich Insurance [LOCATION_11] AG is registered with the Portuguese Insurance and Pension Funds Authority (Autoridade de Supervisão de Seguros e Fundos de Pensões) under no. 4402 to operate in [LOCATION_17] under the freedom to provide services.
+
+Zurich Insurance [LOCATION_11] AG is authorised to operate in [LOCATION_18] under the right of establishment through its branch Zurich Insurance [LOCATION_11] AG, Sucursal en [LOCATION_19]: Tax ID (NIF) W0072130H, registered address [LOCATION_20], and registered in the Directorate General of Insurance and Pension Funds Administrative Register with code no. E0189 and in the Commercial Registry of [LOCATION_21] in volume 36766, Page 1, Sheet M-658706. In enforcement of Article 123 of Royal Decree 1060/[DATE_INTERVAL_1], of [DATE_4], on the organisation, supervision and solvency of insurers and reinsurers, it is stated that in the event of the insurer’s liquidation, Spanish liquidation regulations do not apply.
+
+Each of the following companies has its registered office at [LOCATION_22].
+
+[LOCATION_1] Financial Services (UKISA) Limited is registered in [LOCATION_2] and [LOCATION_9] No. 01860680.
+
+[LOCATION_1] Assurance Ltd is registered in [LOCATION_2] and [LOCATION_9] No.02456671. [LOCATION_1] Assurance Ltd is authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority. [LOCATION_1] is used as a trading name of [LOCATION_1] Assurance Ltd.
+
+[LOCATION_1] Intermediary Group Limited is registered in [LOCATION_2] and [LOCATION_9] No. 01909111 and is authorised and regulated by the Financial Conduct Authority.
+
+Any views or opinions expressed in this email are those of the author only. Communications may be monitored to improve our service and for security and regulatory purposes. 
+
+The information contained in this message is confidential and may be legally privileged. This message is intended for the addressee(s) only. If you are not the intended recipient, please do not read, copy or otherwise use it and do not disclose it to anyone else. Please notify the sender of the delivery error and then delete the message from your system. Thank you for your assistance.
+
+
+
+************************************************************************************** ******************************
+
+This message may contain confidential information. If you are not the intended recipient please:
+i) inform the sender that you have received the message in error before deleting it; and 
+ii) do not disclose, copy or distribute information in this e-mail or take any action in relation to its content (to do so is strictly prohibited and may be unlawful). 
+Thank you for your co-operation.
+
+[URL_3] is the secure email, collaboration and directory service available for all NHS staff in [LOCATION_2]. [URL_3] is approved for exchanging patient data and other sensitive information with [URL_1] Connect and other accredited email services.
+
+For more information and to find out how you can switch visit Joining [URL_3] – [URL_1] Connect Support <[URL_4]__[URL_5]$> 
+

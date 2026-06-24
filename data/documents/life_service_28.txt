@@ -1,0 +1,278 @@
+From: [EMAIL_ADDRESS_1]
+To: [NAME_1]
+Subject: FW: [NUMERICAL_PII_1]  Servicing	General queries	SSG Servicing	SERV GEN
+Date: [DATE_1] 12:58:21
+Attachments: [FILENAME_1], [FILENAME_2], [FILENAME_3], [FILENAME_4], [FILENAME_5], [FILENAME_6], [FILENAME_7], [FILENAME_8]
+
+--------------------------------------------------
+
+Here’s an example where it’s clearly not a complaint…
+
+ 
+
+ 
+
+
+INTERNAL USE ONLY
+
+
+From: [NAME_2] 
+Sent: [DATE_2] 12:54
+To: [NAME_3] <[EMAIL_ADDRESS_2]>
+Cc: [NAME_4] <[EMAIL_ADDRESS_3]>
+Subject: FW: [NUMERICAL_PII_1] Servicing General queries SSG Servicing SERV GEN
+
+ 
+
+Hi,
+
+ 
+
+This is another one from [NAME_5] – the adviser has simply replied to ask if the email has been sent to her in error as she doesn’t have a client with that name (which might suggest a potential breach?).
+
+ 
+
+Again, can we find out who’s approving these?
+
+ 
+
+Thanks alot 
+
+[NAME_6]
+
+ 
+
+From: [USERNAME_1] <[EMAIL_ADDRESS_4]> > 
+Sent: [DATE_2] 11:47
+To: [USERNAME_2] <[EMAIL_ADDRESS_5]> >
+Cc: [NAME_7] <[EMAIL_ADDRESS_6]> >; [NAME_2] <[EMAIL_ADDRESS_7]> >
+Subject: RE: [NUMERICAL_PII_1] Servicing General queries SSG Servicing SERV GEN
+
+ 
+
+Morning Team,
+
+ 
+
+This is not a complaint, you need to raise with your TA/TL.
+
+ 
+
+Kind regards 
+
+ 
+
+ 
+
+ 
+
+ 
+
+INTERNAL USE ONLY
+
+From: [USERNAME_2] <[EMAIL_ADDRESS_5]> > 
+Sent: [DATE_2] 11:19
+To: [USERNAME_3] <[EMAIL_ADDRESS_8]> >
+Cc: GB[FILENAME_9]_[FILENAME_10]lain[FILENAME_11] <[EMAIL_ADDRESS_4]> >
+Subject: [NUMERICAL_PII_1] Servicing General queries SSG Servicing SERV GEN
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+[NAME_8]
+Customer Service Representative 
+
+	
+	
+
+ 
+
+		
+
+ 
+
+
+
+[LOCATION_1]rich Insurance Company Ltd
+
+
+
+[LOCATION_2]
+
+
+
+[EMAIL_ADDRESS_9] <[EMAIL_ADDRESS_10]> 
+
+ 
+
+		
+
+
+ <[URL_1]> 
+
+	
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+INTERNAL USE ONLY
+
+From: [NAME_9] <[EMAIL_ADDRESS_11]> > 
+Sent: [DATE_3] 15:40
+To: [USERNAME_2] <[EMAIL_ADDRESS_5]> >
+Subject: [EXTERNAL] FW: Your Client's Zurich policy
+
+ 
+
+Hi Can you please confirm if this was sent to me in error as I do not have a client with this name [NAME_9] Mortgage and Protection Adviser T - [NUMERICAL_PII_2] E - [EMAIL_ADDRESS_12] Head Office Address: [LOCATION_3]
+
+ZjQcmQRYFpfptBannerStart
+
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+
+	
+
+ZjQcmQRYFpfptBannerEnd
+
+Hi
+
+ 
+
+Can you please confirm if this was sent to me in error as I do not have a client with this name
+
+ 
+
+[NAME_9]
+
+Mortgage and Protection Adviser
+
+ 
+
+T - [NUMERICAL_PII_3] [PHONE_NUMBER_1]    E - [EMAIL_ADDRESS_13] <[EMAIL_ADDRESS_14]> 
+
+ 
+
+Head Office Address: [LOCATION_4]
+
+ <[URL_2]__[URL_3]$> 
+
+ [URL_4]  <[URL_2]__[URL_3]$> 
+
+ Leave a Review  <[URL_2]__[URL_5]$> 
+
+ Testimonials  <[URL_2]__[URL_6]$> 
+
+ <[URL_2]__[URL_5]$> 
+
+ <[URL_2]__[URL_7]$> 
+
+ <[URL_2]__[URL_8]$> 
+
+ 
+
+Home Legal Services [LOCATION_5] LLP t/a Right Click Finance is an Appointed Representative of Primis Mortgage Network, a trading name of First Complete Ltd which is authorised and regulated by the Financial Conduct Authority.
+
+ 
+
+Registered in [LOCATION_6] OC399498. VAT Registration 144 0895 10. Registered office address [LOCATION_7].
+
+ 
+
+Non-advising partners: [NAME_10], [NAME_11], [NAME_12] & [NAME_13]. This email and the information it contains may be privileged and/or confidential. It is for the intended addressee(s) only. The unauthorised use, disclosure or copying of this email, or any information it contains is prohibited and could in certain circumstances be a criminal offence. If you are not the intended recipient, please notify [EMAIL_ADDRESS_13] <mail[EMAIL_ADDRESS_15]>  immediately and delete the message from your system.
+
+ 
+
+Please note that Home Legal Services [LOCATION_5] LLP t/a Right Click Finance does not enter into any form of contract by means of Internet email. None of the staff of Home Legal Services [LOCATION_5] LLP t/a Right Click Finance is authorised to enter into contracts on behalf of the company in this way. All contracts to which Home Legal Services [LOCATION_5] LLP t/a Right Click Finance is a party are documented by other means.
+
+ 
+
+Home Legal Services [LOCATION_5] LLP t/a Right Click Finance monitors emails to ensure its systems operate effectively and to minimise the risk of viruses. Whilst it has taken reasonable steps to scan this email, it does not accept liability for any virus that it may contain.
+
+ 
+
+ 
+
+	
+
+ 
+
+ 
+
+From: [EMAIL_ADDRESS_16] <[EMAIL_ADDRESS_17]>  <[EMAIL_ADDRESS_16] <[EMAIL_ADDRESS_17]> > 
+Sent: [DATE_3] 14:04
+To: [NAME_9] <[EMAIL_ADDRESS_11]> >
+Subject: Your Client's Zurich policy
+
+ 
+
+
+
+ 
+
+
+Hi [NAME_14]
+
+
+Policyholder: Mr [NAME_15]
+Policy number: [HEALTHCARE_NUMBER_1]
+
+This policy has been cancelled
+
+As requested, this policy has been cancelled, which means the protection has ended. We've written to your client(s) confirming this. 
+
+For further details and to view a copy of the letter - click here <[URL_9]> .
+
+	
+			
+
+ 
+
+If you have any questions you can call us on [PHONE_NUMBER_2]. We're open Monday to Friday 8:30am to 5:30pm or you can send us an email at [EMAIL_ADDRESS_18] <mail[EMAIL_ADDRESS_19]:[EMAIL_ADDRESS_18]>  - we'll be happy to help.
+
+
+**This is an automated email. Please do not reply as this email address is not monitored**
+prd_env_01-10.1.42.18/ND2039001 
+
+________________________________
+
+All of the companies listed below are part of a group of companies of which the ultimate parent company is [LOCATION_8] Insurance Group Ltd, a company registered in [LOCATION_9] No. CH-020.3.023.083-6/a. [LOCATION_8] is a trading name of this group of companies.
+
+[LOCATION_8] Insurance Company Ltd. A public limited company incorporated in [LOCATION_9]. Registered in the Canton of [LOCATION_8], No. CHE-105.833.114, registered offices at [LOCATION_10]. [LOCATION_11] Branch registered in [LOCATION_6] and [LOCATION_12] no BR000105. [LOCATION_11] Branch Head Office: [LOCATION_13].
+
+[LOCATION_8] Insurance Company Ltd is authorised and regulated in [LOCATION_9] by the Swiss Financial Market Supervisory Authority FINMA. Authorised by the Prudential Regulation Authority. Subject to regulation by the Financial Conduct Authority and limited regulation by the Prudential Regulation Authority. Details about the extent of our regulation by the Prudential Regulation Authority are available from us on request. Our firm reference number is 959113.
+
+[LOCATION_8] Insurance [LOCATION_14] AG. A stock corporation incorporated with limited liability in [LOCATION_15]. Registered in the Register Court of [LOCATION_16]., HRB No. 133359. Registered Office and Seat: [LOCATION_17]. [LOCATION_18] Branch registered in [LOCATION_18]. Registration No. 910127. [LOCATION_18] Branch Office: [LOCATION_19]. [LOCATION_11] Branch registered in [LOCATION_6] and [LOCATION_12]. Registration No. BR7985. [LOCATION_11] Branch Head Office: [LOCATION_13].
+
+Zurich Insurance [LOCATION_14] AG is authorised and regulated by BaFin - Federal Financial Supervisory Authority. Authorised by the Prudential Regulation Authority. Subject to regulation by the Financial Conduct Authority and limited regulation by the Prudential Regulation Authority. Details about the extent of our regulation by the Prudential Regulation Authority are available from us on request. Our firm reference number is 999465. 
+
+Zurich Insurance [LOCATION_14] AG is registered with the Portuguese Insurance and Pension Funds Authority (Autoridade de Supervisão de Seguros e Fundos de Pensões) under no. [NUMERICAL_PII_4] to operate in [LOCATION_20] under the freedom to provide services.
+
+Zurich Insurance [LOCATION_14] AG is authorised to operate in [LOCATION_21] under the right of establishment through its branch Zurich Insurance [LOCATION_14] AG, Sucursal en [LOCATION_22]: Tax ID (NIF) W0072130H, registered address [LOCATION_23], and registered in the Directorate General of Insurance and Pension Funds Administrative Register with code no. E0189 and in the Commercial Registry of [LOCATION_24] in volume 36766, Page 1, Sheet M-658706. In enforcement of Article 123 of Royal Decree 1060/[DATE_INTERVAL_1], of [DATE_4], on the organisation, supervision and solvency of insurers and reinsurers, it is stated that in the event of the insurer’s liquidation, Spanish liquidation regulations do not apply.
+
+Each of the following companies has its registered office at [LOCATION_25].
+
+[LOCATION_8] Financial Services (UKISA) Limited is registered in [LOCATION_6] and [LOCATION_12] No. 01860680.
+
+[LOCATION_8] Assurance Ltd is registered in [LOCATION_6] and [LOCATION_12] No.02456671. [LOCATION_8] Assurance Ltd is authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority. [LOCATION_8] is used as a trading name of [LOCATION_8] Assurance Ltd.
+
+[LOCATION_8] Intermediary Group Limited is registered in [LOCATION_6] and [LOCATION_12] No. 01909111 and is authorised and regulated by the Financial Conduct Authority.
+
+Any views or opinions expressed in this email are those of the author only. Communications may be monitored to improve our service and for security and regulatory purposes. 
+
+The information contained in this message is confidential and may be legally privileged. This message is intended for the addressee(s) only. If you are not the intended recipient, please do not read, copy or otherwise use it and do not disclose it to anyone else. Please notify the sender of the delivery error and then delete the message from your system. Thank you for your assistance.

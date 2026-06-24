@@ -1,0 +1,35 @@
+# ─── secrets (NEVER commit) ───────────────────────────────────────────────
+.env
+.env.*
+*.key
+*.pem
+*credential*
+*secret*
+
+# ─── python ───────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# ─── node / frontend build ────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/node_modules/
+
+# ─── runs/ : persistent memory + experiment lab ───────────────────────────
+# Keep the folder, ignore generated artifacts. runs/lab holds nested git repos
+# (the keep/discard chain) — must never be committed into the parent repo.
+runs/lab/
+runs/*.jsonl
+runs/*.txt
+runs/solution_*.json
+# results_<channel>.tsv (the notebook) IS tracked on purpose — it's the demo memory.
+!runs/.gitkeep
+
+# ─── os / editor ──────────────────────────────────────────────────────────
+.DS_Store
+*.swp
+.idea/
+.vscode/

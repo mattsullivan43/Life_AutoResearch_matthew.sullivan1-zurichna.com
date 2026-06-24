@@ -1,0 +1,28 @@
+From: [EMAIL_ADDRESS_1]
+To: UW Admin Team
+Subject: [EXTERNAL] [NUMERICAL_PII_1] - [NAME_1] - cancellation
+Date: [DATE_1] 15:10:22
+
+--------------------------------------------------
+
+Our reference number: [NUMERICAL_PII_2]. Hi, please can you cancel the above policy. Many thanks, Customer Services.
+
+ZjQcmQRYFpfptBannerStart
+
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+
+ZjQcmQRYFpfptBannerEnd
+
+
+
+Our reference number: [NUMERICAL_PII_2] / [NUMERICAL_PII_3]
+
+Hi,
+
+Please can you cancel the above policy.
+
+Many thanks,
+Regards,
+Customer Services
+T: [PHONE_NUMBER_1]
+[URL_1]

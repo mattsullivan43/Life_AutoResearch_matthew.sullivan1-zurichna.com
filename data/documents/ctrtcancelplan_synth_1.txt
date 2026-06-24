@@ -1,0 +1,31 @@
+From: [EMAIL_ADDRESS_1]
+To: GBZ_Life Application Support
+Subject: [EXTERNAL] Policy number [HEALTHCARE_NUMBER_1]
+Date: [DATE_1] 11:32:01
+
+--------------------------------------------------
+
+Good morning, I would like to cancel the above policy with immediate effect as it is no longer needed. Please confirm when cancelled and that no further premiums are taken.
+
+ZjQcmQRYFpfptBannerStart
+
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+
+ZjQcmQRYFpfptBannerEnd
+
+
+
+Good morning
+
+I would like to cancel the above policy.
+
+[NAME_1]
+[DOB_1]
+Reference number [NUMERICAL_PII_1]
+
+With immediate effect as no longer needed. Please can you confirm when this is cancelled and that no premiums are paid.
+
+Kind regards
+[NAME_2]
+
+Sent from my iPhone

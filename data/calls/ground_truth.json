@@ -1,0 +1,82 @@
+{
+  "schema": {
+    "vulnerability": "yes | no \u2014 is a vulnerable-customer indicator present (even if implicit)?",
+    "vulnerability_type": "bereavement | financial_hardship | health | mental_health | age_capacity | none",
+    "escalation": "yes | no \u2014 complaint / dissatisfaction / manager / threat to leave / FOS",
+    "regulatory_trigger": "yes | no \u2014 DISP complaint, possible mis-selling, Consumer Duty vulnerable customer",
+    "regulatory_type": "complaint_DISP | mis_selling | consumer_duty_vulnerable | none"
+  },
+  "task": "extract",
+  "labels": {
+    "call_1": {
+      "vulnerability": "yes",
+      "vulnerability_type": "bereavement",
+      "escalation": "no",
+      "regulatory_trigger": "yes",
+      "regulatory_type": "consumer_duty_vulnerable"
+    },
+    "call_2": {
+      "vulnerability": "no",
+      "vulnerability_type": "none",
+      "escalation": "yes",
+      "regulatory_trigger": "yes",
+      "regulatory_type": "complaint_DISP"
+    },
+    "call_3": {
+      "vulnerability": "no",
+      "vulnerability_type": "none",
+      "escalation": "no",
+      "regulatory_trigger": "no",
+      "regulatory_type": "none"
+    },
+    "call_4": {
+      "vulnerability": "yes",
+      "vulnerability_type": "financial_hardship",
+      "escalation": "no",
+      "regulatory_trigger": "yes",
+      "regulatory_type": "consumer_duty_vulnerable"
+    },
+    "call_5": {
+      "vulnerability": "yes",
+      "vulnerability_type": "mental_health",
+      "escalation": "no",
+      "regulatory_trigger": "yes",
+      "regulatory_type": "consumer_duty_vulnerable"
+    },
+    "call_6": {
+      "vulnerability": "no",
+      "vulnerability_type": "none",
+      "escalation": "yes",
+      "regulatory_trigger": "yes",
+      "regulatory_type": "mis_selling"
+    },
+    "call_7": {
+      "vulnerability": "yes",
+      "vulnerability_type": "age_capacity",
+      "escalation": "no",
+      "regulatory_trigger": "yes",
+      "regulatory_type": "consumer_duty_vulnerable"
+    },
+    "call_8": {
+      "vulnerability": "no",
+      "vulnerability_type": "none",
+      "escalation": "no",
+      "regulatory_trigger": "no",
+      "regulatory_type": "none"
+    },
+    "call_9": {
+      "vulnerability": "yes",
+      "vulnerability_type": "health",
+      "escalation": "yes",
+      "regulatory_trigger": "yes",
+      "regulatory_type": "complaint_DISP"
+    },
+    "call_10": {
+      "vulnerability": "no",
+      "vulnerability_type": "none",
+      "escalation": "no",
+      "regulatory_trigger": "no",
+      "regulatory_type": "none"
+    }
+  }
+}

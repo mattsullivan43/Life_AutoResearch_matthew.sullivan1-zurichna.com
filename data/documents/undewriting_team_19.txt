@@ -1,0 +1,22 @@
+From: [EMAIL_ADDRESS_1]
+To: Underwriting Team; GBZ_life_service; [NAME_1]
+Subject: SSG Servicing, [NUMERICAL_PII_1]: Servicing
+Date: [DATE_1] 17:59:56
+
+--------------------------------------------------
+
+Hello, I am [NAME_2], director of SAMAX HOMES LTD. I would like to cancel policy [ACCOUNT_NUMBER_1] with immediate effect. Policy details: [ACCOUNT_NUMBER_1] Mrs [NAME_3] Premium: £47. 28 Start date: [DATE_2] Reason: The client is now insured
+ZjQcmQRYFpfptBannerStart
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+ZjQcmQRYFpfptBannerEnd
+Hello,
+I am [NAME_2], director of SAMAX HOMES LTD.
+I would like to cancel policy [HEALTHCARE_NUMBER_1] with immediate effect.
+Policy details:
+[HEALTHCARE_NUMBER_1]
+Mrs [NAME_3]
+Premium: £47.28
+Start date: [DATE_2]
+Reason: The client is now insured in a personal capacity.
+Please confirm receipt of this email and that the policy has been cancelled.
+Thank you

@@ -1,0 +1,30 @@
+From: [EMAIL_ADDRESS_1]
+To: GBZ_Life ZIG Large Case Underwriting
+CC: [NAME_1]; [NAME_2]; [NAME_3]
+Subject: [EXTERNAL] Medical reclaim invoice no [NUMERICAL_PII_1]
+Date: [DATE_1] 11:55:40
+Attachments: [FILENAME_1], [FILENAME_2], [FILENAME_3], [FILENAME_4]
+
+--------------------------------------------------
+
+Good morning,
+I hope this email finds you well. Please find attached the invoice for the medical reclaim ([NUMERICAL_PII_1]) for [NAME_4] and the associated policy no's [HEALTHCARE_NUMBER_1] and [HEALTHCARE_NUMBER_2] Attached also are the INUVI and Medical practice invoices for your records.
+Should you have any queries regarding this reclaim please don’t hesitate to contact me, otherwise we kindly ask that you settle this invoice within 30 days.
+
+Many thanks
+[NAME_5]
+​​​​
+[NAME_6]
+Operations Manager
+, Salus Life International
+	
+Phone 
+[PHONE_NUMBER_1] 
+I Website
+[URL_1] <[URL_2]__[URL_3]$> I
+Address
+[LOCATION_1]
+	
+Salus Life International is a Limited Company registered in [LOCATION_2] & [LOCATION_3] number 11616682. Salus Life 
+​International Limited is an Appointed Representative of Kubera Wealth Limited (FCA number 509765),
+​and are Authorised and Regulated by the Financial Conduct Authority under FCA number 824633.

@@ -1,0 +1,4 @@
+exp_id	dev	test	status	sig	description
+1	0.966667	0.000000	keep	ec0a14b7f577	The original instructions did not explicitly connect the presence of vulnerability indicators to potential regulatory triggers. By emphasizing that certain vulnerability indicators (like bereavement or age/capacity) often trigger regulatory obligations under Consumer Duty, the instructions can guide
+2	1.000000	0.000000	keep	013f848b6474	To improve the accuracy of identifying the correct regulatory trigger, explicitly state that a terminal diagnosis or a similar serious health condition can imply a formal complaint or potential mis-selling, which aligns with DISP obligations. This addition clarifies the mapping of specific vulnerabi
+6	1.000000	0.850000	final	013f848b6474	held-out test of best (round 2)

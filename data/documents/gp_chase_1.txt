@@ -1,0 +1,22 @@
+From: [EMAIL_ADDRESS_1]
+To: [USERNAME_1]
+Subject: [EXTERNAL] 
+Date: [DATE_1] 11:38:59
+
+--------------------------------------------------
+
+Hello I'm [NAME_1]. I have insurance with yourselves as I was buying a house. Unfortunately, the sale didn't go ahead. So I wish to cancel the two policys. Policy number: [HEALTHCARE_NUMBER_1] Product name: personal protection Policy number: [ACCOUNT_NUMBER_1]
+ZjQcmQRYFpfptBannerStart
+USE CAUTION: This message originates from a sender you have not previously corresponded with. If in doubt, report. 
+ZjQcmQRYFpfptBannerEnd
+Hello 
+I'm [NAME_1]. I have insurance with yourselves as I was buying a house. Unfortunately, the sale didn't go ahead. So I wish to cancel the two policys.
+Policy number: [NUMERICAL_PII_1]
+Product name: personal protection 
+
+Policy number: [HEALTHCARE_NUMBER_2]
+Product name: personal protection 
+
+Thank you
+[NAME_1] 
+Sent from Outlook for Android <[URL_1]__[URL_2]$> 

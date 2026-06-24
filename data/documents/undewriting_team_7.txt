@@ -1,0 +1,114 @@
+From: [EMAIL_ADDRESS_1]
+To: [NAME_1]
+Subject: FW: [NUMERICAL_PII_1] U/W        Information from doctors        SSGUnderwriting        UWINFOFROMDOCTOR 
+Date: [DATE_1] 16:46:22
+Attachments: [FILENAME_1], [FILENAME_2], [FILENAME_3], [FILENAME_4], [FILENAME_5], [FILENAME_6], [FILENAME_7], [FILENAME_8]
+
+--------------------------------------------------
+
+FYI 
+
+	
+
+[NAME_2] 
+
+Senior Underwriter 
+
+Protection Operations
+
+	
+
+		
+
+
+
+Zurich Assurance Ltd
+
+
+
+[LOCATION_1]
+
+
+
+[PHONE_NUMBER_1]
+
+
+
+[EMAIL_ADDRESS_2]
+
+		
+
+
+ <[URL_1]> 
+
+	
+
+
+INTERNAL USE ONLY
+
+
+From: Underwriting Team 
+Sent: [DATE_2] 15:04
+To: [USERNAME_1] 
+Subject: [NUMERICAL_PII_1] U/W Information from doctors SSGUnderwriting UWINFOFROMDOCTOR 
+
+[NAME_3]
+
+Customer Services Representative
+
+		
+
+
+
+Zurich Insurance Ltd
+
+
+
+[LOCATION_2]
+
+
+
+[PHONE_NUMBER_2]
+
+
+
+[EMAIL_ADDRESS_3] <mail[EMAIL_ADDRESS_4]> 
+
+		
+
+
+ <[URL_1]> 
+
+From: Reception (Z00257) <[EMAIL_ADDRESS_5] <[EMAIL_ADDRESS_6]> > 
+Sent: [DATE_3] 14:36
+To: Underwriting Team <[EMAIL_ADDRESS_7]> >
+Subject: [EXTERNAL] [NUMERICAL_PII_1]
+
+“This email is covered by the disclaimer found at the end of the message.”
+
+________________________________
+
+Good Afternoon
+
+Can you please resend the report for the following details:
+
+Name: [NAME_4] 
+
+DOB: [DOB_1]
+
+Ref: [NUMERICAL_PII_1]
+
+Kind regards
+
+Medical Receptionist
+
+[LOCATION_3]gery
+
+[LOCATION_4]
+
+________________________________
+
+
+
+
+“The information contained in this email and any attachments is confidential and intended solely for the attention and use of the named addressee(s). No confidentiality or privilege is waived or lost by any mistransmission. If you are not the intended recipient of this email, please inform the sender by return email and destroy all copies. Any views or opinions presented are solely those of the author and do not necessarily represent the views of HSC. The content of emails sent and received via the HSC network may be monitored for the purposes of ensuring compliance with HSC policies and procedures. Please be aware that e-mail may not be a secure medium. This e-mail (whether you are the sender or the recipient) may be monitored and monitoring and blocking software may be used. While HSC takes precautions in scanning outgoing emails for computer viruses, no responsibility will be accepted by HSC in the event that the email is infected by a computer virus. Recipients are therefore encouraged to take their own precautions in relation to virus scanning. All emails held by HSC may be subject to public disclosure under the Freedom of Information Act [DATE_INTERVAL_1]. All emails held by HSC may also be disclosed, where required, under [LOCATION_5] GDPR and Data Protection Act [DATE_INTERVAL_2]”. 

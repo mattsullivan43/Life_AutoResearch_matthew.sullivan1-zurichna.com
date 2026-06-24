@@ -1,0 +1,11 @@
+exp_id	dev	test	status	sig	description
+1	0.411633	0.000000	discard	a17d959ab946	Introduced a keyword-based pre-filter to improve classification accuracy for common misclassifications.
+2	0.350960	0.000000	discard	8545517e23f0	Added a two-step classification process using regex pre-filtering for common misclassifications, followed by LLM for final decision.
+3	0.575833	0.000000	discard	17fb9cd35a45	Added a routing mechanism to handle tricky pairs with specialized LLM calls for higher accuracy.
+4	0.612916	0.678658	final	7b2993b5c6ea	held-out test of best (round 0)
+5	0.580842	0.000000	discard	f73e16738afd	[instructions] Clarified UWAI GP category with specific phrases to reduce confusion with n/a.
+6	0.550768	0.000000	discard	01f1bbecf54f	[shots_per_class] Increase shots_per_class to provide more examples for each category, improving model differentiation between n/a and other categories.
+7	0.547877	0.000000	discard	45a7ad323282	[instructions] Clarified n/a to explicitly include general information requests or reports, addressing confusion with UWAI GP.
+8	0.567336	0.000000	discard	0d0402b7f694	[fewshot_seed] Change fewshot_seed to explore different examples that might improve differentiation between categories, especially n/a and medical categories.
+9	0.549920	0.000000	discard	cd24627bd639	[instructions] Clarified n/a to explicitly include general information requests or reports without specific actions, addressing confusion with UWAI GP.
+10	0.548282	0.607891	final	e08f3116fea1	held-out test of best (round 0)

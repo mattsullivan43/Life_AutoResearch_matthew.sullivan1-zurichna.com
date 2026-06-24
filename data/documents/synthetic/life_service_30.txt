@@ -1,0 +1,59 @@
+From: [EMAIL_ADDRESS_1]
+To: GBZ_[USERNAME_1]
+Subject: Online form change of address
+Date: [DATE_1] 12:24:02
+
+--------------------------------------------------
+
+
+Step 1: Your details
+
+
+Policy number(s): [HEALTHCARE_NUMBER_1]
+
+First name: [NAME_1]
+
+Last name: [NAME_2]
+
+Contact number: [PHONE_NUMBER_1]
+
+Email address: [EMAIL_ADDRESS_1]
+
+Date of birth: [DOB_1]
+
+
+
+Step 2: Old address
+
+
+First line of your old home address: [LOCATION_1]
+
+Second line of your old home address (optional): 
+
+City/Town of your old home address: [LOCATION_2]
+
+Postcode of your old home address: [LOCATION_3]
+
+Date of move: [DATE_2]
+
+
+
+Step 3: New address
+
+
+First line of your new home address: [LOCATION_4] 
+
+Second line of your new home address (optional): 
+
+City or Town of your new home address: [LOCATION_5]
+
+Postcode of your new home address: [LOCATION_6]
+
+
+
+Step 4: Additional information
+
+
+Do you have any requirements you’d like us to be aware of when fulfilling your request? (optional) 
+
+I consent to [LOCATION_7] completing a electronic check if required: Checked

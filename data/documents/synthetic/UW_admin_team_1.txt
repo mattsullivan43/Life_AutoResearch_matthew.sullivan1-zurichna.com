@@ -1,0 +1,43 @@
+From: [EMAIL_ADDRESS_1]
+To: [USERNAME_1] CS UW Admin
+Subject: [EXTERNAL] [secure] GP Report, your ref [NUMERICAL_PII_1]
+Date: [DATE_1] 12:56:34
+Attachments: [FILENAME_1]
+
+--------------------------------------------------
+
+You have received an Egress secure platform notification. 	
+ <[URL_1]> 
+
+ <[URL_2]> 
+
+You have received a new NHSmail secure email from
+
+LEATSIDESURGERY.OFFICE ([EMAIL_ADDRESS_1])
+
+
+
+
+Open secure email <[URL_3]__[URL_4]$> 	
+
+ <[URL_5]> 
+
+If you have any problems opening the link you can also view the email by visiting [URL_6]/ <[URL_3]__[URL_7]$>  and entering the following code:
+
+[NUMERICAL_PII_2]
+
+Always check the links before you click and check the browser address bar for the padlock icon.
+
+
+
+ <[URL_8]> 
+
+
+This message may contain confidential information. If you are not the intended recipient please inform the sender that you have received the message in error before deleting it. 
+Please do not disclose, copy or distribute information in this e-mail or take any action in relation to its contents. To do so is strictly prohibited and may be unlawful. We appreciate your co-operation.
+
+NHSmail is the secure email and directory service available for all NHS staff in [LOCATION_1] and [LOCATION_2]. NHSmail is approved for exchanging patient data and other sensitive information with NHSmail and other accredited email services.
+
+
+
+

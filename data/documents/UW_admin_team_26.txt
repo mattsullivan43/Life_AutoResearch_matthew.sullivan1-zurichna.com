@@ -1,0 +1,49 @@
+From: [EMAIL_ADDRESS_1]
+To: [USERNAME_1] CS UW Admin
+Subject: [NUMERICAL_PII_1] with policy ref [NUMERICAL_PII_2] FME-client wishes to cancel policy Mr [NAME_1]
+Date: [DATE_1] 12:12:11
+Attachments: [FILENAME_1], [FILENAME_2], [FILENAME_3], [FILENAME_4], [FILENAME_5]
+
+--------------------------------------------------
+
+Hi
+
+I hope all good.
+
+Sampling FME reply from client states client wishes to cancel policy so please cancel policy ref [NUMERICAL_PII_2]
+
+Thanks
+
+[NAME_2]
+
+[NAME_3]
+
+Senior Underwriter
+
+Protection Operations
+
+		
+
+
+
+[LOCATION_1] Assurance Ltd
+
+
+
+[LOCATION_2]
+
+
+
+[PHONE_NUMBER_1]
+
+
+
+[EMAIL_ADDRESS_1] <mailto:[EMAIL_ADDRESS_1]> 
+
+		
+
+
+
+
+Highly Confidential \ Sensitive Personal Data
+

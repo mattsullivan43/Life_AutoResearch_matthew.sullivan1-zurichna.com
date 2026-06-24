@@ -1,0 +1,13 @@
+.venv
+**/__pycache__
+**/*.pyc
+frontend/node_modules
+frontend/dist
+runs/lab
+runs/*.jsonl
+runs/results_*.tsv
+runs/solution_*.json
+runs/best_prompt.txt
+.git
+*.zip
+zurich*.png
