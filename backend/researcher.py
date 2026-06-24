@@ -28,7 +28,9 @@ from backend.prepare import confusion_obj, rows_obj
 
 RUNS = os.path.join(prepare.ROOT, "runs")
 NOISE_MARGIN = 0.02    # measured seed jitter is ~0.019 spread; refuse to bank noise below this
-EVAL_PASSES = 2        # average the noisy metric over N passes before deciding keep/discard
+EVAL_PASSES = 1        # scoring passes per candidate (1 = cheapest; raise to 2+ to average out
+                       # the ~0.019 metric jitter at ~2x the API cost). Keep/discard still gated
+                       # by NOISE_MARGIN so single-pass noise is not banked.
 STOP_AT = 0.999        # ceiling reached -> stop; no point running more experiments
 
 _SAFE_CH = re.compile(r"^[A-Za-z0-9_-]+$")
