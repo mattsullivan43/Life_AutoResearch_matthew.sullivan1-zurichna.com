@@ -102,12 +102,11 @@ deploy/, Dockerfile, dev.sh
 ```
 
 See [`CLAUDE.md`](CLAUDE.md) for eval-hygiene rules and data coverage, and
-[`docs/`](docs/) for the executive summary, technical summary, and pitch deck.
+[`docs/`](docs/) for the executive and technical summaries.
 
 ## Documentation
 
 - [`docs/EXECUTIVE_SUMMARY.md`](docs/EXECUTIVE_SUMMARY.md) — one-page overview
-- [`docs/TECHNICAL_SUMMARY.md`](docs/TECHNICAL_SUMMARY.md) — system design, components, tech stack
-- [`docs/PITCH_DECK.md`](docs/PITCH_DECK.md) — slide deck
+- [`docs/HyperChallenge2026_Technical_Summary.md`](docs/HyperChallenge2026_Technical_Summary.md) — the submission: system design, components, tech stack, costs
 - [`backend/program.md`](backend/program.md) — the research-loop spec
 - [`deploy/DEPLOY_EC2.md`](deploy/DEPLOY_EC2.md) — AWS deployment

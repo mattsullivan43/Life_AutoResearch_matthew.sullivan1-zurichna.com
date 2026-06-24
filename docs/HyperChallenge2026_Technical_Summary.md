@@ -1,8 +1,8 @@
 # Hyper Challenge 2026 — Technical Summary
 
-> Submission file: `Life_Auto-Research_Document_Classification_MatthewSullivan.md`.
-> Remaining `<placeholder>` fields needing your input: demo video + transcript, process-map image
-> (an ASCII map is already in §2), and the submission date.
+> Submission file: `docs/HyperChallenge2026_Technical_Summary.md`.
+> Remaining `<placeholder>` fields needing your input: demo video + transcript, and a process-map
+> image (an ASCII map is already in §2). The app is live — see "Live app" above.
 
 ---
 
@@ -20,13 +20,14 @@
 
 | Artifact | Filename or URL |
 |---|---|
-| GitHub repo | https://github.com/mattsullivan43/auto-research-classifier (private) |
+| GitHub repo | https://github.com/mattsullivan43/Life_AutoResearch_matthew.sullivan1-zurichna.com |
+| Live app (deployed) | https://d1yg8f7s4xp55o.cloudfront.net — sign in: `reviewer@zurich.com` / `ZurichReview2026!` |
 | Exported workflow / solution | This repo (source) — entry points `backend/researcher.py` + `backend/api.py`; one-container `Dockerfile` |
 | Copilot Studio agent name | N/A (platform = claude_api) |
 | Demo video | `<placeholder>` <!-- TeamName_UseCase.mp4 --> |
 | Video transcript | `<placeholder>` |
-| Pitch deck | `docs/PITCH_DECK.md` <!-- export to TeamName_UseCase.pdf --> |
-| Technical summary | `Life_Auto-Research_Document_Classification_MatthewSullivan.md` (this file) |
+| Pitch deck | `Life_AutoResearch_MatthewSullivan_PitchDeck.pptx` |
+| Technical summary | `docs/HyperChallenge2026_Technical_Summary.md` (this file) |
 | Process design map | See §2 ASCII diagram below `<or export TeamName_UseCase_processmap.png>` |
 
 ---
