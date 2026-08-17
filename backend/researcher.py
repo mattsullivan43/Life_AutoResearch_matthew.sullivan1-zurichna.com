@@ -27,10 +27,19 @@ from backend.classifier import _client
 from backend.prepare import confusion_obj, rows_obj
 
 RUNS = os.path.join(prepare.ROOT, "runs")
-NOISE_MARGIN = 0.02    # measured seed jitter is ~0.019 spread; refuse to bank noise below this
-EVAL_PASSES = 1        # scoring passes per candidate (1 = cheapest; raise to 2+ to average out
-                       # the ~0.019 metric jitter at ~2x the API cost). Keep/discard still gated
-                       # by NOISE_MARGIN so single-pass noise is not banked.
+NOISE_MARGIN = 0.03    # Refuse to bank a gain smaller than the metric's own jitter.
+                       # The old value (0.02) assumed a ~0.019 spread, but that was measured
+                       # over too few samples: the notebook shows the IDENTICAL seed solution
+                       # scoring 0.6129 and 0.5483 on the same dev set across two runs — a
+                       # 0.065 swing, ~3x the assumed floor. With EVAL_PASSES=2 averaging the
+                       # candidate and a running mean for the incumbent (see run()), the
+                       # effective jitter is roughly halved, so 0.03 is the honest bar.
+EVAL_PASSES = 2        # scoring passes per CANDIDATE, averaged. 1 was too noisy to survive the
+                       # hard dedup: a good candidate that drew unlucky was discarded AND its
+                       # signature banned forever, so it could never be re-tried. 2 passes
+                       # roughly halves the variance for ~2x the candidate API cost.
+INCUMBENT_PASSES = 1   # passes per incumbent re-score each round. Cheaper than EVAL_PASSES
+                       # because these accumulate into a running mean across rounds (run()).
 STOP_AT = 0.999        # ceiling reached -> stop; no point running more experiments
 
 _SAFE_CH = re.compile(r"^[A-Za-z0-9_-]+$")
@@ -127,7 +136,8 @@ per experiment (a small, safe delta — like changing a single hyperparameter):
 - instructions    (string)  : the category definitions + disambiguation rules. If you pick this,
                               return the FULL revised text but make ONE focused improvement
                               (e.g. sharpen the NBNPW vs CTRTCANCELPLAN or UWADDINFOCUST vs UWAI GP rule).
-- shots_per_class (int 0-6) : how many few-shot examples per category to show.
+- shots_per_class (int 0-4) : how many few-shot examples per category to show. The pool now
+                              supplies this many for EVERY category, so the knob is balanced.
 - fewshot_seed    (int)     : which few-shot examples get sampled (example-selection search).
 
 USE THE NOTEBOOK: never repeat a DISCARD; build on a KEEP. Pick the single highest-leverage knob
@@ -148,7 +158,7 @@ def _apply(best, obj, task):
     new = dict(best); knob = obj.get("knob"); val = obj.get("value")
     if task == "classify":
         if knob == "shots_per_class":
-            try: new["shots_per_class"] = max(0, min(6, int(val)))
+            try: new["shots_per_class"] = max(0, min(prepare.MAX_SHOTS, int(val)))
             except (TypeError, ValueError): pass
         elif knob == "fewshot_seed":
             try: new["fewshot_seed"] = int(val)
@@ -199,9 +209,9 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
     if task == "classify":
         dev, test, pool = prepare.splits()
         unit_label = "Emails"
-        def score(solution, rows):
+        def score(solution, rows, passes=None):
             f1s, accs, last = [], [], None
-            for _ in range(max(1, eval_passes)):
+            for _ in range(max(1, eval_passes if passes is None else passes)):
                 clf, _prompt, _fs = sol.make_classifier(solution, pool, classifier_model)
                 scored, acc, mf1, per = prepare.evaluate(clf, rows)
                 f1s.append(mf1); accs.append(acc); last = (scored, per)
@@ -220,9 +230,9 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
         items, schema = sol.load_extract(channel)
         dev, test = sol.split_items(items)
         unit_label = sol.EXTRACT_CHANNELS[channel]["label"]
-        def score(solution, rows):
+        def score(solution, rows, passes=None):
             judges, fields, last = [], [], None
-            for _ in range(max(1, eval_passes)):
+            for _ in range(max(1, eval_passes if passes is None else passes)):
                 r, judge, field = sol.score_extract(solution["instructions"], schema, rows)
                 judges.append(judge); fields.append(field); last = r
             return {"metric": sum(judges) / len(judges), "second": sum(fields) / len(fields),
@@ -239,6 +249,8 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
     base_exp = len(read_notebook(channel))
     res = score(best, dev)
     best_m, best_res, best_iter = res["metric"], res, 0
+    inc_samples = [res["metric"]]    # every measurement of the CURRENT incumbent; best_m is
+                                     # their running mean, so one lucky draw can't set the bar
     tried = tried_signatures(channel)   # every fingerprint ever scored (persists across runs)
     tried.add(_sig(best))
 
@@ -288,6 +300,14 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
             continue
         tried.add(sig)
         res = score(cand, dev)
+        # Re-score the INCUMBENT on the same dev rows this round and fold the result into
+        # its running mean. Without this, best_m stayed frozen at whatever single draw
+        # round 0 produced — run 1's baseline drew 0.6129, locking the bar at 0.6329, and
+        # nothing was ever kept (best_iter=0 in BOTH historical runs). Re-measuring makes
+        # the comparison paired (same rows, same round) and lets the incumbent estimate
+        # converge on its true value instead of trusting one sample.
+        inc_samples.append(score(best, dev, passes=INCUMBENT_PASSES)["metric"])
+        best_m = sum(inc_samples) / len(inc_samples)
         beats = res["metric"] > best_m + margin
         reviewed = None
         if beats and await_review is not None:
@@ -301,6 +321,7 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
         gitlab.commit(channel, cand, desc)
         if accepted:
             best, best_m, best_res, best_iter = cand, res["metric"], res, i
+            inc_samples = [res["metric"]]      # new incumbent -> restart its estimate
         else:
             gitlab.discard(channel)
         append_notebook(channel, base_exp + i, res["metric"], 0.0, "keep" if accepted else "discard", desc, sig)

@@ -13,6 +13,17 @@ DOCS = os.path.join(ROOT, "data", "documents")
 MANIFEST = os.path.join(ROOT, "data", "dataset_manifest.csv")
 CATEGORIES = ["CTRTCANCELPLAN", "NBNPW", "SERV GEN", "UWADDINFOCUST", "UWAI GP", "n/a"]
 
+# Upper bound of the `shots_per_class` knob (researcher._apply clamps to 0..MAX_SHOTS).
+# The few-shot POOL must be able to supply this many examples for EVERY class, or the
+# knob silently means different things for different classes — see splits() below.
+# 4, not 6: classes with no synthetic backing pay for their pool out of their own real
+# docs, and UWAI GP only has 14. Carving 6 would strip 43% of one of the two hardest
+# classes out of eval and make its per-class F1 pure noise.
+MAX_SHOTS = 4
+# Never spend more than this fraction of a class's real docs on the few-shot pool,
+# so a small class keeps enough rows left to be measured meaningfully.
+MAX_CARVE_FRAC = 0.25
+
 def read_doc(file_stem):
     with open(os.path.join(DOCS, file_stem + ".txt"), encoding="utf-8", errors="ignore") as f:
         return f.read()
@@ -21,10 +32,19 @@ def load_manifest():
     with open(MANIFEST, encoding="utf-8") as f:
         return list(csv.DictReader(f))
 
-def splits(seed=13, dev_frac=0.6, fewshot_per_class=2):
+def splits(seed=13, dev_frac=0.6, fewshot_per_class=MAX_SHOTS):
     """real -> (dev, test) stratified by label; few-shot pool = synthetic + a
     held-out slice of REAL docs for classes that have NO synthetic examples.
-    Carved few-shot docs are removed from dev/test, so test stays clean."""
+    Carved few-shot docs are removed from dev/test, so test stays clean.
+
+    `fewshot_per_class` carves MAX_SHOTS (not 2) so the pool can satisfy the knob
+    at its maximum for every class. Previously this was hardcoded to 2 while the
+    knob ranged 0..6: SERV GEN and n/a (the two largest classes, 90 of 163 real
+    docs) could only ever contribute 2 examples, because fewshot_block() samples
+    min(per_class, len(pool[label])). Raising shots_per_class therefore skewed the
+    few-shot block toward the 4 synthetic-backed classes and pushed the classifier
+    away from the majority of the corpus — the knob made things worse, which is
+    why every experiment that touched it was discarded."""
     rows = load_manifest()
     real = [r for r in rows if r["source"] == "real"]
     synth = [r for r in rows if r["source"] == "synthetic"]
@@ -35,8 +55,9 @@ def splits(seed=13, dev_frac=0.6, fewshot_per_class=2):
     for lab, items in by.items():
         items = items[:]; rng.shuffle(items)
         if lab not in have_synth and len(items) > fewshot_per_class + 2:
-            carved += items[:fewshot_per_class]
-            items = items[fewshot_per_class:]
+            take = min(fewshot_per_class, int(len(items) * MAX_CARVE_FRAC))
+            carved += items[:take]
+            items = items[take:]
         k = max(1, int(round(len(items) * dev_frac))) if len(items) > 1 else len(items)
         dev += items[:k]; test += items[k:]
     return dev, test, synth + carved
