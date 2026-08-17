@@ -1,0 +1,26 @@
+--- # Render blueprint — one-click deploy of the Zurich auto-research dashboard.
+# Render → New → Blueprint → pick this repo. Everything below is preconfigured;
+# the only thing you are prompted for is the LLM key (sync:false = never in git).
+#
+# The Dockerfile already honours ${PORT}, which Render injects, so no code changes.
+services:
+  - type: web
+    name: autoresearch
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    # /api/auth_config is the one /api route the auth middleware leaves public
+    # (backend/api.py:37), so it health-checks fine even with Cognito enabled.
+    healthCheckPath: /api/auth_config
+    envVars:
+      # Cognito pool "autoresearch" (us-east-1). These are public identifiers,
+      # not secrets — the SPA fetches them at runtime from /api/auth_config.
+      - key: COGNITO_REGION
+        value: us-east-1
+      - key: COGNITO_POOL_ID
+        value: us-east-1_selpZ7bK6
+      - key: COGNITO_CLIENT_ID
+        value: 4mlcitltvdphpoae88eirng0cn
+      # Prompted for on deploy, stored encrypted by Render, never committed.
+      - key: OPENAI_API_KEY
+        sync: false
