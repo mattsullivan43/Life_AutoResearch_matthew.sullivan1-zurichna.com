@@ -61,13 +61,72 @@ def discard(ch):
     if n.isdigit() and int(n) > 1:
         _git(["reset", "-q", "--hard", "HEAD~1"], d)
     else:
-        _git(["update-ref", "-d", "HEAD"], d)  # remove the only commit -> empty repo
-        _git(["reset", "-q", "--hard"], d)
+        # Only one commit: there is no parent to roll back to. Dropping the ref is
+        # not enough — `git reset --hard` FAILS once HEAD is unresolvable, which used
+        # to leave the discarded candidate's solution.json sitting in the working
+        # tree, where load() would happily return it as the new "best". Clear the
+        # index and the artifacts explicitly so the repo is genuinely empty.
+        _git(["update-ref", "-d", "HEAD"], d)
+        _git(["read-tree", "--empty"], d)
+        for f in ("solution.json", "solution.txt", "solution.py"):
+            p = os.path.join(d, f)
+            if os.path.exists(p):
+                os.remove(p)
 
 def reset(ch):
-    """Wipe the channel's experiment history (next run starts from the seed)."""
+    """Wipe the channel's experiment history (next run starts from the seed).
+    Removes the durable snapshot too, or the 'reset' channel would immediately
+    warm-start from the best it was meant to forget."""
     import shutil
     shutil.rmtree(os.path.join(LAB, _safe(ch)), ignore_errors=True)
+    p = best_path(ch)
+    if os.path.exists(p):
+        os.remove(p)
+
+# ---------- durable best snapshot (survives a wiped lab / a fresh container) ----------
+# git HEAD is the keep-chain, but it is easy to lose: reset(ch) wipes it, and a
+# container without the runs/ mount starts empty. The best solution is therefore ALSO
+# written to runs/solution_<ch>.json on every keep and at end of run, and load() falls
+# back to it. This is the file CLAUDE.md documents as "the versioned best".
+BEST_DIR = os.path.join(prepare.ROOT, "runs")
+
+def best_path(ch):
+    return os.path.join(BEST_DIR, f"solution_{_safe(ch)}.json")
+
+def save_best(ch, solution, meta=None):
+    """Persist the best SOLUTION as a plain file, independent of git state."""
+    os.makedirs(BEST_DIR, exist_ok=True)
+    payload = {"solution": solution, "meta": meta or {}}
+    tmp = best_path(ch) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+    os.replace(tmp, best_path(ch))          # atomic: never leave a half-written best
+    return best_path(ch)
+
+def load_best_snapshot(ch):
+    """The snapshotted best SOLUTION, or None. Accepts the wrapped {solution, meta}
+    form and a bare solution dict (older files)."""
+    p = best_path(ch)
+    if not os.path.exists(p):
+        return None
+    try:
+        d = json.load(open(p, encoding="utf-8"))
+    except Exception:
+        return None
+    if isinstance(d, dict) and isinstance(d.get("solution"), dict):
+        return d["solution"]
+    return d if isinstance(d, dict) and "instructions" in d else None
+
+def best_meta(ch):
+    p = best_path(ch)
+    if not os.path.exists(p):
+        return {}
+    try:
+        d = json.load(open(p, encoding="utf-8"))
+        return d.get("meta", {}) if isinstance(d, dict) else {}
+    except Exception:
+        return {}
+
 
 def history(ch, n=30):
     """git log oneline for the dashboard / audit."""

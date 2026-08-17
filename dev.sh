@@ -5,6 +5,10 @@
 set -e
 cd "$(dirname "$0")"
 
+# pick up a repo-root .env (the backend loads it too; this is just so the warning
+# below is accurate and the frontend/vite process inherits it as well)
+if [ -f .env ]; then set -a; . ./.env; set +a; fi
+
 if [ -z "$OPENAI_API_KEY" ] && [ -z "$ANTHROPIC_API_KEY" ]; then
   echo "⚠  No API key set — the loop won't run (baseline still works)."
   echo "   export OPENAI_API_KEY=sk-...   then re-run."

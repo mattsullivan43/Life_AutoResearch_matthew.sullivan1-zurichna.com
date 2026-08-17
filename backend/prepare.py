@@ -132,3 +132,145 @@ def rows_obj(scored, max_chars=180):
             "snippet": read_doc(r["file"]).strip().replace("\n", " ")[:max_chars]} for r in scored]
     out.sort(key=lambda x: x["correct"])
     return out
+
+
+# ---------- paired significance tests (the keep/discard decision) ----------
+# The metric is noisy (an LLM eval jitters run-to-run), so "candidate mean > incumbent
+# mean + fixed margin" is the wrong test: it depends on how many samples each side
+# happens to have and on which round a candidate arrives in. These compare the two
+# systems on THE SAME DOCUMENTS and ask whether the difference survives resampling.
+# Pure arithmetic over stored predictions — no extra API calls.
+
+def consensus_rows(per_doc_preds, truth_by_file):
+    """Collapse several scoring passes into ONE prediction per document.
+
+    per_doc_preds: {file: [pred_pass1, pred_pass2, ...]} in pass order.
+    Returns rows [{file, label, pred}] using the modal prediction per document;
+    Counter.most_common breaks ties by insertion order, so a 1-1 split keeps the
+    first pass. Voting removes most per-document jitter before the paired test.
+    """
+    from collections import Counter
+    out = []
+    for f, preds in per_doc_preds.items():
+        if not preds:
+            continue
+        out.append({"file": f, "label": truth_by_file.get(f), "pred": Counter(preds).most_common(1)[0][0]})
+    return out
+
+
+def _align(rows_a, rows_b):
+    """Pair two scored-row lists by document. Tolerates `label` or `true` as the
+    truth key (rows_obj renames it) and ignores row order."""
+    def truth(r): return r.get("label", r.get("true"))
+    b = {r["file"]: r for r in rows_b}
+    t, pa, pb = [], [], []
+    for r in rows_a:
+        o = b.get(r["file"])
+        if o is None:
+            continue
+        t.append(truth(r)); pa.append(r["pred"]); pb.append(o["pred"])
+    return t, pa, pb
+
+
+def paired_bootstrap(rows_a, rows_b, n_boot=2000, seed=17, labels=None):
+    """Paired bootstrap over documents on MACRO-F1 (a = incumbent, b = candidate).
+
+    Resamples documents with replacement and recomputes both systems' macro-F1 on
+    the SAME resample, so shared per-document difficulty cancels out. Macro is
+    averaged over a FIXED label set (every class in the truth), not the classes that
+    happen to appear in a resample — otherwise the denominator moves between draws.
+
+    Returns {n, mf1_a, mf1_b, delta, p_better, p_worse, ci}. p_better is the
+    fraction of resamples where the candidate wins, i.e. the confidence that the
+    improvement is real rather than jitter.
+    """
+    t, pa, pb = _align(rows_a, rows_b)
+    n = len(t)
+    labs = list(labels) if labels else sorted(set(x for x in t if x is not None))
+    if n == 0 or not labs:
+        return {"n": n, "mf1_a": 0.0, "mf1_b": 0.0, "delta": 0.0,
+                "p_better": 0.0, "p_worse": 0.0, "ci": [0.0, 0.0]}
+
+    def mf1(idxs, preds):
+        tp = dict.fromkeys(labs, 0); fp = dict.fromkeys(labs, 0); fn = dict.fromkeys(labs, 0)
+        for i in idxs:
+            tr, pr = t[i], preds[i]
+            if tr == pr:
+                if tr in tp: tp[tr] += 1
+            else:
+                if pr in fp: fp[pr] += 1
+                if tr in fn: fn[tr] += 1
+        tot = 0.0
+        for L in labs:
+            p = tp[L] / (tp[L] + fp[L]) if tp[L] + fp[L] else 0.0
+            r = tp[L] / (tp[L] + fn[L]) if tp[L] + fn[L] else 0.0
+            tot += (2 * p * r / (p + r)) if (p + r) else 0.0
+        return tot / len(labs)
+
+    whole = range(n)
+    a0, b0 = mf1(whole, pa), mf1(whole, pb)
+    rng = random.Random(seed)
+    deltas = []
+    for _ in range(n_boot):
+        idxs = [rng.randrange(n) for _ in range(n)]
+        deltas.append(mf1(idxs, pb) - mf1(idxs, pa))
+    deltas.sort()
+    wins = sum(1 for d in deltas if d > 0)
+    losses = sum(1 for d in deltas if d < 0)
+    lo = deltas[int(0.025 * len(deltas))]
+    hi = deltas[min(len(deltas) - 1, int(0.975 * len(deltas)))]
+    return {"n": n, "mf1_a": a0, "mf1_b": b0, "delta": b0 - a0,
+            "p_better": wins / len(deltas), "p_worse": losses / len(deltas),
+            "ci": [lo, hi]}
+
+
+def paired_bootstrap_mean(rows_a, rows_b, key="score", n_boot=2000, seed=17):
+    """Same paired bootstrap, but on the MEAN of a per-document scalar — used by the
+    extract channels, whose metric is an LLM-judge score per document rather than
+    macro-F1 over classes."""
+    b = {r["file"]: r for r in rows_b}
+    va, vb = [], []
+    for r in rows_a:
+        o = b.get(r["file"])
+        if o is None:
+            continue
+        va.append(float(r.get(key, 0.0))); vb.append(float(o.get(key, 0.0)))
+    n = len(va)
+    if n == 0:
+        return {"n": 0, "mf1_a": 0.0, "mf1_b": 0.0, "delta": 0.0,
+                "p_better": 0.0, "p_worse": 0.0, "ci": [0.0, 0.0]}
+    a0, b0 = sum(va) / n, sum(vb) / n
+    rng = random.Random(seed)
+    deltas = []
+    for _ in range(n_boot):
+        idxs = [rng.randrange(n) for _ in range(n)]
+        deltas.append(sum(vb[i] for i in idxs) / n - sum(va[i] for i in idxs) / n)
+    deltas.sort()
+    wins = sum(1 for d in deltas if d > 0)
+    losses = sum(1 for d in deltas if d < 0)
+    lo = deltas[int(0.025 * len(deltas))]
+    hi = deltas[min(len(deltas) - 1, int(0.975 * len(deltas)))]
+    return {"n": n, "mf1_a": a0, "mf1_b": b0, "delta": b0 - a0,
+            "p_better": wins / len(deltas), "p_worse": losses / len(deltas),
+            "ci": [lo, hi]}
+
+
+def mcnemar(rows_a, rows_b):
+    """Exact McNemar on per-document correctness (a = incumbent, b = candidate).
+
+    Reported alongside the bootstrap as a sanity check. It tests ACCURACY, not
+    macro-F1, so it is NOT the decision rule: a candidate can win on accuracy by
+    favouring the majority class while macro-F1 falls. b_only = documents the
+    candidate fixed, a_only = documents it broke; p is the one-sided exact
+    binomial probability of seeing this many fixes if the two were equivalent.
+    """
+    from math import comb
+    t, pa, pb = _align(rows_a, rows_b)
+    b_only = sum(1 for i in range(len(t)) if pb[i] == t[i] and pa[i] != t[i])
+    a_only = sum(1 for i in range(len(t)) if pa[i] == t[i] and pb[i] != t[i])
+    n = b_only + a_only
+    if n == 0:
+        return {"fixed": 0, "broke": 0, "p": 1.0}
+    k = max(b_only, a_only)
+    p = sum(comb(n, j) for j in range(k, n + 1)) / (2 ** n)
+    return {"fixed": b_only, "broke": a_only, "p": min(1.0, p)}

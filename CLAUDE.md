@@ -25,7 +25,8 @@ backend/   Python. Refactored DIRECTLY from Karpathy's autoresearch repo.
                 (EXTRACT_CHANNELS, list_channels, channel_status) + keyword_baseline().
   researcher.py the loop (≙ his program.md loop): reads the persistent notebook +
                 best SOLUTION, propose()s ONE KNOB change (structured JSON, never code),
-                scores it AVERAGED over EVAL_PASSES, keep/discard by noise margin, logs.
+                scores it AND the incumbent on the same rows, decides by PAIRED BOOTSTRAP
+                (keep / discard / inconclusive), persists the best, logs.
                 UNIFIED across all channels. Also default_solution(), display_prompt(),
                 read/append_notebook(), load_best().
   classifier.py LLM PROVIDER SHIM + keyword_classify + build_llm_classifier (the fixed
@@ -51,12 +52,30 @@ read notebook (results_<channel>.tsv) + best SOLUTION  (the persistent memory)
      classify: instructions / shots_per_class / fewshot_seed  (a fixed scaffold)
      extract : ONE focused edit to the extraction prompt
    propose() returns STRUCTURED JSON {knob, value, description} — NEVER free-form code.
- → score on dev, AVERAGED over EVAL_PASSES passes (kills ~2% jitter)
-     (classify: macro-F1; extract: LLM-as-judge, a DIFFERENT model)
- → git commit; append the experiment to the notebook with a description + keep/discard
- → keep only if it beats best by > NOISE_MARGIN (=0.02, above the measured ~0.019 floor)
- → repeat. Final = best SOLUTION scored once on held-out test (the honest number).
+ → score the CANDIDATE **and the INCUMBENT** on the SAME dev rows, this round, with the
+     same EVAL_PASSES (classify: macro-F1; extract: LLM-as-judge, a DIFFERENT model).
+     Several passes are collapsed to ONE voted prediction per document (prepare.consensus_rows).
+ → decide with a PAIRED BOOTSTRAP over documents (prepare.paired_bootstrap):
+     keep         if p_better >= CONFIDENCE     (0.80) -> commit, persist, advance
+     discard      if p_worse  >= BAN_CONFIDENCE (0.95) -> roll back AND ban the fingerprint
+     inconclusive otherwise                            -> roll back, NOT banned, retryable
+ → git commit; append the experiment + verdict to the notebook; save runs/solution_<ch>.json
+ → repeat. Final = best SOLUTION scored on held-out test (the honest number).
 ```
+**Why a paired test, not a fixed margin:** the old rule (`cand > incumbent_mean + 0.03`)
+never banked a single keep on `emails` — 8 discards across two runs, both finals
+"round 0". An absolute threshold on a noisy metric is not a stable bar: the incumbent
+estimate began as ONE draw and only converged as the run progressed, so a candidate's
+fate depended on which round it arrived in (run 2's converged bar was 0.548 while its
+round-5 candidate scored 0.581 — a winner rejected against a stale bar). A paired
+bootstrap on the same documents is scale-free and round-order independent.
+**Why 0.80/0.95 and not 0.95/0.95:** measured on this data (93 dev docs, 6 classes), a
+TRUE +0.12 gain clears 0.95 only 40% of the time and +0.05 only 17% — the dev set cannot
+resolve small macro-F1 differences. The thresholds are therefore set by consequence: a
+false accept is cheap (it becomes the incumbent, is re-measured next round, and the
+honest number is always the held-out test), a false ban is permanent. Both are `run()`
+parameters (`confidence=`, `ban_confidence=`); `decision="margin"` restores the old rule
+for A/B.
 **Why knobs, not code:** an earlier version let the optimiser rewrite the WHOLE
 classifier as free-form Python every round (emails_seed.py + a sandbox). That broke
 Karpathy's key property — the artifact must be un-breakable — so candidates routinely
@@ -65,7 +84,12 @@ scaffold + single-knob deltas restores the bounded search space. (Deleted in thi
 emails_seed.py, sandbox_runner.py, lab.py, run_program(), _propose_code/OPT_CODE.)
 - **Persistent memory**: the notebook is never wiped; it compounds across runs so the
   researcher stops re-trying dead ends. `runs/solution_<channel>.json` = versioned best
-  (deploy-safe replacement for his git branch). Warm-start loads it; /api/reset clears it.
+  (deploy-safe replacement for his git branch), written by `gitlab.save_best()` on EVERY
+  keep and again at end of run — atomically, so a crash mid-run cannot lose a banked
+  improvement. `load_best()` = git HEAD, else that snapshot, else the seed, so a wiped
+  lab or a fresh container still warm-starts. /api/reset clears both.
+  NB `warm_start=False` calls `gitlab.reset()` and DESTROYS this memory — only pass it
+  when you deliberately want to start from the seed.
 - **Human-in-the-loop** (`await_review`): when a candidate beats best, the loop pauses
   for an underwriter Approve/Reject (wired through /api/run?hitl=true + /api/review + UI).
 
@@ -108,7 +132,12 @@ Two hard distinctions drive the score: NBNPW↔CTRTCANCELPLAN and UWADDINFOCUST�
 | UWAI GP | 14 | 0 |
 | n/a | 45 | 0 |
 
-Splits (seed=13, dev_frac=0.6): **dev=98, test=65, few-shot pool=52**.
+Splits (seed=13, dev_frac=0.6): **dev=93, test=59, few-shot pool=63** (measured; the pool
+grew and dev/test shrank when `splits(fewshot_per_class=)` went 2 -> MAX_SHOTS=4).
+Per-class pool supply is **not** uniform: CTRTCANCELPLAN=24, NBNPW=22, SERV GEN=4,
+UWADDINFOCUST=6, UWAI GP=**3**, n/a=4. Sampling takes min(shots_per_class, available),
+so shots_per_class>3 silently unbalances the block — `researcher._pool_note()` now tells
+the optimizer these real counts instead of claiming the pool is balanced.
 Note: synthetic few-shot only exists for 3 classes (CTRTCANCELPLAN, NBNPW,
 UWADDINFOCUST); SERV GEN / UWAI GP / n/a get no few-shot examples — a known weak
 spot, but per eval hygiene we do not fabricate more.
@@ -118,10 +147,22 @@ synthetic). To add docs: drop .txt into `data/documents/` (name must match an
 NB the source typo "unde**writing**"→"unde**w**riting") and run
 `.venv/bin/python scripts/ingest.py`.
 
-## Latest result (full 6-class, deterministic, held-out real-test)
+## Latest result (full 6-class, held-out real-test, n=59, gpt-4o-mini)
 Keyword baseline floor: acc 43.1% / macro-F1 42.2%.
-Best optimized prompt: **acc 60.0% / macro-F1 61.8%** (n=65). Not 100% by design —
-real triage is ambiguous (the hard pairs) and the classifier model is small.
+Measured with the paired-bootstrap decision rule, two consecutive 6-round runs where the
+second warm-started from the first (this is the compounding the loop is supposed to do):
+| run | start (dev) | keeps | verdicts | best round | TEST macro-F1 | TEST acc |
+|---|---|---|---|---|---|---|
+| 1 (from seed)   | 0.5406 | 1 | 1 keep, 1 inconclusive, 4 duplicate | 1 | **0.5469** | 0.5593 |
+| 2 (warm-start)  | 0.5781 | 1 | 1 keep, 1 discard, 4 inconclusive   | 4 | **0.5813** | 0.5678 |
+
+Not 100% by design — real triage is ambiguous (the hard pairs) and the classifier model
+is small. NB an older line here claimed acc 60.0% / macro-F1 61.8% at n=65; that predates
+the corrected splits (n=59) and a different prompt lineage, so it is not comparable —
+prefer the measured table above and re-measure rather than inheriting the claim.
+**Ceiling to be aware of:** 93 dev docs over 6 classes cannot resolve small macro-F1
+differences (a true +0.05 gain clears p=0.95 only ~17% of the time). More labelled REAL
+data is the only real fix; do NOT fabricate documents (see eval hygiene).
 
 ## Environment (the Python gotcha)
 System `python`/`python3` is broken Homebrew **3.14** (busted `pyexpat`; even pip
@@ -138,7 +179,9 @@ export OPENAI_API_KEY=sk-...            # or a real sk-ant-... for Claude
 # CLI — keyword floor (no API)
 .venv/bin/python -c "from backend import solution; print(solution.keyword_baseline())"
 # CLI — full loop
-.venv/bin/python -c "from backend import researcher as R; [print(e['type'], e.get('description',''), e.get('dev_mf1','')) for e in R.run(channel='emails', iterations=12, warm_start=False)]"
+# NB warm_start=True (the default) — it BUILDS on runs/solution_emails.json. Passing
+# warm_start=False wipes the accumulated best and restarts from the seed.
+.venv/bin/python -c "from backend import researcher as R; [print(e['type'], e.get('verdict',''), e.get('description',''), e.get('dev_mf1','')) for e in R.run(channel='emails', iterations=12)]"
 # App (dashboard)
 ./dev.sh                                # backend :8000 + frontend :5173
 # open http://localhost:5173

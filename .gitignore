@@ -1,6 +1,8 @@
 # ─── secrets (NEVER commit) ───────────────────────────────────────────────
 .env
 .env.*
+# the template carries NO secrets and must be committed (gitignore has no trailing comments)
+!.env.example
 *.key
 *.pem
 *credential*

@@ -13,6 +13,16 @@ Start:
 """
 import os, csv, json, glob, threading, itertools, subprocess, sys, re, base64, secrets
 from collections import Counter
+from pathlib import Path
+
+# Load repo-root .env before the backend imports, so COGNITO_* / APP_PASSWORD are
+# visible to backend.auth at import time too. Real env vars win (override=False).
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
+except ModuleNotFoundError:
+    pass
+
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse, Response

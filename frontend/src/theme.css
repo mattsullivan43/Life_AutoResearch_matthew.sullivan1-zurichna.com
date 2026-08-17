@@ -142,7 +142,8 @@ body {
 .fmain .fplain { color: var(--muted); font-size: 12px; }
 .fchip { font-size: 9.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; flex: 0 0 auto; }
 .fchip.ok { background: #e8f5ee; color: var(--good); }
-.fchip.no { background: var(--bg-2); color: var(--muted); }
+.fchip.no { background: #f7e9e7; color: var(--bad); }          /* discard: measurably worse */
+.fchip.meh { background: var(--bg-2); color: var(--muted); }   /* inconclusive / duplicate / vetoed */
 .fchip.seed { background: #fbf3e2; color: var(--gold-d); }
 .fchip.final { background: #e9edf9; color: var(--blue); }
 .ftime { font-family: var(--mono); font-size: 10.5px; color: var(--faint); flex: 0 0 auto; }

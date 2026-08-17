@@ -1,7 +1,17 @@
 """Classifiers. keyword_classify = iteration-0 baseline (no API).
 build_llm_classifier = the thing the auto-research loop optimizes."""
 import os, re, random
+from pathlib import Path
 from backend.prepare import CATEGORIES, read_doc
+
+# Load the repo-root .env (if present) so OPENAI_API_KEY / ANTHROPIC_API_KEY work
+# without an `export`. Real env vars always win — override=False — so the EC2
+# container's --env-file and Render's dashboard vars are never clobbered.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
+except ModuleNotFoundError:      # dotenv is optional; export still works
+    pass
 
 # ---------- iteration 0: transparent keyword baseline (no API key needed) ----------
 def keyword_classify(t):

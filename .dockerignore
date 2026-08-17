@@ -1,4 +1,8 @@
 .venv
+# never bake secrets into an image layer — .env is passed at runtime via --env-file
+.env
+.env.*
+!.env.example
 **/__pycache__
 **/*.pyc
 frontend/node_modules

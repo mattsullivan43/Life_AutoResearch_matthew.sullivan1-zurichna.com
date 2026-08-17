@@ -1,14 +1,26 @@
 // The persistent research notebook (results_<channel>.tsv) — every experiment ever
 // tried for this channel, with its keep/discard verdict. This is the memory that
 // makes the loop compound: it never repeats a banked failure.
+//
+// Verdicts are NOT just keep/discard. `discard` means the paired test found the
+// candidate measurably worse, so its fingerprint is banned for good. `inconclusive`
+// means the difference was lost in the noise — rolled back, but free to be revisited
+// with a bolder version. Showing those two the same way hides the distinction that
+// makes the notebook useful, so they get different chips.
+const CHIP = { keep: 'ok', final: 'final', discard: 'no' }
+
 export default function ResearchLog({ experiments }) {
   const exps = experiments || []
   const kept = exps.filter((e) => e.status === 'keep').length
+  const unresolved = exps.filter((e) => e.status === 'inconclusive').length
   return (
     <div className="block">
       <div className="head">
         <h3>Research notebook</h3>
-        <span className="sub">{exps.length} experiments · {kept} kept · persists across runs</span>
+        <span className="sub">
+          {exps.length} experiments · {kept} kept
+          {unresolved > 0 ? ` · ${unresolved} inconclusive (retryable)` : ''} · persists across runs
+        </span>
       </div>
       <div className="body">
         {exps.length === 0 ? (
@@ -22,7 +34,7 @@ export default function ResearchLog({ experiments }) {
               <tbody>
                 {[...exps].reverse().map((e, i) => {
                   const dev = parseFloat(e.dev), test = parseFloat(e.test)
-                  const cls = e.status === 'keep' ? 'ok' : e.status === 'final' ? 'final' : 'no'
+                  const cls = CHIP[e.status] || 'meh'
                   return (
                     <tr key={i}>
                       <td className="code">{e.exp_id}</td>
