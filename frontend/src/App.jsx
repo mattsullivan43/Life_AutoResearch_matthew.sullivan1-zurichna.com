@@ -13,6 +13,7 @@ import CoveragePanel from './components/CoveragePanel'
 import PromptViewer from './components/PromptViewer'
 import SubmissionTriage from './components/SubmissionTriage'
 import EngineCard from './components/EngineCard'
+import BucketFlow from './components/BucketFlow'
 import Login from './components/Login'
 import { authConfig, getToken, logout as cognitoLogout } from './auth'
 
@@ -405,6 +406,9 @@ export default function App() {
             )}
           </div>
         )}
+
+        {/* the loop made tangible: this round's documents -> buckets */}
+        {isSub && <BucketFlow rows={rows} channel={channel} split={split} running={running} />}
 
         <div style={{ marginTop: 18 }}><LiveLog lines={log} running={running} /></div>
 
