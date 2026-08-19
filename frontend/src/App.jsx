@@ -19,10 +19,15 @@ import { authConfig, getToken, logout as cognitoLogout } from './auth'
 const pct = (x) => (x == null ? '—' : `${Math.min(100, Math.max(0, x * 100)).toFixed(1)}%`)
 const now = () => new Date().toLocaleTimeString('en-GB')
 
+// ?focus=broker -> demo mode: ONLY the Broker Submissions tab, landing on it.
+// The Zurich Life channels stay fully functional at the plain URL.
+const BROKER_ONLY = typeof window !== 'undefined'
+  && new URLSearchParams(window.location.search).get('focus') === 'broker'
+
 export default function App() {
   const [status, setStatus] = useState(null)
   const [channels, setChannels] = useState([])
-  const [channel, setChannel] = useState('emails')
+  const [channel, setChannel] = useState(BROKER_ONLY ? 'attachment_doc_type' : 'emails')
   const [chStatus, setChStatus] = useState(null)        // extract-channel schema/splits
   const [prompts, setPrompts] = useState({ seed: '', best: '' })
   const [baseline, setBaseline] = useState(null)
@@ -57,7 +62,8 @@ export default function App() {
   const task = channels.find((c) => c.id === channel)?.task || 'classify'
   const isEmails = channel === 'emails'
   const isSub = task === 'classify_sub'
-  const groups = [...new Set(channels.map((c) => c.group || 'Channels'))]
+  const shownChannels = BROKER_ONLY ? channels.filter((c) => c.group === 'Commercial Submissions') : channels
+  const groups = [...new Set(shownChannels.map((c) => c.group || 'Channels'))]
 
   // resolve auth first (Cognito enabled? logged in?)
   useEffect(() => {
@@ -223,7 +229,7 @@ export default function App() {
                     Broker Submissions
                     <span className="tasktag">classify &amp; index · 7 layers</span>
                   </button>
-                ) : channels.filter((c) => (c.group || 'Channels') === g).map((c) => (
+                ) : shownChannels.filter((c) => (c.group || 'Channels') === g).map((c) => (
                   <button key={c.id} className={'tab' + (c.id === channel ? ' on' : '')} onClick={() => !running && setChannel(c.id)} disabled={running}>
                     {c.label}
                     <span className="tasktag">
