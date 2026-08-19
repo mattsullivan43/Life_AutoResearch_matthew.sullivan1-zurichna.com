@@ -285,3 +285,7 @@ pre.prompt .fewshot { color: var(--gold-d); font-weight: 700; background: #fbf1d
 .layerpills .lp:hover:not(:disabled) { color: var(--ink); border-color: var(--faint); }
 .layerpills .lp.on { color: var(--blue); border-color: var(--blue); background: #edf0fa; }
 .layerpills .lp:disabled { opacity: .5; cursor: not-allowed; }
+
+/* neutral verdicts: inconclusive / duplicate — rolled back, not refuted */
+.fmark.mid { background: #b9b4a6; }
+.fchip.mid { background: #f0ede5; color: #7a766a; }

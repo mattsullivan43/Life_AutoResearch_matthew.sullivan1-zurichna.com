@@ -118,7 +118,7 @@ export default function App() {
           if (ev.solution) { setSolution(ev.solution); setSolStatus(ev.accepted === true ? 'kept — new best' : ev.accepted === false ? 'candidate (discarded)' : 'baseline') }
           setSplit(`practice set · round ${ev.iter}`); setBestF1(ev.best_mf1)
           if (ev.accepted === true && ev.candidate_prompt) setPrompts((p) => ({ ...p, best: ev.candidate_prompt }))
-          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description })
+          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description, verdict: ev.verdict, p: ev.stats?.p_better })
         } else if (ev.type === 'review') {
           setReview({ runId: runIdRef.current, iter: ev.iter, cand: ev.cand_mf1, best: ev.best_mf1,
             prompt: ev.candidate_prompt })

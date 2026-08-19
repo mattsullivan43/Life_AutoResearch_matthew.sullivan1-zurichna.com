@@ -9,8 +9,14 @@ export default function LiveLog({ lines, running }) {
 
   function Row({ l }) {
     if (l.kind === 'iter') {
-      const cls = l.accepted === true ? 'ok' : l.accepted === false ? 'no' : 'seed'
-      const chip = l.accepted === true ? 'Kept' : l.accepted === false ? 'Discarded' : 'Seed'
+      // four honest verdicts, not two: only a real p_worse>=0.95 loss is "Discarded";
+      // "Inconclusive" = indistinguishable from noise, rolled back but retryable.
+      const v = l.accepted === null ? 'seed'
+        : l.verdict === 'keep' || l.accepted === true ? 'keep'
+        : l.verdict === 'discard' ? 'discard'
+        : l.verdict === 'duplicate' ? 'duplicate' : 'inconclusive'
+      const cls = { seed: 'seed', keep: 'ok', discard: 'no', duplicate: 'mid', inconclusive: 'mid' }[v]
+      const chip = { seed: 'Seed', keep: 'Kept', discard: 'Discarded', duplicate: 'Duplicate', inconclusive: 'Inconclusive' }[v]
       return (
         <div className="frow">
           <span className={'fmark ' + cls} />
@@ -19,6 +25,7 @@ export default function LiveLog({ lines, running }) {
               <span className="lab">{l.accepted === null ? 'Seed baseline' : `Experiment ${l.iter}`}</span>
               <span className="score">{pct(l.f1)}</span>
               {l.accepted !== null && <span className="muted">best {pct(l.best)}</span>}
+              {l.p != null && <span className="muted">p(better) {Math.round(l.p * 100)}%</span>}
             </div>
             {l.desc && l.accepted !== null && <div className="exp-desc">{l.desc}</div>}
           </div>
