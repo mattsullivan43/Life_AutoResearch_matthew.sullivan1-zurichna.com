@@ -3,44 +3,55 @@ import { getToken } from './auth'
 
 const H = () => { const t = getToken(); return t ? { Authorization: `Bearer ${t}` } : {} }
 
+// Cognito access tokens expire after ~1h. A stale token skips the login screen
+// and then every call 401s — which used to render as "cannot reach backend".
+// On any 401: drop the token and reload, which lands on the login screen.
+const guard = (r) => {
+  if (r.status === 401 && getToken()) {
+    localStorage.removeItem('access_token')
+    window.location.reload()
+  }
+  return r
+}
+
 export async function getStatus() {
-  const r = await fetch('/api/status', { headers: H() })
+  const r = guard(await fetch('/api/status', { headers: H() }))
   if (!r.ok) throw new Error('status failed')
   return r.json()
 }
 
 export async function getChannels() {
-  const r = await fetch('/api/channels', { headers: H() })
+  const r = guard(await fetch('/api/channels', { headers: H() }))
   if (!r.ok) throw new Error('channels failed')
   return r.json()
 }
 
 export async function getChannelStatus(channel) {
-  const r = await fetch(`/api/channel_status?channel=${channel}`, { headers: H() })
+  const r = guard(await fetch(`/api/channel_status?channel=${channel}`, { headers: H() }))
   if (!r.ok) throw new Error('channel_status failed')
   return r.json()
 }
 
 export async function runBaseline() {
-  const r = await fetch('/api/baseline', { method: 'POST', headers: H() })
+  const r = guard(await fetch('/api/baseline', { method: 'POST', headers: H() }))
   if (!r.ok) throw new Error('baseline failed')
   return r.json()
 }
 
 export async function getBestPrompt(channel = 'emails') {
-  const r = await fetch(`/api/best_prompt?channel=${channel}`, { headers: H() })
+  const r = guard(await fetch(`/api/best_prompt?channel=${channel}`, { headers: H() }))
   if (!r.ok) throw new Error('best_prompt failed')
   return r.json()
 }
 
 export async function getNotebook(channel = 'emails') {
-  const r = await fetch(`/api/notebook?channel=${channel}`, { headers: H() })
+  const r = guard(await fetch(`/api/notebook?channel=${channel}`, { headers: H() }))
   if (!r.ok) throw new Error('notebook failed')
   return r.json()
 }
 
 export async function getSolution(channel = 'emails') {
-  const r = await fetch(`/api/solution?channel=${channel}`, { headers: H() })
+  const r = guard(await fetch(`/api/solution?channel=${channel}`, { headers: H() }))
   if (!r.ok) throw new Error('solution failed')
   return r.json()
 }
@@ -53,37 +64,37 @@ export async function uploadDocs(channel, fileList) {
   const fd = new FormData()
   fd.append('channel', channel)
   for (const f of fileList) fd.append('files', f)
-  const r = await fetch('/api/upload', { method: 'POST', headers: H(), body: fd })
+  const r = guard(await fetch('/api/upload', { method: 'POST', headers: H(), body: fd }))
   if (!r.ok) throw new Error('upload failed')
   return r.json()
 }
 
 export async function listSubmissions() {
-  const r = await fetch('/api/submissions', { headers: H() })
+  const r = guard(await fetch('/api/submissions', { headers: H() }))
   if (!r.ok) throw new Error('submissions failed')
   return r.json()
 }
 
 export async function classifySubmission(id, live = false) {
-  const r = await fetch(`/api/classify_submission?submission_id=${encodeURIComponent(id)}&live=${live}`,
-    { method: 'POST', headers: H() })
+  const r = guard(await fetch(`/api/classify_submission?submission_id=${encodeURIComponent(id)}&live=${live}`,
+    { method: 'POST', headers: H() }))
   return r.json()
 }
 
 export async function getSubmissionText(id) {
-  const r = await fetch(`/api/submission_text?submission_id=${encodeURIComponent(id)}`, { headers: H() })
+  const r = guard(await fetch(`/api/submission_text?submission_id=${encodeURIComponent(id)}`, { headers: H() }))
   if (!r.ok) throw new Error('submission_text failed')
   return r.json()
 }
 
 export async function getScoreboard() {
-  const r = await fetch('/api/scoreboard', { headers: H() })
+  const r = guard(await fetch('/api/scoreboard', { headers: H() }))
   if (!r.ok) throw new Error('scoreboard failed')
   return r.json()
 }
 
 export async function getEngineSummary() {
-  const r = await fetch('/api/engine_summary', { headers: H() })
+  const r = guard(await fetch('/api/engine_summary', { headers: H() }))
   if (!r.ok) throw new Error('engine_summary failed')
   return r.json()
 }
