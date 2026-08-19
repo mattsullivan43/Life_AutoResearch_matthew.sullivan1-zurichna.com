@@ -10,7 +10,9 @@ USER="${EC2_USER:-ec2-user}"
 # package the repo (skip heavy/local stuff; NEVER ship raw broker emails — the
 # anonymised extracted/classified JSONs and the runs/ memory DO ship: the demo
 # needs the ingested submissions, banked best prompts and notebooks)
-tar czf /tmp/autoresearch.tgz \
+# COPYFILE_DISABLE stops macOS tar embedding AppleDouble ._* junk files, which
+# land next to real JSONs on the box and crash any *.json directory scan
+COPYFILE_DISABLE=1 tar czf /tmp/autoresearch.tgz \
   --exclude .venv --exclude frontend/node_modules --exclude frontend/dist \
   --exclude runs/lab --exclude .git --exclude '*.zip' \
   --exclude '*.eml' --exclude '*.msg' .

@@ -91,7 +91,8 @@ def _extracted():
     out = {}
     if os.path.isdir(EXTRACTED):
         for fn in sorted(os.listdir(EXTRACTED)):
-            if fn.endswith(".json"):
+            # skip macOS AppleDouble junk ("._x.json") — binary, not JSON
+            if fn.endswith(".json") and not fn.startswith("."):
                 with open(os.path.join(EXTRACTED, fn), encoding="utf-8") as f:
                     d = json.load(f)
                 out[d["submission_id"]] = d
