@@ -224,6 +224,43 @@ def seed_instructions(ch):
             f"{fmt}")
 
 
+def match_id(path):
+    """Short id from the ground truth's `match` keyword (case-insensitive substring
+    of the filename), mirroring ingest.py. None if the file matches no GT row —
+    it still ingests under its filename slug, just without labels."""
+    name = os.path.basename(path).lower()
+    if os.path.exists(GT_SUBMISSIONS):
+        for sid, r in _gt_submissions().items():
+            if r["match"].lower() in name:
+                return sid
+    return None
+
+
+def ingest_file(path):
+    """Ingest ONE .eml/.msg into data/submissions/extracted/ and return the
+    Submission. Used by the upload endpoint and the CLI script."""
+    from backend.ingest_attachments import load_submission
+    sub = load_submission(path, submission_id=match_id(path))
+    os.makedirs(EXTRACTED, exist_ok=True)
+    with open(os.path.join(EXTRACTED, sub.submission_id + ".json"), "w", encoding="utf-8") as f:
+        json.dump(sub.model_dump(), f, indent=1)
+    _extracted.cache_clear()          # the registry must see the new submission
+    return sub
+
+
+def list_submissions():
+    """Everything ingested, for the dashboard picker."""
+    gt = _gt_submissions()
+    out = []
+    for sid, sub in sorted(_extracted().items()):
+        warns = [a["filename"] for a in sub["attachments"] if a.get("read_warning")]
+        out.append({"id": sid, "attachments": len(sub["attachments"]),
+                    "labelled": sid in gt, "warnings": warns,
+                    "chars": len(sub["combined_text"]),
+                    "subject": sub["cover_email_text"].split("\n", 1)[0][:110]})
+    return out
+
+
 def violates_ban(text):
     """True if candidate instructions reference a specific account/broker — the
     memorisation guard. Returns the offending term for the log, else None."""

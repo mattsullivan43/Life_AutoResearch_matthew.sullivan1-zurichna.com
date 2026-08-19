@@ -58,6 +58,18 @@ export async function uploadDocs(channel, fileList) {
   return r.json()
 }
 
+export async function listSubmissions() {
+  const r = await fetch('/api/submissions', { headers: H() })
+  if (!r.ok) throw new Error('submissions failed')
+  return r.json()
+}
+
+export async function classifySubmission(id, live = false) {
+  const r = await fetch(`/api/classify_submission?submission_id=${encodeURIComponent(id)}&live=${live}`,
+    { method: 'POST', headers: H() })
+  return r.json()
+}
+
 export async function resetPrompt(channel) {
   return fetch(`/api/reset?channel=${channel}`, { method: 'POST', headers: H() })
 }

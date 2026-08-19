@@ -253,3 +253,27 @@ pre.prompt .fewshot { color: var(--gold-d); font-weight: 700; background: #fbf1d
 .login-card input:focus { outline: none; border-color: var(--blue); }
 .login-card .btn-primary { margin-top: 8px; width: 100%; padding: 12px; }
 .login-err { background: #fdf4f3; border: 1px solid #f0c8c2; color: var(--bad); font-size: 12.5px; padding: 9px 11px; border-radius: 8px; }
+
+/* ── channel tab groups (Zurich Life vs Commercial Submissions) ─────────── */
+.tabgroups { margin: 26px 0 0; border-bottom: 1px solid var(--rule); display: flex; gap: 34px; flex-wrap: wrap; }
+.tabgroup { display: flex; flex-direction: column; }
+.tabgroup .tg-label { font-size: 10px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--faint); font-family: var(--mono); padding: 6px 4px 0; }
+.tabgroup .tabs { margin: 0; border-bottom: none; flex-wrap: wrap; }
+
+/* ── broker submission triage ───────────────────────────────────────────── */
+.tri-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tri-controls select { font-family: var(--mono); font-size: 12.5px; padding: 9px 10px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper); color: var(--ink); max-width: 340px; }
+.tri-controls .spacer { flex: 1; }
+.tri-result { margin-top: 16px; }
+.tri-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.tri-badge { font-size: 10.5px; font-weight: 700; letter-spacing: .6px; font-family: var(--mono); padding: 3px 9px; border-radius: 20px; }
+.tri-badge.cached { background: #eef3ec; color: var(--good); }
+.tri-badge.live { background: #edf0fa; color: var(--blue); }
+.tri-score { font-size: 12px; color: var(--muted); }
+.tri-buckets { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-top: 12px; }
+.tri-bucket { border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; background: var(--paper); }
+.tri-bucket.miss { border-color: #e4c8c3; background: #fdf8f7; }
+.tri-lab { font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--faint); font-family: var(--mono); margin-bottom: 7px; }
+.tri-val { display: flex; flex-wrap: wrap; gap: 5px; }
+.tri-chip { font-size: 11.5px; font-weight: 600; font-family: var(--mono); background: var(--bg-2); border: 1px solid var(--rule); border-radius: 6px; padding: 2px 8px; color: var(--blue-d); }
+.tri-gt { font-size: 11px; color: var(--bad); margin-top: 6px; font-family: var(--mono); }

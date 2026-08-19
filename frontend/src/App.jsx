@@ -11,6 +11,7 @@ import ConfusionMatrix from './components/ConfusionMatrix'
 import PerClassF1 from './components/PerClassF1'
 import CoveragePanel from './components/CoveragePanel'
 import PromptViewer from './components/PromptViewer'
+import SubmissionTriage from './components/SubmissionTriage'
 import Login from './components/Login'
 import { authConfig, getToken, logout as cognitoLogout } from './auth'
 
@@ -53,6 +54,8 @@ export default function App() {
 
   const task = channels.find((c) => c.id === channel)?.task || 'classify'
   const isEmails = channel === 'emails'
+  const isSub = task === 'classify_sub'
+  const groups = [...new Set(channels.map((c) => c.group || 'Channels'))]
 
   // resolve auth first (Cognito enabled? logged in?)
   useEffect(() => {
@@ -198,18 +201,28 @@ export default function App() {
           <h1>One loop, every channel</h1>
           <p>
             Karpathy's auto-research loop optimises a prompt against a <b>labelled sample</b> and keeps only what beats the
-            incumbent. <b>Each channel needs only its labelled sample; the agent does the rest.</b> Emails are scored by
-            exact match; medical, calls and complaints by an <b>LLM-as-judge</b> against human ground truth.
+            incumbent. <b>Each channel needs only its labelled sample; the agent does the rest.</b> Life emails are scored by
+            exact match, extraction channels by an <b>LLM-as-judge</b> — and <b>Commercial Submissions</b> classifies whole
+            broker emails (5-layer buckets + risk flags) and indexes every attachment by document type.
           </p>
         </div>
 
-        {/* channel tabs */}
-        <div className="tabs">
-          {channels.map((c) => (
-            <button key={c.id} className={'tab' + (c.id === channel ? ' on' : '')} onClick={() => !running && setChannel(c.id)} disabled={running}>
-              {c.label}
-              <span className="tasktag">{c.task === 'extract' ? 'extract · LLM-judge' : 'classify'}</span>
-            </button>
+        {/* channel tabs, grouped: Zurich Life · Commercial Submissions */}
+        <div className="tabgroups">
+          {groups.map((g) => (
+            <div className="tabgroup" key={g}>
+              <span className="tg-label">{g}</span>
+              <div className="tabs">
+                {channels.filter((c) => (c.group || 'Channels') === g).map((c) => (
+                  <button key={c.id} className={'tab' + (c.id === channel ? ' on' : '')} onClick={() => !running && setChannel(c.id)} disabled={running}>
+                    {c.label}
+                    <span className="tasktag">
+                      {c.task === 'extract' ? 'extract · LLM-judge' : c.multi ? 'classify · multi-label' : 'classify'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
@@ -223,7 +236,15 @@ export default function App() {
 
         {/* ribbon */}
         <div className="ribbon">
-          {isEmails ? (
+          {isSub ? (
+            <>
+              <div className="stat"><div className="lab">Majority-class floor</div><div className="num">{chStatus?.baseline ? pct(chStatus.baseline.mf1) : '—'}</div></div>
+              <div className="stat"><div className="lab">Best on practice set</div><div className="num">{bestF1 != null ? pct(bestF1) : '—'}</div></div>
+              <div className="stat"><div className="lab">Final · unseen docs</div><div className="num hl">{finalScore != null ? pct(finalScore) : '—'}</div></div>
+              <div className="stat"><div className="lab">Practice / unseen</div><div className="num">{chStatus ? chStatus.dev : '—'}<small> / {chStatus ? chStatus.test : '—'}</small></div></div>
+              <div className="stat"><div className="lab">Buckets</div><div className="num">{chStatus?.categories?.length ?? '—'}</div></div>
+            </>
+          ) : isEmails ? (
             <>
               <div className="stat"><div className="lab">Simple keyword floor</div><div className="num">{baseline ? pct(baseline.mf1) : '—'}</div></div>
               <div className="stat"><div className="lab">Best on practice set</div><div className="num">{bestF1 != null ? pct(bestF1) : '—'}</div></div>
@@ -248,16 +269,29 @@ export default function App() {
           real-world performance. The practice score is always a bit higher (it studied those examples); the unseen score is the honest one.
         </div>
 
+        {/* broker submission triage — the Commercial Submissions demo panel */}
+        {isSub && (
+          <>
+            <div className="seclab"><span className="tick" /><h2>Triage a submission</h2>
+              <span className="hint">drop a broker email (.eml/.msg) — attachments read locally, PII anonymised, then bucketed &amp; indexed</span></div>
+            <SubmissionTriage />
+          </>
+        )}
+
         {/* upload labelled sample */}
-        <div className="seclab"><span className="tick" /><h2>Add to the labelled sample</h2>
-          <span className="hint">{isEmails ? 'drop .txt emails — auto-labelled from ground truth & re-ingested instantly' : `drop .txt ${chStatus?.unit || 'doc'}s into this channel`}</span></div>
-        <div className="dropzone" onClick={() => fileRef.current?.click()}
-             onDragOver={(e) => e.preventDefault()} onDrop={onDrop}>
-          <input ref={fileRef} type="file" multiple accept=".txt" onChange={onPick} style={{ display: 'none' }} />
-          <div className="dz-title">Drop .txt files here, or click to choose</div>
-          <div className="dz-sub">{isEmails ? 'filenames are matched to ground_truth.csv to assign labels' : 'labels come from this channel’s ground-truth file'}</div>
-          {uploadMsg && <div className="dz-msg">{uploadMsg}</div>}
-        </div>
+        {!isSub && (
+          <>
+            <div className="seclab"><span className="tick" /><h2>Add to the labelled sample</h2>
+              <span className="hint">{isEmails ? 'drop .txt emails — auto-labelled from ground truth & re-ingested instantly' : `drop .txt ${chStatus?.unit || 'doc'}s into this channel`}</span></div>
+            <div className="dropzone" onClick={() => fileRef.current?.click()}
+                 onDragOver={(e) => e.preventDefault()} onDrop={onDrop}>
+              <input ref={fileRef} type="file" multiple accept=".txt" onChange={onPick} style={{ display: 'none' }} />
+              <div className="dz-title">Drop .txt files here, or click to choose</div>
+              <div className="dz-sub">{isEmails ? 'filenames are matched to ground_truth.csv to assign labels' : 'labels come from this channel’s ground-truth file'}</div>
+              {uploadMsg && <div className="dz-msg">{uploadMsg}</div>}
+            </div>
+          </>
+        )}
 
         {/* controls + chart */}
         <div className="seclab"><span className="tick" /><h2>Experiment — {channels.find((c) => c.id === channel)?.label || channel}</h2></div>
@@ -331,12 +365,12 @@ export default function App() {
         <div className="seclab"><span className="tick" /><h2>The answers</h2><span className="hint">every scored document — ground truth vs what the model produced</span></div>
         <PredictionsTable rows={rows} split={split} task={task} />
 
-        {/* classify-only scorecard */}
-        {isEmails && (
+        {/* classify-only scorecard (multi-label channels have no confusion matrix) */}
+        {(isEmails || isSub) && (
           <>
             <div className="seclab"><span className="tick" /><h2>Scorecard</h2></div>
-            <div className="grid cols-2">
-              <ConfusionMatrix confusion={confusion} title={split} />
+            <div className={confusion ? 'grid cols-2' : 'grid'}>
+              {confusion && <ConfusionMatrix confusion={confusion} title={split} />}
               <PerClassF1 perClass={perClass} title={split} />
             </div>
           </>

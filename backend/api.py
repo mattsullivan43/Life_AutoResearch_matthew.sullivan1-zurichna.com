@@ -27,7 +27,8 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse, Response
 
-from backend import researcher, solution, prepare, auth
+from backend import researcher, solution, prepare, auth, triage
+from backend import submissions as subs
 
 app = FastAPI(title="Zurich Auto-Research Classifier")
 app.add_middleware(
@@ -125,8 +126,29 @@ def status():
 @app.post("/api/upload")
 async def upload(channel: str = Form("emails"), files: list[UploadFile] = File(...)):
     """Add a labelled sample through the UI instead of dropping files on disk.
-    emails  -> save to data/documents/ and re-ingest (auto-labelled via ground_truth.csv).
-    extract -> save into the channel's docs folder."""
+    emails      -> save to data/documents/ and re-ingest (auto-labelled via ground_truth.csv).
+    submissions -> save a broker .eml/.msg and ingest it (extract text, anonymise).
+    extract     -> save into the channel's docs folder."""
+    if channel == "submissions" or channel in subs.CHANNELS:
+        dest = subs.SUB_DIR
+        os.makedirs(dest, exist_ok=True)
+        ingested = []
+        for f in files:
+            name = os.path.basename(f.filename or "")
+            if not name.lower().endswith((".eml", ".msg")):
+                continue
+            path = os.path.join(dest, name)
+            with open(path, "wb") as out:
+                out.write(await f.read())
+            try:
+                sub = subs.ingest_file(path)
+                ingested.append({"id": sub.submission_id,
+                                 "attachments": len(sub.attachments),
+                                 "warnings": [a.filename for a in sub.attachments if a.read_warning],
+                                 "labelled": sub.submission_id in subs._gt_submissions()})
+            except Exception as e:
+                ingested.append({"id": name, "error": str(e)})
+        return {"channel": "submissions", "saved": len(ingested), "ingested": ingested}
     if channel == "emails":
         dest = os.path.join(ROOT, "data", "documents")
     else:
@@ -163,6 +185,32 @@ async def upload(channel: str = Form("emails"), files: list[UploadFile] = File(.
 @app.get("/api/channels")
 def channels():
     return {"channels": solution.list_channels()}
+
+
+# ---- broker-submission triage (Commercial Submissions demo) ----
+@app.get("/api/submissions")
+def submissions_list():
+    rows = subs.list_submissions()
+    for r in rows:
+        r["cached"] = triage.cached(r["id"]) is not None
+    return {"submissions": rows}
+
+
+@app.post("/api/classify_submission")
+def classify_submission(submission_id: str, live: bool = False):
+    """Buckets + attachment doc-type index for one submission, using each
+    channel's CURRENT BEST prompt. live=false serves the cache when present
+    (pre-processed mode — instant during the demo)."""
+    if submission_id not in subs._extracted():
+        return JSONResponse(status_code=404, content={"error": f"unknown submission: {submission_id}"})
+    prov = _provider()
+    if not prov["key_present"] and (live or triage.cached(submission_id) is None):
+        return JSONResponse(status_code=400,
+                            content={"error": "No API key and no cached result for this submission."})
+    try:
+        return triage.get_or_classify(submission_id, prov["classifier_model"], live=live)
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 
 @app.get("/api/channel_status")
