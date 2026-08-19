@@ -117,7 +117,7 @@ export default function App() {
         if (ev.type === 'run_id') { runIdRef.current = ev.run_id }
         else if (ev.type === 'start') {
           addLog({ kind: 'plain', text: ev.warm_start ? 'continuing from the saved best prompt (cumulative)' : 'starting fresh from the seed prompt' })
-          addLog({ kind: 'plain', text: `tune on ${ev.dev} emails · final score on ${ev.test} UNSEEN emails · ${task === 'extract' ? 'graded by an AI judge' : 'graded against human labels'}` })
+          addLog({ kind: 'plain', text: `tune on ${ev.dev} ${isSub ? (channel === 'attachment_doc_type' ? 'attachments' : 'submissions') : task === 'extract' ? 'documents' : 'emails'} · at the END, the best prompt is scored ONCE on ${ev.test} UNSEEN ${isSub ? (channel === 'attachment_doc_type' ? 'attachments' : 'submissions') : task === 'extract' ? 'documents' : 'emails'} · ${task === 'extract' ? 'graded by an AI judge' : 'graded against human labels'}` })
         } else if (ev.type === 'iter') {
           setChart((c) => [...c, { iter: ev.iter, dev_mf1: ev.dev_mf1, best_mf1: ev.best_mf1, accepted: ev.accepted === true }])
           if (ev.per_class) setPerClass(ev.per_class)
