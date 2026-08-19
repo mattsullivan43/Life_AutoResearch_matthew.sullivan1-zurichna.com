@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // Refined activity timeline (not a terminal): one elegant row per event.
 export default function LiveLog({ lines, running }) {
   const ref = useRef(null)
+  const [openPrompt, setOpenPrompt] = useState(null)   // which row's full prompt is expanded
   useEffect(() => { if (ref.current) ref.current.scrollTop = ref.current.scrollHeight }, [lines, running])
 
   const pct = (v) => `${(v * 100).toFixed(1)}%`
@@ -18,19 +19,29 @@ export default function LiveLog({ lines, running }) {
       const cls = { seed: 'seed', keep: 'ok', discard: 'no', duplicate: 'mid', inconclusive: 'mid' }[v]
       const chip = { seed: 'Seed', keep: 'Kept', discard: 'Discarded', duplicate: 'Duplicate', inconclusive: 'Inconclusive' }[v]
       return (
-        <div className="frow">
-          <span className={'fmark ' + cls} />
-          <div className="fmain fmain-exp">
-            <div className="exp-head">
-              <span className="lab">{l.accepted === null ? 'Seed baseline' : `Experiment ${l.iter}`}</span>
-              <span className="score">{pct(l.f1)}</span>
-              {l.accepted !== null && <span className="muted">best {pct(l.best)}</span>}
-              {l.p != null && <span className="muted">p(better) {Math.round(l.p * 100)}%</span>}
+        <div className="frow-wrap">
+          <div className="frow">
+            <span className={'fmark ' + cls} />
+            <div className="fmain fmain-exp">
+              <div className="exp-head">
+                <span className="lab">{l.accepted === null ? 'Seed baseline' : `Experiment ${l.iter}`}</span>
+                <span className="score">{pct(l.f1)}</span>
+                {l.accepted !== null && <span className="muted">best {pct(l.best)}</span>}
+                {l.p != null && <span className="muted">p(better) {Math.round(l.p * 100)}%</span>}
+                {l.prompt && (
+                  <button className="prompt-toggle" onClick={() => setOpenPrompt(openPrompt === l.iter ? null : l.iter)}>
+                    {openPrompt === l.iter ? 'hide prompt ▴' : 'view prompt it tried ▾'}
+                  </button>
+                )}
+              </div>
+              {l.desc && l.accepted !== null && <div className="exp-desc">{l.desc}</div>}
             </div>
-            {l.desc && l.accepted !== null && <div className="exp-desc">{l.desc}</div>}
+            <span className={'fchip ' + cls}>{chip}</span>
+            <span className="ftime">{l.t}</span>
           </div>
-          <span className={'fchip ' + cls}>{chip}</span>
-          <span className="ftime">{l.t}</span>
+          {l.prompt && openPrompt === l.iter && (
+            <pre className="prompt-view">{l.prompt}</pre>
+          )}
         </div>
       )
     }

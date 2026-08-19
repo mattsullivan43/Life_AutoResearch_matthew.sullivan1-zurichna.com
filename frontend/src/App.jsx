@@ -44,6 +44,7 @@ export default function App() {
   const [bestF1, setBestF1] = useState(null)
   const [finalScore, setFinalScore] = useState(null)   // honest score on unseen set
   const [finalInfo, setFinalInfo] = useState(null)     // {mf1, acc, n} — counts beat % at tiny n
+  const [runResult, setRunResult] = useState(null)     // BEFORE -> AFTER on unseen, the run's verdict
   const [notebook, setNotebook] = useState([])         // persistent research log
   const [solution, setSolution] = useState(null)       // the editable artifact
   const [solStatus, setSolStatus] = useState('')
@@ -86,7 +87,7 @@ export default function App() {
   useEffect(() => {
     if (!ready) return
     setChart([]); setRows(null); setConfusion(null); setPerClass(null); setMetrics(null)
-    setBestF1(null); setSplit(null); setReview(null); setFinalScore(null); setFinalInfo(null)
+    setBestF1(null); setSplit(null); setReview(null); setFinalScore(null); setFinalInfo(null); setRunResult(null)
     getBestPrompt(channel).then(setPrompts).catch(() => setPrompts({ seed: '', best: '' }))
     getNotebook(channel).then((d) => setNotebook(d.experiments || [])).catch(() => setNotebook([]))
     getSolution(channel).then((d) => { setSolution(d.solution); setSolStatus('current best') }).catch(() => setSolution(null))
@@ -109,7 +110,7 @@ export default function App() {
 
   function onRun() {
     setError(''); setChart([]); setPerClass(null); setConfusion(null); setRows(null)
-    setMetrics(null); setBestF1(null); setFinalScore(null); setReview(null); setRunning(true)
+    setMetrics(null); setBestF1(null); setFinalScore(null); setFinalInfo(null); setRunResult(null); setReview(null); setRunning(true)
     addLog({ kind: 'plain', text: `run ${channel} · ${iterations} iters${hitl ? ' · human-in-the-loop' : ''}` })
     esRef.current = streamRun({ channel, iterations, hitl, warm },
       (ev) => {
@@ -126,7 +127,7 @@ export default function App() {
           if (ev.solution) { setSolution(ev.solution); setSolStatus(ev.accepted === true ? 'kept — new best' : ev.accepted === false ? 'candidate (discarded)' : 'baseline') }
           setSplit(`practice set · round ${ev.iter}`); setBestF1(ev.best_mf1)
           if (ev.accepted === true && ev.candidate_prompt) setPrompts((p) => ({ ...p, best: ev.candidate_prompt }))
-          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description, verdict: ev.verdict, p: ev.stats?.p_better })
+          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description, verdict: ev.verdict, p: ev.stats?.p_better, prompt: ev.candidate_prompt })
         } else if (ev.type === 'review') {
           setReview({ runId: runIdRef.current, iter: ev.iter, cand: ev.cand_mf1, best: ev.best_mf1,
             prompt: ev.candidate_prompt })
@@ -144,7 +145,10 @@ export default function App() {
           if (ev.metrics) setMetrics(ev.metrics)
           if (ev.solution) { setSolution(ev.solution); setSolStatus('best · final') }
           setSplit('UNSEEN emails · final'); setBestF1(ev.best_mf1); setFinalScore(ev.test_mf1)
-          setFinalInfo({ mf1: ev.test_mf1, acc: ev.test_acc, n: ev.n }); setRunning(false); setReview(null)
+          setFinalInfo({ mf1: ev.test_mf1, acc: ev.test_acc, n: ev.n })
+          setRunResult({ improved: ev.improved, beforeMf1: ev.before_mf1, beforeAcc: ev.before_acc,
+            afterMf1: ev.test_mf1, afterAcc: ev.test_acc, n: ev.n, bestIter: ev.best_iter })
+          setRunning(false); setReview(null)
           addLog({ kind: 'final', text: `FINAL — score on UNSEEN data: ${pct(ev.test_mf1)} (the honest number; best from round ${ev.best_iter})${ev.stopped_early ? ' · stopped early: hit the 100% ceiling' : ''}` })
           getBestPrompt(channel).then(setPrompts).catch(() => {})
           getNotebook(channel).then((d) => setNotebook(d.experiments || [])).catch(() => {})
@@ -381,49 +385,82 @@ export default function App() {
             metric={task === 'extract' ? 'LLM-judge score' : 'macro-F1'} />
         </div>
 
+        {/* the run's verdict: BEFORE -> AFTER on unseen documents */}
+        {runResult && (
+          <div className={'result-banner' + (runResult.improved ? ' improved' : '')}>
+            {runResult.improved ? (
+              <>
+                <span className="rb-label">RESULT — score on unseen documents</span>
+                <span className="rb-nums">
+                  {pct(runResult.beforeMf1)} <span className="rb-arrow">→</span> <b>{pct(runResult.afterMf1)}</b>
+                </span>
+                <span className="rb-sub">improvement from round {runResult.bestIter} adopted &amp; saved · n={runResult.n} docs · {Math.round(runResult.afterAcc * runResult.n)}/{runResult.n} correct</span>
+              </>
+            ) : (
+              <>
+                <span className="rb-label">RESULT</span>
+                <span className="rb-nums">no change kept</span>
+                <span className="rb-sub">no candidate beat the current prompt with statistical confidence — it stays at {pct(runResult.afterMf1)} on unseen (n={runResult.n}). Nothing is banked on noise.</span>
+              </>
+            )}
+          </div>
+        )}
+
         <div style={{ marginTop: 18 }}><LiveLog lines={log} running={running} /></div>
 
-        <div className="seclab"><span className="tick" /><h2>Research notebook</h2>
-          <span className="hint">every experiment ever tried — kept &amp; discarded — so it never repeats a dead end</span></div>
-        <ResearchLog experiments={notebook} />
+        {/* engine internals — on the broker tab these fold into one closed drawer:
+            the run story above (chart + result banner + activity) IS the demo */}
+        {(() => {
+          const internals = (
+            <>
+              <div className="seclab"><span className="tick" /><h2>Research notebook</h2>
+                <span className="hint">every experiment ever tried — kept &amp; discarded — so it never repeats a dead end</span></div>
+              <ResearchLog experiments={notebook} />
 
-        <div className="seclab"><span className="tick" /><h2>Solution</h2>
-          <span className="hint">the editable artifact the agent mutates each experiment — Karpathy's train.py</span></div>
-        <SolutionPanel solution={solution} task={task} status={solStatus} />
+              <div className="seclab"><span className="tick" /><h2>Solution</h2>
+                <span className="hint">the editable artifact the agent mutates each experiment — Karpathy's train.py</span></div>
+              <SolutionPanel solution={solution} task={task} status={solStatus} />
 
-        {/* extract schema card */}
-        {!isEmails && chStatus?.schema && (
-          <>
-            <div className="seclab"><span className="tick" /><h2>Target schema</h2><span className="hint">the JSON the agent must produce, judged field-by-field</span></div>
-            <div className="block"><div className="body">
-              <table className="preds"><tbody>
-                {Object.entries(chStatus.schema).map(([k, v]) => (
-                  <tr key={k}><td className="code" style={{ width: 180 }}>{k}</td><td className="snip">{v}</td></tr>
-                ))}
-              </tbody></table>
-            </div></div>
-          </>
-        )}
+              {!isEmails && chStatus?.schema && (
+                <>
+                  <div className="seclab"><span className="tick" /><h2>Target schema</h2><span className="hint">the JSON the agent must produce, judged field-by-field</span></div>
+                  <div className="block"><div className="body">
+                    <table className="preds"><tbody>
+                      {Object.entries(chStatus.schema).map(([k, v]) => (
+                        <tr key={k}><td className="code" style={{ width: 180 }}>{k}</td><td className="snip">{v}</td></tr>
+                      ))}
+                    </tbody></table>
+                  </div></div>
+                </>
+              )}
 
-        <div className="seclab"><span className="tick" /><h2>The answers</h2><span className="hint">every scored document — ground truth vs what the model produced</span></div>
-        <PredictionsTable rows={rows} split={split} task={task} />
+              <div className="seclab"><span className="tick" /><h2>The answers</h2><span className="hint">every scored document — ground truth vs what the model produced</span></div>
+              <PredictionsTable rows={rows} split={split} task={task} />
 
-        {/* classify-only scorecard (multi-label channels have no confusion matrix) */}
-        {(isEmails || isSub) && (
-          <>
-            <div className="seclab"><span className="tick" /><h2>Scorecard</h2></div>
-            <div className={confusion ? 'grid cols-2' : 'grid'}>
-              {confusion && <ConfusionMatrix confusion={confusion} title={split} />}
-              <PerClassF1 perClass={perClass} title={split} />
-            </div>
-          </>
-        )}
+              {(isEmails || isSub) && (
+                <>
+                  <div className="seclab"><span className="tick" /><h2>Scorecard</h2></div>
+                  <div className={confusion ? 'grid cols-2' : 'grid'}>
+                    {confusion && <ConfusionMatrix confusion={confusion} title={split} />}
+                    <PerClassF1 perClass={perClass} title={split} />
+                  </div>
+                </>
+              )}
 
-        <div className="seclab"><span className="tick" /><h2>{isEmails ? 'Coverage & prompt' : 'Prompt'}</h2></div>
-        <div className={isEmails ? 'grid cols-2' : 'grid'}>
-          {isEmails && <CoveragePanel coverage={status?.coverage} />}
-          <PromptViewer seed={prompts.seed} best={prompts.best} candidate={review ? prompts.candidate : null} />
-        </div>
+              <div className="seclab"><span className="tick" /><h2>{isEmails ? 'Coverage & prompt' : 'Prompt'}</h2></div>
+              <div className={isEmails ? 'grid cols-2' : 'grid'}>
+                {isEmails && <CoveragePanel coverage={status?.coverage} />}
+                <PromptViewer seed={prompts.seed} best={prompts.best} candidate={review ? prompts.candidate : null} />
+              </div>
+            </>
+          )
+          return isSub ? (
+            <details className="internals">
+              <summary>Engine internals — research notebook · current prompt · per-document answers · scorecard</summary>
+              <div className="internals-body">{internals}</div>
+            </details>
+          ) : internals
+        })()}
 
         <div className="foot">
           <span>karpathy auto-research · temp=0 scoring · LLM-as-judge ≠ generator · human-in-the-loop</span>

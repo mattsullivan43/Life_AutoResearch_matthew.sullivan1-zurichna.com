@@ -420,6 +420,7 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
         gitlab.reset(channel)                       # fresh run -> wipe git history, start from seed
     warmed = warm_start and has_history(channel)
     best = load_best(channel)
+    initial = dict(best)               # the run's starting point, for the BEFORE/AFTER readout
     # Keep the lab's HEAD in sync with the authoritative best, so the keep-chain always
     # continues FROM the solution we are actually optimizing. Two cases: an empty lab
     # (first run), and a lab whose HEAD disagrees with the adopted snapshot — which is
@@ -660,8 +661,11 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
         append_notebook(channel, base_exp + i, res["metric"], 0.0, verdict, desc, sig)
         yield emit(i, res, accepted, desc, reviewed=reviewed, stats=stats, verdict=verdict)
 
-    # final — honest score on the held-out test set
+    # final — honest score on the held-out test set. If the run banked a keep,
+    # ALSO score the STARTING solution on test so the UI can show a true
+    # before/after on unseen documents (same rows, same passes).
     fin = score(best, test)
+    fin0 = score(initial, test) if best_iter > 0 else None
     # Persist the best unconditionally at end of run, even when best_iter == 0 (nothing
     # beat the seed). Without this the next run has nothing to warm-start from and
     # repeats the identical search from scratch — which is exactly what was happening.
@@ -674,6 +678,9 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
     ev = {"type": "final", "test_acc": fin["second"], "test_mf1": fin["metric"], "best_iter": best_iter,
           "n": len(test), "split": "UNSEEN · final", "rows": fin["rows"], "best_prompt": fin["display"],
           "task": task, "stopped_early": stopped_early,
+          "improved": best_iter > 0,
+          "before_mf1": fin0["metric"] if fin0 else fin["metric"],
+          "before_acc": fin0["second"] if fin0 else fin["second"],
           "best_saved_to": os.path.relpath(best_file, prepare.ROOT)}
     for k in ("confusion", "per_class", "prf", "metrics", "solution"):
         if fin.get(k) is not None: ev[k] = fin[k]
