@@ -1,0 +1,7 @@
+exp_id	dev	test	status	sig	description
+1	0.555556	0.000000	inconclusive	06d71c9d14f3	[instructions] Add exclusions to Single entity multi-site to reduce over-firing, focusing on disallowing mentions of multiple entities or subsidiaries.
+2	0.555556	0.000000	inconclusive	dd9cb25f72ac	[instructions] Broaden Single site by specifying it requires singular mentions of location/entity, targeting under-firing issue.
+3	0.555556	0.000000	inconclusive	fab69a52975f	[instructions] Narrow Single entity multi-site by explicitly excluding mentions of multiple entities or subsidiaries.
+4	0.285714	0.000000	inconclusive	6f56e67180ef	[instructions] Add a decision order to check for Multi-entity/subsidiaries before Single entity multi-site to reduce misclassification.
+5	1.000000	0.000000	keep	8f224315789d	[instructions] Added content signals to Single site to help identify and differentiate it from Single entity multi-site, addressing its under-firing.
+13	1.000000	0.222222	final	8f224315789d	held-out test of best (round 5)

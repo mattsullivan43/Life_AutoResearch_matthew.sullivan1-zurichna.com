@@ -76,6 +76,12 @@ export async function getSubmissionText(id) {
   return r.json()
 }
 
+export async function getScoreboard() {
+  const r = await fetch('/api/scoreboard', { headers: H() })
+  if (!r.ok) throw new Error('scoreboard failed')
+  return r.json()
+}
+
 export async function getEngineSummary() {
   const r = await fetch('/api/engine_summary', { headers: H() })
   if (!r.ok) throw new Error('engine_summary failed')

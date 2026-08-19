@@ -12,7 +12,7 @@ import PerClassF1 from './components/PerClassF1'
 import CoveragePanel from './components/CoveragePanel'
 import PromptViewer from './components/PromptViewer'
 import SubmissionTriage from './components/SubmissionTriage'
-import EngineCard from './components/EngineCard'
+import Scoreboard from './components/Scoreboard'
 import BucketFlow from './components/BucketFlow'
 import Login from './components/Login'
 import { authConfig, getToken, logout as cognitoLogout } from './auth'
@@ -304,9 +304,9 @@ export default function App() {
             <div className="seclab"><span className="tick" /><h2>Triage a submission</h2>
               <span className="hint">drop a broker email (.eml/.msg) — attachments read locally, PII anonymised, then bucketed &amp; indexed</span></div>
             <SubmissionTriage />
-            <div className="seclab"><span className="tick" /><h2>The self-improving engine</h2>
-              <span className="hint">measured on held-out documents · the loop below is how these numbers were earned</span></div>
-            <EngineCard />
+            <div className="seclab"><span className="tick" /><h2>Layer scoreboard</h2>
+              <span className="hint">every layer's real numbers — floor, current best, honest unseen result, improvements kept</span></div>
+            <Scoreboard />
           </>
         )}
 
@@ -390,26 +390,36 @@ export default function App() {
             metric={task === 'extract' ? 'LLM-judge score' : 'macro-F1'} />
         </div>
 
-        {/* the run's verdict: BEFORE -> AFTER on unseen documents */}
-        {runResult && (
-          <div className={'result-banner' + (runResult.improved ? ' improved' : '')}>
-            {runResult.improved ? (
-              <>
-                <span className="rb-label">RESULT — score on unseen documents</span>
-                <span className="rb-nums">
-                  {pct(runResult.beforeMf1)} <span className="rb-arrow">→</span> <b>{pct(runResult.afterMf1)}</b>
-                </span>
-                <span className="rb-sub">improvement from round {runResult.bestIter} adopted &amp; saved · n={runResult.n} docs · {Math.round(runResult.afterAcc * runResult.n)}/{runResult.n} correct</span>
-              </>
-            ) : (
-              <>
-                <span className="rb-label">RESULT</span>
-                <span className="rb-nums">no change kept</span>
-                <span className="rb-sub">no candidate beat the current prompt with statistical confidence — it stays at {pct(runResult.afterMf1)} on unseen (n={runResult.n}). Nothing is banked on noise.</span>
-              </>
-            )}
-          </div>
-        )}
+        {/* the run's verdict on UNSEEN docs — three honest states, counts first at tiny n */}
+        {runResult && (() => {
+          const cnt = (a) => `${Math.round(a * runResult.n)}/${runResult.n} correct`
+          const gain = runResult.afterMf1 - runResult.beforeMf1
+          const same = Math.abs(gain) < 0.005
+          if (!runResult.improved) return (
+            <div className="result-banner">
+              <span className="rb-label">RESULT</span>
+              <span className="rb-nums">no change kept</span>
+              <span className="rb-sub">no candidate beat the current prompt with statistical confidence — unseen stays at {cnt(runResult.afterAcc)} (macro-F1 {pct(runResult.afterMf1)}). Nothing is banked on noise.</span>
+            </div>)
+          if (same) return (
+            <div className="result-banner">
+              <span className="rb-label">RESULT</span>
+              <span className="rb-nums">kept on practice · unseen unchanged</span>
+              <span className="rb-sub">round {runResult.bestIter}'s change won on the practice set and was adopted — but the unseen score did not move: {cnt(runResult.afterAcc)} (macro-F1 {pct(runResult.afterMf1)}). The unseen set is the honest check on practice-set wins.</span>
+            </div>)
+          if (gain > 0) return (
+            <div className="result-banner improved">
+              <span className="rb-label">RESULT — score on unseen documents</span>
+              <span className="rb-nums">{pct(runResult.beforeMf1)} <span className="rb-arrow">→</span> <b>{pct(runResult.afterMf1)}</b></span>
+              <span className="rb-sub">improvement from round {runResult.bestIter} adopted &amp; saved · {cnt(runResult.afterAcc)} on n={runResult.n}</span>
+            </div>)
+          return (
+            <div className="result-banner warn">
+              <span className="rb-label">RESULT — caution</span>
+              <span className="rb-nums">{pct(runResult.beforeMf1)} <span className="rb-arrow">→</span> {pct(runResult.afterMf1)}</span>
+              <span className="rb-sub">round {runResult.bestIter} won on the tiny practice set but scored WORSE on unseen ({cnt(runResult.afterAcc)}) — small-sample overfitting, caught because the unseen set is honest.</span>
+            </div>)
+        })()}
 
         {/* the loop made tangible: this round's documents -> buckets */}
         {isSub && <BucketFlow rows={rows} channel={channel} split={split} running={running} />}

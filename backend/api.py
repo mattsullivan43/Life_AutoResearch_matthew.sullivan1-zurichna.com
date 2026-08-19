@@ -230,6 +230,27 @@ def classify_submission_stream(submission_id: str, live: bool = False):
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
+@app.get("/api/scoreboard")
+def scoreboard():
+    """Every Commercial layer's real numbers: splits, majority floor, current best
+    on practice, last held-out result, and how many improvements were ever kept."""
+    from backend import gitlab
+    rows = []
+    for ch in subs.CHANNELS:
+        st = solution.channel_status(ch) or {}
+        meta = gitlab.best_meta(ch)
+        nb = researcher.read_notebook(ch)
+        rows.append({"id": ch, "label": st.get("label", ch), "multi": st.get("multi", False),
+                     "dev": st.get("dev"), "test": st.get("test"),
+                     "floor": (st.get("baseline") or {}).get("mf1"),
+                     "best_dev": meta.get("dev_metric"),
+                     "unseen_mf1": meta.get("test_metric"), "unseen_acc": meta.get("test_acc"),
+                     "n_test": meta.get("n_test") or st.get("test"),
+                     "keeps": sum(1 for r in nb if r.get("status") == "keep"),
+                     "experiments": sum(1 for r in nb if r.get("status") not in ("final",))})
+    return {"rows": rows}
+
+
 @app.get("/api/engine_summary")
 def engine_summary():
     """Measured headline numbers for the demo card (runs/engine_summary.json)."""

@@ -347,3 +347,6 @@ details.internals > summary:hover { color: var(--ink); }
 .exp-diff .dline.add span { color: var(--good); font-weight: 700; }
 .exp-diff .dline.del { background: #faf0ee; color: #7c2f26; text-decoration: line-through; opacity: .75; }
 .exp-diff .dline.del span { color: var(--bad); font-weight: 700; }
+
+.result-banner.warn { border-color: #e2ceA0; background: #fbf7ec; }
+.result-banner.warn .rb-nums { color: var(--amber); }
