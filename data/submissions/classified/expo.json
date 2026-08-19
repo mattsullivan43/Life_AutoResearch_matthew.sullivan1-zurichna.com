@@ -1,0 +1,91 @@
+{
+ "submission_id": "expo",
+ "mode": "live",
+ "ts": 1787154903.148341,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: The Expo Group  \n\nINTERNAL USE ONLY\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_6]>\nSent: Wednesday, August 12, 2026 10:26 AM\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_6]>\nSubject: The Expo Group\n\nHello,\n\nThis is a previously logged submission, but the umbrella was never created. Please add umbrella as a line of coverage to submission ID 22929913.\n\nAnwar, please rate $10M umbrella.\n\nThanks!\nBernard Kirby\nMarket Facing Underwriter\nUS Middle Market - Dallas\nZurich North America\nDallas - Addison\n[PLACEHOLDER_15], Ste 800 [PLACEHOLDER_16]\n[PLACEHOLDER_12]\n[PLACEHOLDER_7]<mailto:[PLACEHOLDER_7]>\n\n\nINT",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "Endorsement"
+   ],
+   "gt": [
+    "Endorsement"
+   ],
+   "match": true
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Events/Hospitality"
+   ],
+   "gt": [
+    "Events/Hospitality"
+   ],
+   "match": true
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "Umbrella/Excess"
+   ],
+   "match": false
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Standard\u2013Middle Market"
+   ],
+   "gt": [
+    "Standard\u2013Middle Market"
+   ],
+   "match": true
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Single entity multi-site"
+   ],
+   "gt": [
+    "Single entity multi-site"
+   ],
+   "match": true
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [],
+   "gt": [],
+   "match": true
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "EXPO Acords 2026.pdf",
+   "doc_type": "Narrative/risk write-up",
+   "gt": "ACORD form",
+   "match": false,
+   "char_count": 29948,
+   "read_warning": null
+  }
+ ]
+}

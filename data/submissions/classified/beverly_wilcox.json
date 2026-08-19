@@ -1,0 +1,155 @@
+{
+ "submission_id": "beverly_wilcox",
+ "mode": "live",
+ "ts": 1787157126.3558311,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: New Submission - Sol Hoff / Beverly Wilcox Properties, eff 09/10/2026 \n\nINTERNAL USE ONLY\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSent: Sunday, July 26, 2026 9:44 PM\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSubject: New Submission - Sol Hoff / Beverly Wilcox Properties, eff 09/10/2026\n\nHi Ranjith,\n\nPlease advise if you can provide competitive GL terms for the attached submission, Sol Hoff Company/Beverly Wilcox Properties, effective 9/10/2026. Included for your review is the acord, prior loss runs and rent rolls; note the 23-24 loss runs are still outstanding.\n\nThe incumbent carrier,",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "New Business"
+   ],
+   "gt": [
+    "New Business"
+   ],
+   "match": true
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Real Estate (LRO)"
+   ],
+   "gt": [
+    "Real Estate (LRO)"
+   ],
+   "match": true
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "General Liability"
+   ],
+   "match": false
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Standard\u2013Middle Market"
+   ],
+   "gt": [
+    "Clean/Fast-track"
+   ],
+   "match": false
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Multi-entity/subsidiaries"
+   ],
+   "gt": [
+    "Multi-entity/subsidiaries"
+   ],
+   "match": true
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [],
+   "gt": [],
+   "match": true
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "Rent Rolls_Tenant List, re CA Properties.xlsx",
+   "doc_type": "Other",
+   "gt": "Other",
+   "match": true,
+   "char_count": 9456,
+   "read_warning": null
+  },
+  {
+   "filename": "2026 SOV - Beverly Wilcox - CA locations.xlsx",
+   "doc_type": "Statement of Values (SOV)",
+   "gt": "Statement of Values (SOV)",
+   "match": true,
+   "char_count": 3527,
+   "read_warning": null
+  },
+  {
+   "filename": "Sol Hoff - 2026 GL Acord App.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29977,
+   "read_warning": null
+  },
+  {
+   "filename": "Loss Runs-UFG PKG 21-22, Valued 7-23-26, re Beverly Wilcox-CA Locations.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 2190,
+   "read_warning": null
+  },
+  {
+   "filename": "Loss Runs-UFG PKG 22-23, Valued 7-23-26, re Beverly Wilcox-CA Locations.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 2226,
+   "read_warning": null
+  },
+  {
+   "filename": "Loss Runs-Deans PKG for 21-25 Valued 7-22-2026, re 6350 McClintock Dr, AZ-Sol HOff.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 650,
+   "read_warning": null
+  },
+  {
+   "filename": "Loss Runs-Deans PKG 19-25 Valued 7-22-2026, re 1714 E Guadalupe Dr, AZ-Sol HOff.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 396,
+   "read_warning": null
+  },
+  {
+   "filename": "Loss Runs-Deans PKG 18-24 PKG Valued 07-22-2026, re 5055 W Ray Rd., AZ-Sol Hoff.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 402,
+   "read_warning": null
+  },
+  {
+   "filename": "Loss Runs-Liberty Mutual for 2024 - 2026, Valued 07-10-2026, re PKG.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 3198,
+   "read_warning": null
+  }
+ ]
+}

@@ -26,15 +26,16 @@ frontend/node_modules/
 runs/lab/
 runs/*.jsonl
 runs/*.txt
-runs/solution_*.json
-# results_<channel>.tsv (the notebook) IS tracked on purpose — it's the demo memory.
+# results_<channel>.tsv (the notebook) AND solution_<channel>.json (the banked
+# best prompts) ARE tracked on purpose — they are the demo's memory and a fresh
+# deploy must warm-start from them.
 !runs/.gitkeep
 
-# ─── broker submissions: raw emails contain real PII — never commit ──────
+# ─── broker submissions: RAW emails contain real PII — never commit. The
+# extracted/ and classified/ JSONs are ANONYMISED and are tracked so a fresh
+# deploy (Render builds from git) carries the demo data. ─────────────────
 data/submissions/*.eml
 data/submissions/*.msg
-data/submissions/extracted/
-data/submissions/classified/
 
 # ─── os / editor ──────────────────────────────────────────────────────────
 .DS_Store

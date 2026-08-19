@@ -1,0 +1,127 @@
+{
+ "submission_id": "elsner",
+ "mode": "live",
+ "ts": 1787154902.264354,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: New Submission - ELSNER ENGINEERING WORKS, INC - 8/1/2026 Renewal\n\nINTERNAL USE ONLY\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_6]>\nSent: Monday, July 20, 2026 5:07 PM\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_6]>\nSubject: New Submission - ELSNER ENGINEERING WORKS, INC - 8/1/2026 Renewal\n\nHi Ranjith,\n\nCan you please clear this account:\nSIC: 3559\nProducer/Broker number/code: HUB International Greater PA, Agency ID:ELSNENG-01,\nLicense: 60236\nLOBs: Auto, GL, Inland Marine, Property and Umbrella\nNeed by Date: 7/21\n\nThank you,\nRachel Eiseman\nMiddle Market Underwriter\n[PLACEHOLDER_15]. Philadelphia, P",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "Renewal"
+   ],
+   "gt": [
+    "Renewal"
+   ],
+   "match": true
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Manufacturing"
+   ],
+   "gt": [
+    "Manufacturing"
+   ],
+   "match": true
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "Commercial Auto",
+    "General Liability",
+    "Inland Marine",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "Commercial Auto",
+    "General Liability",
+    "Inland Marine",
+    "Property",
+    "Umbrella/Excess"
+   ],
+   "match": false
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Referral\u2013Adverse Loss"
+   ],
+   "gt": [
+    "Referral\u2013Adverse Loss"
+   ],
+   "match": true
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Single site"
+   ],
+   "gt": [
+    "Single site"
+   ],
+   "match": true
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [
+    "adverse loss ratio",
+    "equipment breakdown",
+    "large product-liability loss"
+   ],
+   "gt": [
+    "adverse loss ratio",
+    "large product-liability loss"
+   ],
+   "match": false
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "Insurance Questions from HUB_701A819F-0100-C64A-96A9-57F0AE358920.docx",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Supplemental questionnaire",
+   "match": true,
+   "char_count": 7096,
+   "read_warning": null
+  },
+  {
+   "filename": "GLUmbrellaPropertyAuto Acord 2026_701A819F-0000-C6A5-99F1-7CD77C2B4578.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 30008,
+   "read_warning": null
+  },
+  {
+   "filename": "Elsner Engineering Loss Runs_701A819F-0000-CC3B-A878-9518A8435F55.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 11092,
+   "read_warning": null
+  },
+  {
+   "filename": "2026_Exposure_Spreadsheet_Elsner_-_updated_701A819F-0000-CA6D-9083-24C0CA443E4E.xlsx",
+   "doc_type": "Statement of Values (SOV)",
+   "gt": "Statement of Values (SOV)",
+   "match": true,
+   "char_count": 2778,
+   "read_warning": null
+  }
+ ]
+}

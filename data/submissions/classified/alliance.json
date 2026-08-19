@@ -1,0 +1,192 @@
+{
+ "submission_id": "alliance",
+ "mode": "live",
+ "ts": 1787154898.978673,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: New Business - Alliance Group Holdings, LLC - 09/10/2026\n\nINTERNAL USE ONLY\r\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_6]>\r\nSent: Tuesday, August 4, 2026 1:39 PM\r\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_6]>\r\nSubject: New Business - Alliance Group Holdings, LLC - 09/10/2026\r\n\r\nRanjith,\r\n\r\nFinally got all the updated exposure information together on this one!!!!      I\u2019m attaching the Acord applications, a spreadsheet that includes all the locations, vehicles and drivers.     Also attached is a loss summary and the most currently valued loss runs that we have on file a long with overage Specs. ",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "New Business"
+   ],
+   "gt": [
+    "Renewal"
+   ],
+   "match": false
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Distribution/Wholesale"
+   ],
+   "gt": [
+    "Events/Hospitality"
+   ],
+   "match": false
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Workers' Comp"
+   ],
+   "match": false
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Standard\u2013Middle Market"
+   ],
+   "gt": [
+    "Referral\u2013High Hazard"
+   ],
+   "match": false
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Multi-entity/subsidiaries"
+   ],
+   "gt": [
+    "Multi-entity/subsidiaries"
+   ],
+   "match": true
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [],
+   "gt": [
+    "heavy fleet exposure"
+   ],
+   "match": false
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "Insurance Policy1.docx",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Other",
+   "match": false,
+   "char_count": 1924,
+   "read_warning": null
+  },
+  {
+   "filename": "Insurance Policy2.docx",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Other",
+   "match": false,
+   "char_count": 3783,
+   "read_warning": null
+  },
+  {
+   "filename": "Carrier Info AGH Vehicles Drivers  Property _7022409D-0000-C829-B0FB-559CCB4A4F89.xlsx",
+   "doc_type": "Driver/vehicle schedule",
+   "gt": "Driver/vehicle schedule",
+   "match": true,
+   "char_count": 8807,
+   "read_warning": null
+  },
+  {
+   "filename": "Selective LR1.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 8784,
+   "read_warning": null
+  },
+  {
+   "filename": "Selective LR.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 439,
+   "read_warning": null
+  },
+  {
+   "filename": "26 May Alliance Group Holdings Combined LSS_7022409D-0000-C597-93D2-454A5028F546.xlsx",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 2519,
+   "read_warning": null
+  },
+  {
+   "filename": "Alliance LR_1.pdf",
+   "doc_type": "Other",
+   "gt": "Loss run",
+   "match": false,
+   "char_count": 9436,
+   "read_warning": null
+  },
+  {
+   "filename": "Alliance LR.pdf",
+   "doc_type": "Other",
+   "gt": "Loss run",
+   "match": false,
+   "char_count": 16180,
+   "read_warning": null
+  },
+  {
+   "filename": "Application Questionnaire1.docx",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Supplemental questionnaire",
+   "match": true,
+   "char_count": 1842,
+   "read_warning": null
+  },
+  {
+   "filename": "Application Questionnaire2.docx",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Supplemental questionnaire",
+   "match": true,
+   "char_count": 3165,
+   "read_warning": null
+  },
+  {
+   "filename": "Application Questionnaire3.docx",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Supplemental questionnaire",
+   "match": true,
+   "char_count": 3923,
+   "read_warning": null
+  },
+  {
+   "filename": "WC Acord.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29996,
+   "read_warning": null
+  },
+  {
+   "filename": "Pkg Acord.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29998,
+   "read_warning": null
+  }
+ ]
+}

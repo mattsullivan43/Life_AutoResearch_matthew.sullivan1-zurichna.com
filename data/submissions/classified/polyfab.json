@@ -1,0 +1,137 @@
+{
+ "submission_id": "polyfab",
+ "mode": "live",
+ "ts": 1787154909.388813,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: PolyFab Corporation T/A Reading Plastic & Metal Advanced Machining\n\nINTERNAL USE ONLY\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSent: Thursday, August 13, 2026 10:07 AM\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSubject: PolyFab Corporation T/A Reading Plastic & Metal Advanced Machining\n\nGood morning,\n\nHope you are doing well!\n\nPlease see attached is the full submission for the above referenced account. This would be new business to our agency out of our Eastern Region. Current coverage is with Sentry for all lines and is effective 9/30. Expiring pricing is roughly $150k (~$95k package/$",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "New Business"
+   ],
+   "gt": [
+    "New Business"
+   ],
+   "match": true
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Manufacturing"
+   ],
+   "gt": [
+    "Manufacturing"
+   ],
+   "match": true
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "match": true
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Standard\u2013Middle Market"
+   ],
+   "gt": [
+    "Standard\u2013Middle Market"
+   ],
+   "match": true
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Single entity multi-site"
+   ],
+   "gt": [
+    "Single site"
+   ],
+   "match": false
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [],
+   "gt": [
+    "equipment breakdown"
+   ],
+   "match": false
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "Narrative - Reading Advanced Machine.docx",
+   "doc_type": "Narrative/risk write-up",
+   "gt": "Narrative/risk write-up",
+   "match": true,
+   "char_count": 4441,
+   "read_warning": null
+  },
+  {
+   "filename": "093026 All Lines Acord Apps.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29939,
+   "read_warning": null
+  },
+  {
+   "filename": "093026 SENT All Lines LRs valued 062426.pdf",
+   "doc_type": "Other",
+   "gt": "Loss run",
+   "match": false,
+   "char_count": 449,
+   "read_warning": null
+  },
+  {
+   "filename": "093026 SENT Loss Summary.xlsx",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 4483,
+   "read_warning": null
+  },
+  {
+   "filename": "SOV - Reading Machine.xlsx",
+   "doc_type": "Statement of Values (SOV)",
+   "gt": "Statement of Values (SOV)",
+   "match": true,
+   "char_count": 895,
+   "read_warning": null
+  },
+  {
+   "filename": "drivers list.xlsx",
+   "doc_type": "Driver/vehicle schedule",
+   "gt": "Driver/vehicle schedule",
+   "match": true,
+   "char_count": 758,
+   "read_warning": null
+  }
+ ]
+}

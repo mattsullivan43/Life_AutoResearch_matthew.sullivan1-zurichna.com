@@ -1,0 +1,201 @@
+{
+ "submission_id": "gemini",
+ "mode": "live",
+ "ts": 1787157119.577257,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: Gemini Power Systems - Eff 12/01/26 - New Business Submission \n\nINTERNAL USE ONLY\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSent: Wednesday, August 5, 2026 10:02 AM\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSubject: Gemini Power Systems - Eff 12/01/26 - New Business Submission\n\nGood morning!\n\nAttached is our new business submission for Gemini Power Systems with an effective date of 12/01/2026. We are sending you the needed information to quote the Property/GL/Auto/Umb/WC lines of business.\n\nAttachments\n*ACORD\n*LOSS RUNS\n*Driver List & Vehicle List\nFor all underwriting questions, please ",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "New Business"
+   ],
+   "gt": [
+    "New Business"
+   ],
+   "match": true
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Manufacturing"
+   ],
+   "gt": [
+    "Distribution/Wholesale"
+   ],
+   "match": false
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "match": true
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Standard\u2013Middle Market"
+   ],
+   "gt": [
+    "CAT-Exposed"
+   ],
+   "match": false
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Single entity multi-site"
+   ],
+   "gt": [
+    "Single entity multi-site"
+   ],
+   "match": true
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [
+    "heavy fleet exposure"
+   ],
+   "gt": [],
+   "match": false
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "26-27 Auto Acord.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29981,
+   "read_warning": null
+  },
+  {
+   "filename": "26-27 Pckg - Property and GL Acord.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29984,
+   "read_warning": null
+  },
+  {
+   "filename": "26-27 CUMB Acord.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29979,
+   "read_warning": null
+  },
+  {
+   "filename": "Auto 23-24 val 09 04 2024.PDF",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 1473,
+   "read_warning": null
+  },
+  {
+   "filename": "Auto 25-26 val 06 04 2026.PDF",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 1272,
+   "read_warning": null
+  },
+  {
+   "filename": "Auto 24-25 val 07 02 2026.PDF",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 1593,
+   "read_warning": null
+  },
+  {
+   "filename": "Property - Pkg   GL - Pkg  Umbrella 24-26 val 06 2.PDF",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 4018,
+   "read_warning": null
+  },
+  {
+   "filename": "Property General Liability 19-24 val 09 04 2024.PDF",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 11615,
+   "read_warning": null
+  },
+  {
+   "filename": "Umbrella 19-24 val 09 04 2024.PDF",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 11615,
+   "read_warning": null
+  },
+  {
+   "filename": "Workers Compensation 21-26 val 06 08 2026.PDF",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 2093,
+   "read_warning": null
+  },
+  {
+   "filename": "26-27 Work Comp Acord.pdf",
+   "doc_type": "ACORD form",
+   "gt": "ACORD form",
+   "match": true,
+   "char_count": 29948,
+   "read_warning": null
+  },
+  {
+   "filename": "26-27AUTO_BusinessAuto_Vehicles_07-09-2026.csv",
+   "doc_type": "Driver/vehicle schedule",
+   "gt": "Driver/vehicle schedule",
+   "match": true,
+   "char_count": 3126,
+   "read_warning": null
+  },
+  {
+   "filename": "26-27AUTO_BusinessAuto_Drivers_07-09-2026.csv",
+   "doc_type": "Driver/vehicle schedule",
+   "gt": "Driver/vehicle schedule",
+   "match": true,
+   "char_count": 3358,
+   "read_warning": null
+  },
+  {
+   "filename": "Copy of Gemini Power Supply - Amrisc SOV.XLSX",
+   "doc_type": "Statement of Values (SOV)",
+   "gt": "Statement of Values (SOV)",
+   "match": true,
+   "char_count": 29923,
+   "read_warning": null
+  }
+ ]
+}

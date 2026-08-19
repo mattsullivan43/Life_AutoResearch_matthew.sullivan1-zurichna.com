@@ -7,10 +7,13 @@ HOST="${EC2_HOST:?set EC2_HOST}"
 KEY="${EC2_KEY:?set EC2_KEY (path to .pem)}"
 USER="${EC2_USER:-ec2-user}"
 
-# package the repo (skip heavy/local/secret stuff)
+# package the repo (skip heavy/local stuff; NEVER ship raw broker emails — the
+# anonymised extracted/classified JSONs and the runs/ memory DO ship: the demo
+# needs the ingested submissions, banked best prompts and notebooks)
 tar czf /tmp/autoresearch.tgz \
   --exclude .venv --exclude frontend/node_modules --exclude frontend/dist \
-  --exclude runs --exclude .git --exclude '*.zip' .
+  --exclude runs/lab --exclude .git --exclude '*.zip' \
+  --exclude '*.eml' --exclude '*.msg' .
 
 SSHOPTS="-o StrictHostKeyChecking=accept-new -o ConnectTimeout=15"
 scp $SSHOPTS -i "$KEY" /tmp/autoresearch.tgz "$USER@$HOST:~/"

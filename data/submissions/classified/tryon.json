@@ -1,0 +1,137 @@
+{
+ "submission_id": "tryon",
+ "mode": "live",
+ "ts": 1787157143.36705,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: Tryon Medical Partners, LLC : Property & Casualty Submission  \n\nINTERNAL USE ONLY\r\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_7]>\r\nSent: Monday, July 20, 2026 5:18 PM\r\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_7]>\r\nSubject: Tryon Medical Partners, LLC : Property & Casualty Submission\r\n\r\nThank you,\r\nDaniel Leitao\r\nUnderwriting Account Service Associate\r\nU.S. Middle Markets - East Region | U.S. Commercial Insurance\r\nZurich North America\r\n4 World Trade Center, [PLACEHOLDER_19] [PLACEHOLDER_21]\r\n[PLACEHOLDER_8]<mailto:[PLACEHOLDER_8]>\r\n\r\n\r\n\r\nINTERNAL USE ONLY\r\nFrom: [PLACEHOLDER_2] <mailto:[PLACEHOL",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "New Business"
+   ],
+   "gt": [
+    "New Business"
+   ],
+   "match": true
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Healthcare/Medical"
+   ],
+   "gt": [
+    "Healthcare/Medical"
+   ],
+   "match": true
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "General Liability",
+    "HNOA",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "Commercial Auto",
+    "General Liability",
+    "Property",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "match": false
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Specialty\u2013PE/M&A"
+   ],
+   "gt": [
+    "Specialty\u2013PE/M&A"
+   ],
+   "match": true
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Multi-entity/subsidiaries"
+   ],
+   "gt": [
+    "Multi-entity/subsidiaries"
+   ],
+   "match": true
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [],
+   "gt": [
+    "needlestick/medical"
+   ],
+   "match": false
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "2026 Tryon Medical Exposure Workbook 7.15.26 - added BI_0027819F-0100-CE2D-AC7B-A94F5B3D64A1.xlsx",
+   "doc_type": "Statement of Values (SOV)",
+   "gt": "Statement of Values (SOV)",
+   "match": true,
+   "char_count": 30009,
+   "read_warning": null
+  },
+  {
+   "filename": "Property & Casualty Submission_1027819F-0000-CCE8-A291-6D7587D8C399.pdf",
+   "doc_type": "Narrative/risk write-up",
+   "gt": "Narrative/risk write-up",
+   "match": true,
+   "char_count": 18163,
+   "read_warning": null
+  },
+  {
+   "filename": "2026 08 BAUT CGL WORK LOSS 2024-2026 V-06-02-2026 XL Insurance America Inc_1027819F-0000-C14C-8115-158BD6F682B1.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 12293,
+   "read_warning": null
+  },
+  {
+   "filename": "2026 08 CUMB LOSS 2024-2026 V-06-02-2026 XL Insurance America Inc._1027819F-0000-C2CB-A059-340093E0C17D.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 1512,
+   "read_warning": null
+  },
+  {
+   "filename": "2026 08 PROP LOSS 2024-2026 V-06-02-2026 XL Insurance America Inc._1027819F-0000-C94B-BDAC-812B84FFFAEE.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 2737,
+   "read_warning": null
+  },
+  {
+   "filename": "2026 08 WORK- LOSS 2024-2026 V-04-08-2026 XL Insurance_1027819F-0000-C21B-87EB-2961C4AE6527.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 5936,
+   "read_warning": null
+  }
+ ]
+}

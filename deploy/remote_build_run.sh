@@ -7,6 +7,10 @@ set -euo pipefail
 mkdir -p ~/autoresearch ~/runs
 tar xzf ~/autoresearch.tgz -C ~/autoresearch
 cd ~/autoresearch
+# the ~/runs mount SHADOWS /app/runs in the container — land the shipped demo
+# memory (notebooks, banked best prompts, scoreboard summary) in the mount
+cp -f ~/autoresearch/runs/*.tsv ~/runs/ 2>/dev/null || true
+cp -f ~/autoresearch/runs/*.json ~/runs/ 2>/dev/null || true
 
 docker build -t autoresearch .
 docker rm -f autoresearch 2>/dev/null || true

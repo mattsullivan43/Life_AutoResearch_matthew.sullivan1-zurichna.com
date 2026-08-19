@@ -1,0 +1,176 @@
+{
+ "submission_id": "moda",
+ "mode": "live",
+ "ts": 1787157139.129696,
+ "labelled": true,
+ "cover_preview": "SUBJECT: FW: New Business Submission: Moda Operandi, Inc. 8/15/2026-2027  \n\nINTERNAL USE ONLY\nFrom: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSent: Tuesday, July 21, 2026 11:36 AM\nTo: [PLACEHOLDER_1] <[PLACEHOLDER_2]>\nSubject: New Business Submission: Moda Operandi, Inc. 8/15/2026-2027\n\nHi Ranjith,\n\nAttached is the property and casualty submission for Moda Operandi, Inc., a New York based client for the renewal term 8/15/2026-2027.  We need your quote by Friday August 7th.\n\nCan you forward this submission to your foreign underwriter, we need a foreign package quote with an admitted UK EL underlyer.\n\nP",
+ "buckets": [
+  {
+   "channel": "submission_type",
+   "label": "Type",
+   "multi": false,
+   "pred": [
+    "New Business"
+   ],
+   "gt": [
+    "Renewal"
+   ],
+   "match": false
+  },
+  {
+   "channel": "industry",
+   "label": "Industry",
+   "multi": false,
+   "pred": [
+    "Retail/E-commerce"
+   ],
+   "gt": [
+    "Retail/E-commerce"
+   ],
+   "match": true
+  },
+  {
+   "channel": "lines",
+   "label": "Lines of Business",
+   "multi": true,
+   "pred": [
+    "Commercial Auto",
+    "Foreign Package/International",
+    "General Liability",
+    "Jewelers Block",
+    "Property",
+    "Stock Throughput/Ocean Marine",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "gt": [
+    "Commercial Auto",
+    "Foreign Package/International",
+    "General Liability",
+    "HNOA",
+    "Jewelers Block",
+    "Property",
+    "Stock Throughput/Ocean Marine",
+    "Umbrella/Excess",
+    "Workers' Comp"
+   ],
+   "match": false
+  },
+  {
+   "channel": "routing",
+   "label": "Routing lane",
+   "multi": false,
+   "pred": [
+    "Specialty\u2013PE/M&A"
+   ],
+   "gt": [
+    "Standard\u2013Middle Market"
+   ],
+   "match": false
+  },
+  {
+   "channel": "structure",
+   "label": "Account Structure",
+   "multi": false,
+   "pred": [
+    "Multi-entity/subsidiaries"
+   ],
+   "gt": [
+    "Multi-national (US + foreign)"
+   ],
+   "match": false
+  },
+  {
+   "channel": "risk_flags",
+   "label": "Risk Flags",
+   "multi": true,
+   "pred": [],
+   "gt": [
+    "high-value inventory & transit"
+   ],
+   "match": false
+  }
+ ],
+ "attachments": [
+  {
+   "filename": "26-27 Last 12 Months NOV By Category & Subcategory 6.15.26.xlsx",
+   "doc_type": "Other",
+   "gt": "Other",
+   "match": true,
+   "char_count": 28153,
+   "read_warning": null
+  },
+  {
+   "filename": "AUTO_2023-2026_Moda Operandi, Inc_05-21-2026_Hartford (1).pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 3411,
+   "read_warning": null
+  },
+  {
+   "filename": "NY Mod-Moda Operandi 2026.pdf",
+   "doc_type": "Other",
+   "gt": "Other",
+   "match": true,
+   "char_count": 4298,
+   "read_warning": null
+  },
+  {
+   "filename": "UMB_2023-2026_Moda Operandi, Inc_05-21-2026_Hartford.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 2255,
+   "read_warning": null
+  },
+  {
+   "filename": "PKGINT_2023-2026_Moda Operandi, Inc_05-21-2026_Hartford.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 3958,
+   "read_warning": null
+  },
+  {
+   "filename": "AUTO_2023-2026_Moda Operandi, Inc_05-21-2026_Hartford.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 3411,
+   "read_warning": null
+  },
+  {
+   "filename": "26-27 Moda Operandi_Hartford Hired_Non-Owned Auto Coverage Supplemental App.pdf",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Supplemental questionnaire",
+   "match": true,
+   "char_count": 3486,
+   "read_warning": null
+  },
+  {
+   "filename": "WC_2023-2026_Moda Operandi, Inc_05-21-2026_Hartford.pdf",
+   "doc_type": "Loss run",
+   "gt": "Loss run",
+   "match": true,
+   "char_count": 1574,
+   "read_warning": null
+  },
+  {
+   "filename": "26-27 Moda Operandi_Propery Casualty Specifications.pdf",
+   "doc_type": "Supplemental questionnaire",
+   "gt": "Other",
+   "match": false,
+   "char_count": 8518,
+   "read_warning": null
+  },
+  {
+   "filename": "2026-2027 Moda Operandi_P&C Request for Renewal Information 5.27.26 (Consolidated, Submitted July 13, 2026).xlsx",
+   "doc_type": "Statement of Values (SOV)",
+   "gt": "Statement of Values (SOV)",
+   "match": true,
+   "char_count": 30134,
+   "read_warning": null
+  }
+ ]
+}

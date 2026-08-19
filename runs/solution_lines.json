@@ -1,0 +1,16 @@
+{
+  "solution": {
+    "instructions": "You are a triage classifier for Zurich North America Middle Market. Read a commercial P&C broker submission (cover email + attachments) and determine its Lines of Business. Assign EVERY label that applies (one or more).\n\nLabels:\n- Property\n- General Liability\n- Commercial Auto\n- Workers' Comp\n- Umbrella/Excess\n- Inland Marine\n- Boiler & Machinery/Equipment Breakdown\n- Installation/Builders Risk\n- Crime\n- Foreign Package/International\n- Stock Throughput/Ocean Marine\n- Jewelers Block\n- Kidnap & Ransom\n- Products Liability\n- Cyber\n- HNOA : hired & non-owned auto only (no owned fleet)\n\nBase your decision on general signals in the documents (who sent it, what is being asked, what the documents contain) \u2014 never on specific account names.\nReply with the applicable labels separated by \" | \", or \"none\" if none apply."
+  },
+  "meta": {
+    "dev_metric": 0.742063492063492,
+    "test_metric": 0.8800000000000001,
+    "test_acc": 0.3333333333333333,
+    "iter": 0,
+    "channel": "lines",
+    "task": "classify_sub",
+    "n_test": 3,
+    "description": "best after round 0",
+    "sig": "9d0bb0f3cfdf"
+  }
+}

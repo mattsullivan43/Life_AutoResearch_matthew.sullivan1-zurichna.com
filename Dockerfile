@@ -23,7 +23,9 @@ COPY scripts/ ./scripts/
 COPY taxonomy.yaml ./taxonomy.yaml
 COPY --from=frontend /fe/dist ./frontend/dist
 
-# runs/ holds the persistent memory (notebook + git lab) — mount EFS here on AWS
+# runs/ ships the demo memory (notebooks + banked best prompts); on AWS the
+# host ~/runs mount shadows it, and remote_build_run.sh syncs these files there
+COPY runs/ ./runs/
 RUN mkdir -p runs/lab
 ENV PORT=8000 \
     AUTORESEARCH_LAB=/app/runs/lab \
