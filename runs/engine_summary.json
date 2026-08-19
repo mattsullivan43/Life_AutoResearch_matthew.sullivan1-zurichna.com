@@ -1,0 +1,21 @@
+{
+ "attachment": {
+  "label": "Attachment indexing",
+  "floor_mf1": 0.09059233449477352,
+  "best_mf1": 0.9333333333333332,
+  "best_acc": 0.9642857142857143,
+  "n_test": 28,
+  "correct": 27
+ },
+ "emails": {
+  "label": "Life email triage",
+  "floor_mf1": 0.4215,
+  "finals": [
+   0.5469,
+   0.5813,
+   0.6613
+  ],
+  "keeps": 3,
+  "note": "3 compounding runs; every keep verified by paired bootstrap"
+ }
+}

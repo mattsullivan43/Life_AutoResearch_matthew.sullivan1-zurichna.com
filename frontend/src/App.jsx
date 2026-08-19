@@ -12,6 +12,7 @@ import PerClassF1 from './components/PerClassF1'
 import CoveragePanel from './components/CoveragePanel'
 import PromptViewer from './components/PromptViewer'
 import SubmissionTriage from './components/SubmissionTriage'
+import EngineCard from './components/EngineCard'
 import Login from './components/Login'
 import { authConfig, getToken, logout as cognitoLogout } from './auth'
 
@@ -288,6 +289,9 @@ export default function App() {
             <div className="seclab"><span className="tick" /><h2>Triage a submission</h2>
               <span className="hint">drop a broker email (.eml/.msg) — attachments read locally, PII anonymised, then bucketed &amp; indexed</span></div>
             <SubmissionTriage />
+            <div className="seclab"><span className="tick" /><h2>The self-improving engine</h2>
+              <span className="hint">measured on held-out documents · the loop below is how these numbers were earned</span></div>
+            <EngineCard />
           </>
         )}
 

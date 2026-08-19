@@ -70,6 +70,33 @@ export async function classifySubmission(id, live = false) {
   return r.json()
 }
 
+export async function getSubmissionText(id) {
+  const r = await fetch(`/api/submission_text?submission_id=${encodeURIComponent(id)}`, { headers: H() })
+  if (!r.ok) throw new Error('submission_text failed')
+  return r.json()
+}
+
+export async function getEngineSummary() {
+  const r = await fetch('/api/engine_summary', { headers: H() })
+  if (!r.ok) throw new Error('engine_summary failed')
+  return r.json()
+}
+
+// SSE: fills in buckets/attachments as the model classifies them.
+export function streamClassify(id, live, onEvent, onError) {
+  const t = getToken()
+  const auth = t ? `&access_token=${encodeURIComponent(t)}` : ''
+  const es = new EventSource(`/api/classify_submission_stream?submission_id=${encodeURIComponent(id)}&live=${live}${auth}`)
+  es.onmessage = (m) => {
+    let ev
+    try { ev = JSON.parse(m.data) } catch { return }
+    onEvent(ev)
+    if (ev.type === 'done' || ev.type === 'error') es.close()
+  }
+  es.onerror = () => { es.close(); onError && onError() }
+  return es
+}
+
 export async function resetPrompt(channel) {
   return fetch(`/api/reset?channel=${channel}`, { method: 'POST', headers: H() })
 }

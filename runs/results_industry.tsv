@@ -1,0 +1,14 @@
+exp_id	dev	test	status	sig	description
+1	0.916667	0.000000	inconclusive	2e13c07e29f0	[instructions] Broadened the definition of Events/Hospitality to include event management and catering, which may have been missed in the original instruction.
+2	0.916667	0.000000	inconclusive	a9c630ece1fa	[instructions] Broaden Events/Hospitality to explicitly include catering, event management, and entertainment.
+3	0.916667	0.000000	inconclusive	4109fb471162	[instructions] Broadened Events/Hospitality to include event planning and catering services to capture misclassified submissions.
+4	0.916667	0.000000	inconclusive	4977ca543b72	[instructions] Broaden Events/Hospitality to explicitly include event planning, catering, and entertainment services to capture under-firing.
+5	0.916667	0.000000	inconclusive	92b7f7e05e82	[instructions] Added 'event management, catering, and entertainment services' explicitly to Events/Hospitality to address under-firing.
+6	0.916667	0.000000	inconclusive	4f5a615a946e	[instructions] Expanded Events/Hospitality to include 'any service related to organizing or hosting events' to capture broader scope and reduce under-firing.
+7	0.916667	0.000000	inconclusive	1c816170f455	[instructions] Expanded Events/Hospitality to include 'services related to organizing, managing, or hosting events or entertainment activities' to better capture this category and improve recall.
+8	0.916667	0.000000	inconclusive	b422a8b1b188	[instructions] Broaden Events/Hospitality to include 'any services related to organizing or hosting such events' to capture a broader range of activities.
+9	0.916667	0.000000	inconclusive	5e0896d99a2e	[instructions] Broaden Events/Hospitality to clearly include services related to event hosting or management, such as catering and entertainment.
+10	0.916667	0.000000	inconclusive	8c82aa5e84fc	[instructions] Explicitly add 'event planning, catering, and entertainment' to Events/Hospitality to address under-firing.
+11	0.916667	0.000000	inconclusive	2fc17741791b	[instructions] Clarified Events/Hospitality to explicitly include ancillary services like catering and event management, addressing under-firing by capturing broader scope.
+12	0.916667	0.000000	inconclusive	cf2963b0d60b	[instructions] Added clear signals for Events/Hospitality, such as event schedules, booking details, or venue-related documents, to improve classification accuracy and capture under-firing.
+13	0.916667	0.555556	final	aae588000b04	held-out test of best (round 0)

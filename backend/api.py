@@ -201,6 +201,45 @@ def submissions_list():
     return {"submissions": rows}
 
 
+@app.get("/api/submission_text")
+def submission_text(submission_id: str):
+    """The anonymised document (cover + attachment texts) — what the model reads."""
+    if submission_id not in subs._extracted():
+        return JSONResponse(status_code=404, content={"error": f"unknown submission: {submission_id}"})
+    return triage.submission_text(submission_id)
+
+
+@app.get("/api/classify_submission_stream")
+def classify_submission_stream(submission_id: str, live: bool = False):
+    """SSE: one event per classified item, so the UI fills in as the model works.
+    Cached + not live -> a single instant `done` event."""
+    if submission_id not in subs._extracted():
+        return JSONResponse(status_code=404, content={"error": f"unknown submission: {submission_id}"})
+    prov = _provider()
+    if not prov["key_present"] and (live or triage.cached(submission_id) is None):
+        return JSONResponse(status_code=400,
+                            content={"error": "No API key and no cached result for this submission."})
+
+    def gen():
+        try:
+            for ev in triage.stream_classify(submission_id, prov["classifier_model"], live=live):
+                yield f"data: {json.dumps(ev)}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+    return StreamingResponse(gen(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+@app.get("/api/engine_summary")
+def engine_summary():
+    """Measured headline numbers for the demo card (runs/engine_summary.json)."""
+    p = os.path.join(RUNS, "engine_summary.json")
+    if not os.path.exists(p):
+        return {"attachment": None, "emails": None}
+    with open(p, encoding="utf-8") as f:
+        return json.load(f)
+
+
 @app.post("/api/classify_submission")
 def classify_submission(submission_id: str, live: bool = False):
     """Buckets + attachment doc-type index for one submission, using each
