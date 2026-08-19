@@ -23,3 +23,10 @@ exp_id	dev	test	status	sig	description
 22	0.776595	0.000000	inconclusive	0fb39aff1a4a	[instructions] Narrow Other by excluding documents detailing specific insurance products, assigning them to Supplemental questionnaire.
 23	0.734531	0.000000	inconclusive	1ff047d2ad44	[instructions] Clarify that documents primarily listing insurance terms, limits, or coverage details should be classified as Supplemental questionnaire, not Other, to reduce over-firing of the Other label.
 24	0.803976	0.933333	final	87dd16fb4cbb	held-out test of best (round 0)
+25	0.776651	0.000000	inconclusive	ab80e1ea19cb	[instructions] Explicitly exclude coverage specifications from Other, directing them to Supplemental questionnaire to reduce over-firing.
+26	0.803976	0.000000	keep	0c913a788a80	[instructions] Broaden Supplemental questionnaire to include coverage specifications, emphasizing exclusion of unreadable/corrupted documents from classification.
+27	0.803976	0.000000	inconclusive	594b6f2a3f31	[instructions] Clarify that documents detailing specific insurance terms, limits, or coverage details belong under Supplemental questionnaire, not Other, to further narrow the Other category.
+28	0.803976	0.000000	inconclusive	92e81f7eed61	[instructions] Exclude coverage specifications from Other, directing them to Supplemental questionnaire to reduce over-firing.
+29	0.776595	0.000000	inconclusive	37c885efcde7	[instructions] Clarify that documents listing insurance terms, limits, or specific coverage details should be Supplemental questionnaire, narrowing Other.
+30	0.803976	0.000000	inconclusive	ee168a5b765a	[instructions] Added explicit exclusion of documents with unreadable or corrupted content from classification, not just from 'Other', to reduce misclassification.
+31	0.803976	0.853968	final	0c913a788a80	held-out test of best (round 2)
