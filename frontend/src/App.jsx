@@ -37,6 +37,7 @@ export default function App() {
   const [metrics, setMetrics] = useState(null)          // extract: {judge, field_accuracy}
   const [bestF1, setBestF1] = useState(null)
   const [finalScore, setFinalScore] = useState(null)   // honest score on unseen set
+  const [finalInfo, setFinalInfo] = useState(null)     // {mf1, acc, n} — counts beat % at tiny n
   const [notebook, setNotebook] = useState([])         // persistent research log
   const [solution, setSolution] = useState(null)       // the editable artifact
   const [solStatus, setSolStatus] = useState('')
@@ -78,7 +79,7 @@ export default function App() {
   useEffect(() => {
     if (!ready) return
     setChart([]); setRows(null); setConfusion(null); setPerClass(null); setMetrics(null)
-    setBestF1(null); setSplit(null); setReview(null)
+    setBestF1(null); setSplit(null); setReview(null); setFinalScore(null); setFinalInfo(null)
     getBestPrompt(channel).then(setPrompts).catch(() => setPrompts({ seed: '', best: '' }))
     getNotebook(channel).then((d) => setNotebook(d.experiments || [])).catch(() => setNotebook([]))
     getSolution(channel).then((d) => { setSolution(d.solution); setSolStatus('current best') }).catch(() => setSolution(null))
@@ -135,7 +136,8 @@ export default function App() {
           if (ev.rows) setRows(ev.rows)
           if (ev.metrics) setMetrics(ev.metrics)
           if (ev.solution) { setSolution(ev.solution); setSolStatus('best · final') }
-          setSplit('UNSEEN emails · final'); setBestF1(ev.best_mf1); setFinalScore(ev.test_mf1); setRunning(false); setReview(null)
+          setSplit('UNSEEN emails · final'); setBestF1(ev.best_mf1); setFinalScore(ev.test_mf1)
+          setFinalInfo({ mf1: ev.test_mf1, acc: ev.test_acc, n: ev.n }); setRunning(false); setReview(null)
           addLog({ kind: 'final', text: `FINAL — score on UNSEEN data: ${pct(ev.test_mf1)} (the honest number; best from round ${ev.best_iter})${ev.stopped_early ? ' · stopped early: hit the 100% ceiling' : ''}` })
           getBestPrompt(channel).then(setPrompts).catch(() => {})
           getNotebook(channel).then((d) => setNotebook(d.experiments || [])).catch(() => {})
@@ -247,7 +249,11 @@ export default function App() {
             <>
               <div className="stat"><div className="lab">Majority-class floor</div><div className="num">{chStatus?.baseline ? pct(chStatus.baseline.mf1) : '—'}</div></div>
               <div className="stat"><div className="lab">Best on practice set</div><div className="num">{bestF1 != null ? pct(bestF1) : '—'}</div></div>
-              <div className="stat"><div className="lab">Final · unseen docs</div><div className="num hl">{finalScore != null ? pct(finalScore) : '—'}</div></div>
+              <div className="stat"><div className="lab">Final · unseen docs</div>
+                {/* at n<=12 a percentage is fake precision — show the raw count */}
+                <div className="num hl">{finalInfo == null ? '—'
+                  : finalInfo.n <= 12 ? <>{Math.round(finalInfo.acc * finalInfo.n)}/{finalInfo.n}<small> correct · F1 {pct(finalInfo.mf1)}</small></>
+                  : pct(finalInfo.mf1)}</div></div>
               <div className="stat"><div className="lab">Practice / unseen</div><div className="num">{chStatus ? chStatus.dev : '—'}<small> / {chStatus ? chStatus.test : '—'}</small></div></div>
               <div className="stat"><div className="lab">Buckets</div><div className="num">{chStatus?.categories?.length ?? '—'}</div></div>
             </>
@@ -312,6 +318,14 @@ export default function App() {
                 {c.label}{c.multi ? ' ·multi' : ''}
               </button>
             ))}
+          </div>
+        )}
+        {isSub && channel !== 'attachment_doc_type' && (
+          <div className="note">
+            <b>Small-sample layer:</b> only 8 labelled submissions exist → {chStatus?.dev ?? 5} practice / {chStatus?.test ?? 3} unseen.
+            Scores here move in giant steps (1 document ≈ {chStatus?.test ? Math.round(100 / chStatus.test) : 33}%) and most rounds
+            will be <b>inconclusive</b> — the statistics refusing to bank noise, not a failure. To watch the loop
+            actually learn, use <b>Attachment document type</b> (35 practice / 28 unseen).
           </div>
         )}
         <div className="grid exp">
