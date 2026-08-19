@@ -236,6 +236,47 @@ def _apply(best, obj, task):
             new["instructions"] = val.strip()
     return new
 
+def diagnose(prf, rows):
+    """Turn per-class precision/recall into an explicit, ranked instruction.
+
+    The optimizer used to receive only a raw confusion matrix and example texts, and it
+    could not read the asymmetry out of them: on the real data UWAI GP was predicted 15x
+    against 4 true instances (precision 0.27, 40% of ALL errors) while the optimizer spent
+    ten consecutive rounds "clarifying n/a". A confusion matrix shows both facts but names
+    neither as the lever. This states which class is OVER-firing (needs narrowing) and
+    which is UNDER-firing (needs broadening), ranked by how many errors each one causes.
+    """
+    per = (prf or {}).get("per_class") or {}
+    if not per or not rows:
+        return ""
+    n_pred = {}
+    for r in rows:
+        p = r.get("pred")
+        n_pred[p] = n_pred.get(p, 0) + 1
+    lines = []
+    for lab, v in per.items():
+        sup, pred = v["support"], n_pred.get(lab, 0)
+        # errors this class is responsible for: false positives + missed true instances
+        fp = round(pred * (1 - v["precision"]))
+        fn = round(sup * (1 - v["recall"]))
+        if v["precision"] < 0.55 and pred > sup:
+            verdict = (f"OVER-FIRING: predicted {pred}x but only {sup} are truly {lab}. "
+                       f"Make this category NARROWER — add explicit exclusions.")
+        elif v["recall"] < 0.55 and pred < sup:
+            verdict = (f"UNDER-FIRING: {sup} true but only {pred} predicted. "
+                       f"Broaden it / remove the conditions blocking it.")
+        elif v["f1"] >= 0.75:
+            verdict = "healthy — do NOT spend an experiment here."
+        else:
+            verdict = "mixed; lower priority."
+        lines.append((fp + fn, f"  {lab:16} P={v['precision']:.2f} R={v['recall']:.2f} "
+                                f"F1={v['f1']:.2f} (true {sup}, predicted {pred})\n"
+                                f"      -> {verdict}"))
+    lines.sort(key=lambda x: -x[0])
+    return ("PER-CLASS DIAGNOSIS (ranked by errors caused — fix the top one first;\n"
+            "macro-F1 averages all 6 classes equally, so the weakest class caps the score):\n"
+            + "\n".join(t for _, t in lines))
+
 _POOL_NOTE = None
 def _pool_note():
     """The TRUE per-class few-shot supply. The optimizer used to be told the pool was
@@ -364,7 +405,8 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
                     "paired": prepare.consensus_rows(per_doc, truth_by_file),
                     "display": sol.display_prompt(solution, pool), "solution": solution}
         def feedback(scored_dict, solution):
-            return ("DEV confusion (true rows / pred cols):\n"
+            return (diagnose(scored_dict.get("prf"), scored_dict["rows"])
+                    + "\n\nDEV confusion (true rows / pred cols):\n"
                     + prepare.confusion_str([{"label": r["true"], "pred": r["pred"]} for r in scored_dict["rows"]])
                     + "\n\nMISCLASSIFIED examples:\n"
                     + "\n---\n".join(f"TRUE={r['true']} PRED={r['pred']}\n{r['snippet']}"

@@ -190,13 +190,19 @@ API/model reference: https://docs.claude.com/en/api/overview
 
 ## Spec scorecard (the 5 "Prototype expectations")
 1. ✅ Ingests a labelled document sample — `ingest.py` + manifest + ground truth.
-2. 🟡 Auto-generates & iterates prompts via eval loop — done, but classification
-   eval is exact-match macro-F1, **not LLM-as-judge** (LLM-judge fits summarisation).
+2. ✅ Auto-generates & iterates prompts via eval loop — BOTH eval styles are live:
+   classification uses exact-match macro-F1 (`prepare.evaluate`), extraction uses
+   **LLM-as-judge with a different model** (`solution._judge`, gpt-4o judging gpt-4o-mini).
 3. ✅ Human-in-the-loop (underwriter review) — `await_review` wired through
    `/api/run?hitl=true` (SSE pause) + `/api/review` (approve/reject) + UI panel.
-4. 🟡 Reports precision/recall vs hold-out — `harness.prf()` computes per-class +
-   macro P/R; events carry it; **UI display still TODO**.
-5. ❌ Extension to ≥1 additional modality — only a parked scaffold (see below).
+4. 🟡 Reports precision/recall vs hold-out — `prepare.prf()` computes per-class +
+   macro P/R; events carry it; `researcher.diagnose()` now feeds it back to the
+   optimizer as a ranked over-/under-firing verdict; **UI display still TODO**.
+5. ✅ Extension to ≥1 additional modality — `calls` (call-transcript structured
+   extraction) has RUN end-to-end: 2 keeps, dev 0.967 -> 1.000, held-out test **0.850**
+   (`runs/results_calls.tsv`). `data/medical` and `data/complaints` are also on disk and
+   registered in `solution.EXTRACT_CHANNELS`, so they run with no code change.
+   (This item was previously marked ❌ as "a parked scaffold" — that was stale.)
 
 ## Good next steps (core first)
 - Wire **precision/recall** into the dashboard (math already in events as `prf`).

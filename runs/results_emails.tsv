@@ -23,3 +23,14 @@ exp_id	dev	test	status	sig	description
 22	0.574582	0.000000	discard	ef6aceca98d7	[instructions] Clarified 'n/a' category to include emails that request information without specifying an action, aiming to reduce confusion with active categories like UWAI GP.
 23	0.554308	0.000000	inconclusive	0efa0ff73265	[shots_per_class] Reduce shots_per_class to 0 to test the impact of no few-shot examples, focusing entirely on the instructions and LLM's inherent understanding to improve differentiation for underrepresented categorie
 24	0.615706	0.581296	final	5149dd6439ae	held-out test of best (round 4)
+25	0.593555	0.000000	inconclusive	067e6c42b270	[fewshot_seed] Explore a new set of examples to improve differentiation between n/a and other categories, focusing on reducing over-firing of UWAI GP and under-firing of SERV GEN and n/a.
+26	0.567011	0.000000	discard	6c1e6aec58b5	[shots_per_class] Increase shots_per_class to 3 to potentially improve example variety and address the under-firing of SERV GEN and n/a, while also reducing over-firing of UWAI GP by providing more balanced context.
+27	0.627150	0.000000	inconclusive	2fdadec24d35	[fewshot_seed] Explore a new set of examples to potentially improve differentiation, focusing on reducing the under-firing of the n/a and SERV GEN categories.
+28	0.544983	0.000000	inconclusive	ea382be643ca	[shots_per_class] Reduce shots_per_class to 1 to balance exposure across categories, aiming to improve under-firing of n/a and SERV GEN while reducing over-firing of UWAI GP.
+29	0.570385	0.000000	discard	081127151612	[instructions] Broaden SERV GEN to include ambiguous general queries, aiming to reduce its under-firing.
+30	0.596367	0.000000	inconclusive	efe9f6cc79b6	[instructions] Refine UWAI GP to exclude purely informational emails, aiming to reduce its over-firing.
+31	0.541991	0.000000	discard	0efa0ff73265	[shots_per_class] Remove few-shot examples to rely solely on instructions, aiming to reduce over-firing of UWAI GP and improve differentiation for under-firing categories like SERV GEN and n/a.
+32	0.575386	0.000000	inconclusive	e5b20c4afa3f	[instructions] Broaden SERV GEN to explicitly include inquiries asking for information, aiming to reduce its under-firing.
+33	0.583134	0.000000	inconclusive	40522be062ac	[instructions] Broaden 'n/a' to explicitly include emails that are purely informational without requiring follow-up, to address under-firing.
+34	0.648062	0.000000	keep	f67eacadcdff	[fewshot_seed] Change fewshot_seed to explore a new set of examples to potentially improve differentiation, focusing on reducing the under-firing of the n/a and SERV GEN categories.
+35	0.648062	0.661272	final	f67eacadcdff	held-out test of best (round 10)
