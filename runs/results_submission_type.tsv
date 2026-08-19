@@ -2,3 +2,16 @@ exp_id	dev	test	status	sig	description
 1	0.619048	0.000000	inconclusive	3e5807539193	[instructions] Broaden 'Renewal' criteria to catch under-firing by including terms like 'renewal', 'recurring', 'extension', or references to prior policy information.
 2	0.619048	0.000000	inconclusive	f20828c2e486	[instructions] Broaden 'Renewal' criteria by explicitly including phrases indicating continuation of existing coverage.
 3	0.619048	0.666667	final	273d4f5a9b09	held-out test of best (round 0)
+4	0.619048	0.000000	inconclusive	5cc1392d3d78	[instructions] Sharpen 'Renewal' label by defining explicit content signals like 'previous policy numbers' or 'expiring coverage terms' to better distinguish it from New Business.
+5	0.619048	0.000000	inconclusive	1c4fa57b2a46	[instructions] Introduce a decision order: prioritize identifying Renewals first to address under-firing, and add explicit renewal signals like policy numbers and expiring terms.
+6	0.619048	0.000000	inconclusive	2118c2fa90ad	[instructions] Sharpen 'Renewal' label by adding explicit content signals like 'renewal offer' and 'renewal terms' to distinguish it from New Business.
+7	0.619048	0.000000	inconclusive	5de441e7f43d	[instructions] Rewrote 'Renewal' label definition to include decisive content signals like 'renewal policy', 'renewing account', and 'updated terms for existing coverage' to address under-firing.
+8	0.555556	0.000000	inconclusive	ee9fb3818da2	[instructions] Introduce a decision order prioritizing Renewal detection first to address under-firing.
+9	0.466667	0.000000	inconclusive	9f62d9cda3a9	[instructions] Refined 'Renewal' definition to include signals such as expiring policies, renewal quotes, and previous policy numbers to distinguish it from New Business.
+10	0.619048	0.000000	inconclusive	635b2d3d60d6	[instructions] Broaden 'Renewal' criteria explicitly to include any communication about continuation or extension of existing policies, using terms like 'renewal', 'renewing policy', or references to prior or expiri
+11	0.466667	0.000000	inconclusive	e0d10215af49	[instructions] Prioritize identifying Renewals first if the submission mentions continuation or extension of existing coverage, to address under-firing of the Renewal label.
+12	0.619048	0.000000	inconclusive	ce6683e1701a	[instructions] Sharpen 'Renewal' by emphasizing content signals like 'renewal offer', 'renewal terms', and 'expiring policy' to better distinguish it from New Business.
+13	0.619048	0.000000	inconclusive	bac7782bb6b8	[instructions] Add a clear disambiguation rule for 'Renewal' focusing on language indicating continuation, to address under-firing.
+14	0.619048	0.000000	inconclusive	c6c64a83cd60	[instructions] Broaden 'Renewal' criteria by explicitly including phrases like 'renewal', 'renewing policy', 'updated terms', and 'continuation' to address under-firing.
+15	0.555556	0.000000	inconclusive	a62da448168b	[instructions] Added a tie-break rule to prioritize 'Renewal' over 'New Business' when expiring policy details or prior policy numbers are mentioned, to address under-firing of 'Renewal'.
+16	0.619048	0.666667	final	273d4f5a9b09	held-out test of best (round 0)

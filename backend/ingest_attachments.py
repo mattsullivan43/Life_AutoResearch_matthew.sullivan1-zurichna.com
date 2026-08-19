@@ -58,15 +58,19 @@ _PII_PATTERNS = [
     re.compile(r"\b\d{9}\b"),        # 9-digit run: undashed FEIN/SSN/rating IDs. Deliberately
                                      # broad — a stray redacted ID number costs nothing here
     re.compile(r"(?:\+1[\s.-]?)?\(?\b\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b"),             # US phone
-    re.compile(r"\b\d{1,5}\s+[A-Z][A-Za-z]*(?:\s+[A-Z][A-Za-z]*){0,3}\s+"
+    re.compile(r"\b\d{1,5}\s+[A-Z][A-Za-z.]*(?:\s+[A-Z][A-Za-z.]*){0,4}\s+"
                r"(?:Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Boulevard|Blvd|Lane|Ln|"
                r"Way|Court|Ct|Parkway|Pkwy|Highway|Hwy|Place|Pl|Circle|Cir)\.?\b"),  # street address
+    re.compile(r"\b[A-Z][A-Za-z .-]{2,28},\s*[A-Z]{2}\s+\d{5}(?:-\d{4})?\b"),        # city, ST zip
 ]
 
 
 # display names on mail-header lines ("From: Jane Doe <addr>") — the one place
 # person names sit in a reliable pattern. Names elsewhere in prose are NOT caught.
 _HEADER_NAME = re.compile(r"(?m)^((?:From|To|Cc|Bcc)\s*:\s*)([^<\n]{2,80}?)(\s*[<\[])")
+# nested-forward headers often have NO address: "From: Lynn Hunt-Fones" (observed
+# leaking). Same rule, end-of-line variant; [^\[<] keeps placeholders untouched.
+_HEADER_NAME_EOL = re.compile(r"(?m)^((?:From|To|Cc|Bcc)\s*:\s*)([^<\[\n]{2,60}?)\s*$")
 
 
 def anonymize(text, table):
@@ -77,6 +81,7 @@ def anonymize(text, table):
             table[s] = f"[PLACEHOLDER_{len(table) + 1}]"
         return table[s]
     text = _HEADER_NAME.sub(lambda m: m.group(1) + tok(m.group(2).strip()) + m.group(3), text)
+    text = _HEADER_NAME_EOL.sub(lambda m: m.group(1) + tok(m.group(2).strip()), text)
     for pat in _PII_PATTERNS:
         text = pat.sub(lambda m: tok(m.group(0)), text)
     return text

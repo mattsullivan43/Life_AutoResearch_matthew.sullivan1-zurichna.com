@@ -5,3 +5,21 @@ exp_id	dev	test	status	sig	description
 4	0.803976	0.000000	inconclusive	a2c654a33efd	[instructions] Exclude corrupted/unreadable documents from Other to prevent misclassification, narrowing the Other category.
 5	0.803976	0.000000	inconclusive	3ea9866fbe24	[instructions] Exclude corrupted/unreadable documents from Other to reduce its over-firing, narrowing the Other category.
 6	0.803976	0.800000	final	87dd16fb4cbb	held-out test of best (round 1)
+7	0.803976	0.000000	inconclusive	ad5366687675	[instructions] Exclude corrupted/unreadable documents from Other to reduce its over-firing, narrowing the Other category.
+8	0.776595	0.000000	inconclusive	221e583fd19d	[instructions] Exclude corrupted/unreadable documents from classification to address misclassification and reduce over-firing of Other.
+9	0.803976	0.000000	inconclusive	7737b0eafc40	[instructions] Exclude corrupted or unreadable documents from Other to reduce its over-firing.
+10	0.803976	0.000000	inconclusive	2d3115b939c1	[instructions] Explicitly exclude corrupted or unreadable documents from Other to prevent over-firing.
+11	0.803976	0.000000	inconclusive	f57a1a16f78f	[instructions] Exclude corrupted/unreadable documents from classification, not just from Other, to reduce misclassification.
+12	0.742751	0.000000	inconclusive	ae8060cc7e29	[instructions] Exclude corrupted/unreadable documents from Other to reduce its over-firing, but also explicitly state they are excluded from classification.
+13	0.803976	0.000000	inconclusive	cf8ed9cf2e08	[instructions] Explicitly exclude corrupted/unreadable documents from classification to address over-firing of Other.
+14	0.803976	0.000000	inconclusive	0080c37e3b77	[instructions] Exclude corrupted/unreadable documents from classification entirely to address the misclassification issue.
+15	0.803976	0.000000	inconclusive	4eab8dcbd041	[instructions] Explicitly exclude corrupted/unreadable documents entirely from classification to prevent misclassification into Other.
+16	0.803976	0.000000	inconclusive	f525e74450ed	[instructions] Explicitly exclude unreadable/corrupted documents from classification to prevent misclassification into Other.
+17	0.803976	0.000000	inconclusive	c91668ee265d	[instructions] Explicitly exclude unreadable/corrupted documents from classification to reduce misclassification into Other.
+18	0.687989	0.000000	inconclusive	8d92f251a28b	[instructions] Clarify that documents detailing specific coverage terms or limits belong under Supplemental questionnaire, not Other, to further narrow the Other category.
+19	0.803976	0.933333	final	87dd16fb4cbb	held-out test of best (round 0)
+20	0.803976	0.000000	inconclusive	600607fdac9b	[instructions] Explicitly exclude unreadable or corrupted documents from Other to narrow the category and reduce over-firing.
+21	0.776595	0.000000	inconclusive	50edd57bf765	[instructions] Exclude documents with significant unreadable or corrupted content to reduce misclassification into Other.
+22	0.776595	0.000000	inconclusive	0fb39aff1a4a	[instructions] Narrow Other by excluding documents detailing specific insurance products, assigning them to Supplemental questionnaire.
+23	0.734531	0.000000	inconclusive	1ff047d2ad44	[instructions] Clarify that documents primarily listing insurance terms, limits, or coverage details should be classified as Supplemental questionnaire, not Other, to reduce over-firing of the Other label.
+24	0.803976	0.933333	final	87dd16fb4cbb	held-out test of best (round 0)

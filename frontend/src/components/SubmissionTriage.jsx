@@ -23,7 +23,12 @@ export default function SubmissionTriage() {
   // auto-load: first submission's document + its cached triage, so the tab is
   // never empty in front of an audience
   useEffect(() => {
-    refresh().then((list) => { if (list.length) select(list[0].id, true) })
+    // default to the strongest sample, not the alphabetical first (alliance is the
+    // adversarial worst case — its disputed labels make it the wrong opener)
+    refresh().then((list) => {
+      const pick = list.find((s) => s.id === 'tryon') || list[0]
+      if (pick) select(pick.id, true)
+    })
     return () => esRef.current && esRef.current.close()
   }, [])
 

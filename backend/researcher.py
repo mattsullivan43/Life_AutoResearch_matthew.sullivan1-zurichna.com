@@ -100,6 +100,33 @@ def _sig(solution):
     """Stable fingerprint of a SOLUTION — used to hard-block re-trying an exact repeat."""
     return hashlib.sha1(json.dumps(solution, sort_keys=True).encode()).hexdigest()[:12]
 
+
+def _delta_tokens(text, base):
+    """The words a candidate ADDED relative to the incumbent — its actual idea."""
+    from collections import Counter
+    t = Counter(re.findall(r"[a-z0-9']+", (text or "").lower()))
+    b = Counter(re.findall(r"[a-z0-9']+", (base or "").lower()))
+    return set(t - b)
+
+
+def _same_idea(cand, tried_solutions, base, jaccard=0.5):
+    """Paraphrase guard for instructions-only channels. The sig dedup only blocks
+    EXACT repeats, so the optimizer could burn rounds re-wording one already-
+    inconclusive idea (observed: notebook rows 16/17 differ by one word). Two
+    candidates embody the same idea when the TOKENS THEY ADD to the incumbent
+    overlap heavily — comparing whole prompts can't work, because every focused
+    edit shares the entire unchanged base. An empty delta (no effective change)
+    also counts as spent."""
+    base_text = (base or {}).get("instructions", "")
+    a = _delta_tokens(cand.get("instructions", ""), base_text)
+    if not a:
+        return True
+    for s in tried_solutions:
+        b = _delta_tokens(s.get("instructions", ""), base_text)
+        if b and len(a & b) / len(a | b) >= jaccard:
+            return True
+    return False
+
 # ---------- persistent notebook ----------
 def read_notebook(ch):
     p = notebook_path(ch)
@@ -230,6 +257,12 @@ The classifier is a FIXED scaffold: it shows a fast LLM your <instructions> plus
 and asks for the label(s). The ONLY knob is the instructions text. Per experiment, make exactly ONE
 focused improvement (sharpen one label definition, add one disambiguation rule, fix one recurring
 error) — not a wholesale rewrite. Keep the label names EXACTLY as they are.
+
+VARY YOUR STRATEGY across experiments — do not fixate on one idea. Strategies that count as
+different: (a) add decisive CONTENT signals to one label ("a loss run shows claim numbers,
+reserves, valuation dates"); (b) an explicit tie-break rule between two confusable labels;
+(c) a decision ORDER (check X before Y); (d) rewrite one weak label's definition from scratch.
+Anything the notebook marks INCONCLUSIVE is SPENT — a reworded version of it is auto-rejected.
 
 HARD CONSTRAINT — no memorisation: the dev set is tiny, so rules that reference a specific account,
 company, broker or person (e.g. "if it mentions <some account>") would score perfectly on dev and be
@@ -592,15 +625,22 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
         cand, desc = propose(channel, best, nb, fb, optimizer_model, tried_solutions)
         # HARD dedup: never re-evaluate a solution already tried (this run OR a past run).
         # An invalid/no-op knob change collapses to best's signature and is caught here too.
+        # For instructions-only channels, PARAPHRASES of a tried idea are spent as well.
+        def _spent(c):
+            return _sig(c) in tried or (task == "classify_sub" and _same_idea(c, tried_solutions, best))
         dup = 0
-        while _sig(cand) in tried and dup < 4:
+        while _spent(cand) and dup < 4:
             dup += 1
             cand, desc = propose(channel, best, nb, fb +
-                "\n\nIMPORTANT: your previous proposal repeats an experiment already in the notebook "
-                "(or changed nothing). Propose a GENUINELY DIFFERENT single-knob change.",
+                "\n\nIMPORTANT: your previous proposal repeats — or merely REWORDS — an experiment already "
+                "tried (probably one the notebook marks INCONCLUSIVE). A paraphrase of a spent idea wastes "
+                "the round. Pick a categorically DIFFERENT strategy, e.g.: add DECISIVE CONTENT SIGNALS to a "
+                "different label ('a loss run shows claim numbers, reserves, valuation dates'); add an "
+                "explicit tie-break rule between two specific labels; impose a decision ORDER (check X "
+                "before Y); rewrite one weak label definition from scratch. Return ONLY the JSON.",
                 optimizer_model, tried_solutions)
         sig = _sig(cand)
-        if sig in tried:
+        if _spent(cand):
             tried_solutions.append(dict(cand))   # so the next round is told this value is spent
             append_notebook(channel, base_exp + i, 0.0, 0.0, "duplicate",
                             (desc or "change") + " — duplicate/no-op, skipped (already known)", sig)
