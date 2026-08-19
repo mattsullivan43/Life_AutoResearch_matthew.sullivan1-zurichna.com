@@ -213,11 +213,18 @@ export default function App() {
             <div className="tabgroup" key={g}>
               <span className="tg-label">{g}</span>
               <div className="tabs">
-                {channels.filter((c) => (c.group || 'Channels') === g).map((c) => (
+                {g === 'Commercial Submissions' ? (
+                  /* one demo surface: the 7 layer-channels live INSIDE this tab */
+                  <button className={'tab' + (isSub ? ' on' : '')}
+                    onClick={() => !running && setChannel('attachment_doc_type')} disabled={running}>
+                    Broker Submissions
+                    <span className="tasktag">classify &amp; index · 7 layers</span>
+                  </button>
+                ) : channels.filter((c) => (c.group || 'Channels') === g).map((c) => (
                   <button key={c.id} className={'tab' + (c.id === channel ? ' on' : '')} onClick={() => !running && setChannel(c.id)} disabled={running}>
                     {c.label}
                     <span className="tasktag">
-                      {c.task === 'extract' ? 'extract · LLM-judge' : c.multi ? 'classify · multi-label' : 'classify'}
+                      {c.task === 'extract' ? 'extract · LLM-judge' : 'classify'}
                     </span>
                   </button>
                 ))}
@@ -294,7 +301,19 @@ export default function App() {
         )}
 
         {/* controls + chart */}
-        <div className="seclab"><span className="tick" /><h2>Experiment — {channels.find((c) => c.id === channel)?.label || channel}</h2></div>
+        <div className="seclab"><span className="tick" /><h2>Experiment — {channels.find((c) => c.id === channel)?.label || channel}</h2>
+          {isSub && <span className="hint">the loop optimizes ONE layer at a time — pick which below</span>}</div>
+        {isSub && (
+          <div className="layerpills">
+            <span className="lp-label">optimize layer</span>
+            {channels.filter((c) => c.group === 'Commercial Submissions').map((c) => (
+              <button key={c.id} className={'lp' + (c.id === channel ? ' on' : '')} disabled={running}
+                onClick={() => setChannel(c.id)}>
+                {c.label}{c.multi ? ' ·multi' : ''}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="grid exp">
           <div className="block">
             <div className="head"><h3>Run</h3><span className="sub">{running ? 'streaming…' : 'idle'}</span></div>
