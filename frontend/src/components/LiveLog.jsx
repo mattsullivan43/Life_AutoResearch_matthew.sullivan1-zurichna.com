@@ -8,6 +8,24 @@ export default function LiveLog({ lines, running }) {
 
   const pct = (v) => `${(v * 100).toFixed(1)}%`
 
+  // line-level LCS diff: the CHANGE a candidate makes, shown inline without clicks
+  function diffLines(a, b) {
+    const A = (a || '').split('\n'), B = (b || '').split('\n')
+    const n = A.length, m = B.length
+    const L = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0))
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+      L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1])
+    const out = []; let i = 0, j = 0
+    while (i < n && j < m) {
+      if (A[i] === B[j]) { i++; j++ }
+      else if (L[i + 1][j] >= L[i][j + 1]) { if (A[i].trim()) out.push({ t: '-', s: A[i] }); i++ }
+      else { if (B[j].trim()) out.push({ t: '+', s: B[j] }); j++ }
+    }
+    while (i < n) { if (A[i].trim()) out.push({ t: '-', s: A[i] }); i++ }
+    while (j < m) { if (B[j].trim()) out.push({ t: '+', s: B[j] }); j++ }
+    return out
+  }
+
   function Row({ l }) {
     if (l.kind === 'iter') {
       // four honest verdicts, not two: only a real p_worse>=0.95 loss is "Discarded";
@@ -35,6 +53,17 @@ export default function LiveLog({ lines, running }) {
                 )}
               </div>
               {l.desc && l.accepted !== null && <div className="exp-desc">{l.desc}</div>}
+              {/* WHAT CHANGED — inline, no clicking: diff vs the incumbent prompt */}
+              {l.prompt && l.inc && l.accepted !== null && (
+                <div className="exp-diff">
+                  {diffLines(l.inc, l.prompt).slice(0, 8).map((d, k) => (
+                    <div key={k} className={'dline ' + (d.t === '+' ? 'add' : 'del')}>
+                      <span>{d.t}</span> {d.s.length > 200 ? d.s.slice(0, 200) + '…' : d.s}
+                    </div>
+                  ))}
+                  {diffLines(l.inc, l.prompt).length === 0 && <div className="dline">（identical wording — rejected as a no-op）</div>}
+                </div>
+              )}
             </div>
             <span className={'fchip ' + cls}>{chip}</span>
             <span className="ftime">{l.t}</span>

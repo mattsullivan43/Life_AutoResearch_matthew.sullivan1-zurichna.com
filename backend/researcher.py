@@ -601,6 +601,8 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
               "accepted": accepted, "best_mf1": best_locked, "incumbent_mf1": best_m,
               "best_iter": best_iter,
               "split": f"practice set · round {itr}", "rows": r["rows"], "candidate_prompt": r["display"],
+              # the incumbent's prompt too, so the UI can render the CHANGE inline
+              "incumbent_prompt": (best_res or {}).get("display"),
               "description": desc, "reviewed": reviewed}
         for k in ("confusion", "per_class", "prf", "metrics", "solution"):
             if r.get(k) is not None: ev[k] = r[k]
@@ -622,6 +624,7 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
         nb = read_notebook(channel)
         fb = feedback(best_res, best)      # best_res is refreshed every round below, so
                                            # the proposer sees CURRENT mistakes, not round 0's
+        yield {"type": "note", "text": f"round {i}: optimizer studying the notebook + current mistakes, proposing ONE change…"}
         cand, desc = propose(channel, best, nb, fb, optimizer_model, tried_solutions)
         # HARD dedup: never re-evaluate a solution already tried (this run OR a past run).
         # An invalid/no-op knob change collapses to best's signature and is caught here too.
@@ -651,7 +654,9 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
             continue
         tried.add(sig)
         tried_solutions.append(dict(cand))
+        yield {"type": "note", "text": f"round {i}: proposal accepted — scoring the CANDIDATE prompt on {len(dev)} practice docs…"}
         res = score(cand, dev)
+        yield {"type": "note", "text": f"round {i}: candidate scored {res['metric']:.1%} — re-scoring the INCUMBENT on the same docs for the paired test…"}
         # Re-score the INCUMBENT on the same dev rows, this round, with the SAME number of
         # passes as the candidate. Both sides then have equal-precision, same-round, same-
         # document measurements — the only form in which a paired test is meaningful.

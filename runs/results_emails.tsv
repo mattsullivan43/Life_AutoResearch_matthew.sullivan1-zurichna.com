@@ -51,3 +51,14 @@ exp_id	dev	test	status	sig	description
 50	0.618473	0.000000	inconclusive	d0623a196f13	[instructions] Broaden SERV GEN to include requests for additional information or clarification, aiming to reduce its under-firing.
 51	0.596373	0.000000	inconclusive	2dcd2b9271d1	[instructions] Broaden SERV GEN to include requests for information or clarification to reduce under-firing, while ensuring UWAI GP excludes purely informational emails.
 52	0.622113	0.612191	final	f67eacadcdff	held-out test of best (round 0)
+53	0.598209	0.000000	keep	682bf93091e0	[fewshot_seed] Change fewshot_seed to explore a different set of examples, focusing on improving the differentiation between the n/a and other categories, especially reducing the over-firing of UWAI GP and under-fir
+54	0.513582	0.000000	discard	9358f47534bd	[fewshot_seed] Change fewshot_seed to explore a new set of examples, focusing on improving differentiation between n/a and other categories, especially reducing the under-firing of n/a and SERV GEN and over-firing o
+55	0.538045	0.000000	discard	f600a7ad0e10	[shots_per_class] Increase shots_per_class to 3 to provide more examples, especially for underrepresented categories like UWAI GP and n/a, to improve differentiation and address under-firing of n/a and SERV GEN.
+56	0.554039	0.000000	inconclusive	86b3925a976b	[shots_per_class] Reduce shots_per_class to 1 to balance exposure across categories, aiming to reduce over-firing of UWAI GP and improve differentiation for under-firing categories like n/a and SERV GEN.
+57	0.567110	0.000000	inconclusive	a85ee69c7b6a	[fewshot_seed] Explore a new set of examples to improve differentiation, focusing on reducing the under-firing of n/a and SERV GEN and over-firing of UWAI GP.
+58	0.583443	0.000000	inconclusive	21e8d1d4489f	[instructions] Broadened SERV GEN to explicitly include requests for information or clarification, aiming to reduce its under-firing.
+59	0.617056	0.000000	keep	6a404fa7a7ab	[instructions] Broaden SERV GEN to explicitly include requests for information or clarification to reduce its under-firing.
+60	0.548592	0.000000	discard	60433a01ff37	[shots_per_class] Remove few-shot examples to focus solely on the instructions, aiming to reduce over-firing of UWAI GP and improve differentiation for under-firing categories like SERV GEN and n/a.
+61	0.590749	0.000000	inconclusive	998da63c8749	[instructions] Narrow UWAI GP to exclude emails without explicit medical details, addressing its over-firing issue.
+62	0.616774	0.000000	inconclusive	e7450937446f	[instructions] Refined UWAI GP to exclude emails that mention GP reports without explicit medical details, aiming to reduce its over-firing.
+63	0.556487	0.000000	inconclusive	eda92bf7c93d	[shots_per_class] Increase shots_per_class to 4 to provide more examples for each category, especially for underrepresented categories like n/a and SERV GEN, potentially improving differentiation and reducing under-fir

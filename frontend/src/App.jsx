@@ -128,7 +128,7 @@ export default function App() {
           if (ev.solution) { setSolution(ev.solution); setSolStatus(ev.accepted === true ? 'kept — new best' : ev.accepted === false ? 'candidate (discarded)' : 'baseline') }
           setSplit(`practice set · round ${ev.iter}`); setBestF1(ev.best_mf1)
           if (ev.accepted === true && ev.candidate_prompt) setPrompts((p) => ({ ...p, best: ev.candidate_prompt }))
-          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description, verdict: ev.verdict, p: ev.stats?.p_better, prompt: ev.candidate_prompt })
+          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description, verdict: ev.verdict, p: ev.stats?.p_better, prompt: ev.candidate_prompt, inc: ev.incumbent_prompt })
         } else if (ev.type === 'review') {
           setReview({ runId: runIdRef.current, iter: ev.iter, cand: ev.cand_mf1, best: ev.best_mf1,
             prompt: ev.candidate_prompt })
@@ -153,6 +153,8 @@ export default function App() {
           addLog({ kind: 'final', text: `FINAL — score on UNSEEN data: ${pct(ev.test_mf1)} (the honest number; best from round ${ev.best_iter})${ev.stopped_early ? ' · stopped early: hit the 100% ceiling' : ''}` })
           getBestPrompt(channel).then(setPrompts).catch(() => {})
           getNotebook(channel).then((d) => setNotebook(d.experiments || [])).catch(() => {})
+        } else if (ev.type === 'note') {
+          addLog({ kind: 'plain', text: ev.text })
         } else if (ev.type === 'error') {
           setError(ev.message); setRunning(false); addLog({ kind: 'err', text: ev.message })
         }
@@ -211,15 +213,17 @@ export default function App() {
       </header>
 
       <div className="page">
-        <div className="masthead">
-          <h1>One loop, every channel</h1>
-          <p>
-            Karpathy's auto-research loop optimises a prompt against a <b>labelled sample</b> and keeps only what beats the
-            incumbent. <b>Each channel needs only its labelled sample; the agent does the rest.</b> Life emails are scored by
-            exact match, extraction channels by an <b>LLM-as-judge</b> — and <b>Commercial Submissions</b> classifies whole
-            broker emails (5-layer buckets + risk flags) and indexes every attachment by document type.
-          </p>
-        </div>
+        {!BROKER_ONLY && (
+          <div className="masthead">
+            <h1>One loop, every channel</h1>
+            <p>
+              Karpathy's auto-research loop optimises a prompt against a <b>labelled sample</b> and keeps only what beats the
+              incumbent. <b>Each channel needs only its labelled sample; the agent does the rest.</b> Life emails are scored by
+              exact match, extraction channels by an <b>LLM-as-judge</b> — and <b>Commercial Submissions</b> classifies whole
+              broker emails (5-layer buckets + risk flags) and indexes every attachment by document type.
+            </p>
+          </div>
+        )}
 
         {/* channel tabs, grouped: Zurich Life · Commercial Submissions */}
         <div className="tabgroups">
@@ -255,8 +259,8 @@ export default function App() {
           </div>
         )}
 
-        {/* ribbon */}
-        <div className="ribbon">
+        {/* ribbon — hidden in demo mode: the engine cards carry these numbers */}
+        {!BROKER_ONLY && <div className="ribbon">
           {isSub ? (
             <>
               <div className="stat"><div className="lab">Majority-class floor</div><div className="num">{chStatus?.baseline ? pct(chStatus.baseline.mf1) : '—'}</div></div>
@@ -286,13 +290,13 @@ export default function App() {
               <div className="stat"><div className="lab">Graded by</div><div className="num" style={{ fontSize: 16 }}>AI judge</div></div>
             </>
           )}
-        </div>
+        </div>}
 
-        <div className="explainer">
+        {!BROKER_ONLY && <div className="explainer">
           <b>How to read this:</b> the loop <b>tunes</b> its prompt on a practice set to score higher there.
           The number that counts is the <b>“Final · unseen”</b> score — measured on documents it never trained on, so it reflects
           real-world performance. The practice score is always a bit higher (it studied those examples); the unseen score is the honest one.
-        </div>
+        </div>}
 
         {/* broker submission triage — the Commercial Submissions demo panel */}
         {isSub && (
