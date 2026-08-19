@@ -231,14 +231,7 @@ export default function App() {
             <div className="tabgroup" key={g}>
               <span className="tg-label">{g}</span>
               <div className="tabs">
-                {g === 'Commercial Submissions' ? (
-                  /* one demo surface: the 7 layer-channels live INSIDE this tab */
-                  <button className={'tab' + (isSub ? ' on' : '')}
-                    onClick={() => !running && setChannel('attachment_doc_type')} disabled={running}>
-                    Broker Submissions
-                    <span className="tasktag">classify &amp; index · 7 layers</span>
-                  </button>
-                ) : shownChannels.filter((c) => (c.group || 'Channels') === g).map((c) => (
+                {shownChannels.filter((c) => (c.group || 'Channels') === g).map((c) => (
                   <button key={c.id} className={'tab' + (c.id === channel ? ' on' : '')} onClick={() => !running && setChannel(c.id)} disabled={running}>
                     {c.label}
                     <span className="tasktag">
@@ -326,19 +319,7 @@ export default function App() {
         )}
 
         {/* controls + chart */}
-        <div className="seclab"><span className="tick" /><h2>Experiment — {channels.find((c) => c.id === channel)?.label || channel}</h2>
-          {isSub && <span className="hint">the loop optimizes ONE layer at a time — pick which below</span>}</div>
-        {isSub && (
-          <div className="layerpills">
-            <span className="lp-label">optimize layer</span>
-            {channels.filter((c) => c.group === 'Commercial Submissions').map((c) => (
-              <button key={c.id} className={'lp' + (c.id === channel ? ' on' : '')} disabled={running}
-                onClick={() => setChannel(c.id)}>
-                {c.label}{c.multi ? ' ·multi' : ''}
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="seclab"><span className="tick" /><h2>Experiment — {channels.find((c) => c.id === channel)?.label || channel}</h2></div>
         {isSub && channel !== 'attachment_doc_type' && (
           <div className="note">
             <b>Small-sample layer:</b> only 8 labelled submissions exist → {chStatus?.dev ?? 5} practice / {chStatus?.test ?? 3} unseen.
@@ -472,12 +453,7 @@ export default function App() {
               </div>
             </>
           )
-          return isSub ? (
-            <details className="internals">
-              <summary>Engine internals — research notebook · current prompt · per-document answers · scorecard</summary>
-              <div className="internals-body">{internals}</div>
-            </details>
-          ) : internals
+          return internals
         })()}
 
         <div className="foot">
