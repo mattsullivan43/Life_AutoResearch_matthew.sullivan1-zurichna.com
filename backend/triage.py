@@ -20,7 +20,15 @@ CLASSIFIED = os.path.join(subs.SUB_DIR, "classified")
 BUCKET_CHANNELS = ["submission_type", "industry", "lines", "routing", "structure", "risk_flags"]
 
 
+import re
+_SAFE_SID = re.compile(r"^[A-Za-z0-9_-]+$")
+
+
 def cache_path(sid):
+    """sid becomes a filesystem path — slug-validate even though callers already
+    check membership in the extracted registry (defense in depth)."""
+    if not _SAFE_SID.match(sid or ""):
+        raise ValueError(f"invalid submission id: {sid!r}")
     return os.path.join(CLASSIFIED, f"{sid}.json")
 
 

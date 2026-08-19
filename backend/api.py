@@ -134,12 +134,17 @@ async def upload(channel: str = Form("emails"), files: list[UploadFile] = File(.
         os.makedirs(dest, exist_ok=True)
         ingested = []
         for f in files:
-            name = os.path.basename(f.filename or "")
+            # defense in depth: basename only, printable-safe chars only, 25MB cap
+            name = re.sub(r"[^\w .&()\[\]-]", "_", os.path.basename(f.filename or ""))
             if not name.lower().endswith((".eml", ".msg")):
+                continue
+            data = await f.read()
+            if len(data) > 25 * 1024 * 1024:
+                ingested.append({"id": name, "error": "file exceeds 25MB limit"})
                 continue
             path = os.path.join(dest, name)
             with open(path, "wb") as out:
-                out.write(await f.read())
+                out.write(data)
             try:
                 sub = subs.ingest_file(path)
                 ingested.append({"id": sub.submission_id,

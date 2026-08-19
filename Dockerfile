@@ -19,6 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./backend/
 COPY data/ ./data/
 COPY scripts/ ./scripts/
+# the Commercial Submissions bucket taxonomy lives at repo root
+COPY taxonomy.yaml ./taxonomy.yaml
 COPY --from=frontend /fe/dist ./frontend/dist
 
 # runs/ holds the persistent memory (notebook + git lab) — mount EFS here on AWS

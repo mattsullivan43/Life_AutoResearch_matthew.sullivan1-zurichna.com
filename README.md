@@ -41,15 +41,25 @@ thrash.
 ```
 read notebook (results_<channel>.tsv) + best SOLUTION        # persistent memory
  → propose ONE knob change, conditioned on the notebook       # never repeat a discard
- → score on dev, AVERAGED over EVAL_PASSES (kills ~2% jitter)  # classify: macro-F1
- → git commit; keep only if it beats best by > NOISE_MARGIN    # else reset --hard
+ → score CANDIDATE + INCUMBENT on the same dev rows,           # classify: macro-F1
+   averaged over EVAL_PASSES (kills the ~2% API jitter)        # extract: LLM-judge
+ → PAIRED BOOTSTRAP decides: keep (p≥.80) / discard+ban (p≥.95)
+   / inconclusive (revert, retryable); git commit = keep       # else reset --hard
  → repeat. Final = best SOLUTION scored once on held-out test  # the honest number
 ```
 
-Two channels share one loop:
-- **`emails`** → *classify* into one of 6 categories, scored by exact-match **macro-F1**.
-- **`medical` / `calls` / `complaints`** → *extract* structured JSON, scored by an
+Three channel families share one loop:
+- **Zurich Life · `emails`** → *classify* into one of 6 categories, scored by exact-match **macro-F1**.
+- **Zurich Life · `medical` / `calls` / `complaints`** → *extract* structured JSON, scored by an
   **LLM-as-judge** (a different model than the one generating).
+- **Commercial Submissions · `submission_type` / `industry` / `lines` / `routing` /
+  `structure` / `risk_flags` / `attachment_doc_type`** → *classify* whole broker
+  submissions (.eml/.msg incl. attachments, read fully locally, PII anonymised)
+  into the 5-layer bucket taxonomy (`taxonomy.yaml`) + index every attachment by
+  document type. Multi-label channels use set-valued macro-F1. Guard rails for the
+  tiny (n=8) labelled sample: grouped dev/test splits (one email's attachments never
+  straddle the boundary), a filename-blind doc-type classifier, and auto-rejection of
+  optimizer rules that mention specific accounts (no memorisation).
 
 ---
 
@@ -87,17 +97,23 @@ PY
 
 ```
 backend/
-  prepare.py      FIXED ground-truth eval: splits, macro-F1, precision/recall, confusion (read-only)
-  solution.py     the SOLUTION knobs + make_classifier() scaffold; extract layer + LLM-judge; channel registry
-  researcher.py   the loop: read notebook + best → propose ONE knob change → score (avg) → keep/discard → log
-  classifier.py   provider shim (OpenAI/Anthropic) + keyword baseline + build_llm_classifier scaffold
-  gitlab.py       literal git keep/discard chain (one tiny repo per channel under runs/lab/)
-  api.py          FastAPI + SSE: /api/status /api/run /api/baseline /api/review /api/notebook /api/solution …
-  program.md      the research-org spec (human-edited, ≙ Karpathy's program.md)
-  prompts/        seed prompts (classifier / summariser / extractor)
-frontend/         React + Vite + Recharts — Zurich-themed console
-runs/             results_<channel>.tsv (notebook) + lab/ (keep/discard git repos)
-data/, scripts/   labelled sample + ingest / synthetic-data generators
+  prepare.py            FIXED ground-truth eval: splits, macro-F1 (single + set-valued), P/R, confusion,
+                        paired bootstrap + McNemar (read-only)
+  solution.py           the SOLUTION knobs + make_classifier() scaffold; extract layer + LLM-judge; channel registry
+  researcher.py         the loop: read notebook + best → propose ONE knob change → score both → paired decide → log
+  submissions.py        Commercial Submissions data layer: taxonomy, ground truth, grouped splits, realism guards
+  triage.py             classify ONE submission across every channel at once (dashboard demo path + cache)
+  ingest_attachments.py broker .eml/.msg → anonymised Submission text (PDF/DOCX/XLSX read locally, no OCR/cloud)
+  classifier.py         provider shim (OpenAI/Anthropic) + keyword baseline + build_llm_classifier scaffold
+  gitlab.py             literal git keep/discard chain (one tiny repo per channel under runs/lab/)
+  api.py                FastAPI + SSE: /api/run /api/submissions /api/classify_submission /api/upload …
+  auth.py               Cognito JWT verification (Basic-auth fallback; open in local dev)
+  program.md            the research-org spec (human-edited, ≙ Karpathy's program.md)
+  prompts/              seed prompts (classifier / summariser / extractor)
+taxonomy.yaml           the 5-layer submission buckets + risk flags + doc types (editable seed)
+frontend/               React + Vite + Recharts — Zurich-themed console (grouped tabs + triage panel)
+runs/                   results_<channel>.tsv (notebook) + lab/ (keep/discard git repos)
+data/, scripts/         labelled samples + ingest / precompute; data/submissions/*.eml are gitignored (PII)
 deploy/, Dockerfile, dev.sh
 ```
 

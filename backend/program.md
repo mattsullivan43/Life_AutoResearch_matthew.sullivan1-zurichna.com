@@ -25,8 +25,14 @@ The persistent notebook is **`runs/results_<channel>.tsv`** (≙ his `results.ts
 Inside `solution.py`'s `SOLUTION` dict — these are the only knobs, like the
 hyper-parameter block at the top of Karpathy's `train.py`. Change exactly ONE per round:
 - the **instruction prompt** wording / rules / category definitions (`instructions`),
-- the **number of shots** per class (`shots_per_class`, 0–6),
+- the **number of shots** per class (`shots_per_class`, 0–4 = `prepare.MAX_SHOTS`),
 - the **few-shot example selection** (`fewshot_seed` — which labelled examples to show).
+
+The broker-submission channels (`submission_type`, `industry`, `lines`, `routing`,
+`structure`, `risk_flags`, `attachment_doc_type` — see `backend/submissions.py`) have
+**one knob only**: `instructions`. Their labelled sample (8 submissions) cannot spare a
+few-shot pool, and proposals that mention a specific account/broker/carrier are
+**auto-rejected** (`BANNED_TERMS`) — memorising 5 dev documents is not learning.
 
 `propose()` returns STRUCTURED JSON `{knob, value, description}` — **never free-form
 code**. The classifier scaffold (`make_classifier`) is fixed and cannot be edited, so a
@@ -40,13 +46,19 @@ search space is the whole reason the loop converges instead of collapsing.
 - Few-shot may ONLY use the designated few-shot pool, NEVER dev/test docs.
 
 ## The metric
-`dev macro-F1` (higher is better), from `prepare.evaluate()`.
-**Important — the metric is NOISY** (~0.019 spread run-to-run, measured; inherent to
-the LLM API). We tame it two ways: every candidate is scored **AVERAGED over
-`EVAL_PASSES` passes**, and a change is only **`keep`** if it beats the current best by
-MORE than `NOISE_MARGIN` (=0.02, set just above the measured floor); otherwise
-**`discard`**. This is our adaptation of his deterministic `val_bpb`: we refuse to bank
-lucky noise.
+`dev macro-F1` (higher is better), from `prepare.evaluate()` /
+`prepare.evaluate_texts()` (multi-label channels use set-valued macro-F1 — the same
+formula with label sets). **Important — the metric is NOISY** (LLM API jitter,
+measured up to ~0.065 swing on identical inputs). We tame it two ways: every
+candidate is scored **AVERAGED over `EVAL_PASSES` passes**, and the keep/discard call
+is a **PAIRED BOOTSTRAP** over documents (`prepare.paired_bootstrap*`): candidate and
+incumbent are re-scored on the SAME rows in the SAME round, then
+- **keep** at `p_better >= 0.80` (a false accept is cheap — it is re-measured next round),
+- **discard + permanent ban** only at `p_worse >= 0.95` (a false ban is forever),
+- otherwise **inconclusive**: rolled back but retryable.
+(The old fixed-margin rule survives as `decision="margin"` for A/B only — it never
+banked a single keep.) This is our adaptation of his deterministic `val_bpb`: we
+refuse to bank lucky noise.
 
 **Simplicity criterion** (from Karpathy): all else equal, simpler wins. A tiny gain
 that adds convoluted rules isn't worth it; a simplification that holds the score is.
@@ -70,10 +82,12 @@ LOOP:
  2. Propose ONE change to SOLUTION, conditioned on the notebook:
        - NEVER repeat a change already logged as `discard`,
        - build on changes logged as `keep`.
- 3. Score the new SOLUTION with prepare.evaluate() on dev.
- 4. Append a row to the notebook with a description + status.
- 5. keep  -> it beat best by > noise margin: adopt as the new best SOLUTION.
-    discard-> otherwise: revert to the previous best.
+ 3. Score the new SOLUTION *and the incumbent* on the SAME dev rows this round.
+ 4. Append a row to the notebook with a description + verdict.
+ 5. Paired bootstrap over documents:
+      keep         (p_better >= 0.80) -> adopt as the new best SOLUTION, persist.
+      discard      (p_worse  >= 0.95) -> revert AND ban the fingerprint forever.
+      inconclusive (otherwise)        -> revert; retryable in a future round.
  6. Repeat.
 Final: score the best SOLUTION once on the held-out TEST split — the honest number.
 ```

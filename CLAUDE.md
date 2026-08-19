@@ -204,6 +204,50 @@ API/model reference: https://docs.claude.com/en/api/overview
    registered in `solution.EXTRACT_CHANNELS`, so they run with no code change.
    (This item was previously marked ❌ as "a parked scaffold" — that was stale.)
 
+## Commercial Submissions (broker classify-and-index — hackathon extension)
+Added per the "Extend to Broker Submissions" brief: classify a whole broker
+submission email into a 5-layer bucket taxonomy + index each attachment by document
+type. CLASSIFICATION ONLY — no field extraction, no OCR, no cloud ingestion.
+```
+backend/ingest_attachments.py  .eml/.msg -> anonymised Submission text (pdfplumber/
+                               python-docx/openpyxl, all local; read_warning, never crash;
+                               PII -> [PLACEHOLDER_n] BEFORE any LLM call; deterministic)
+backend/submissions.py         data layer: taxonomy.yaml, ground_truth_*.csv, grouped
+                               splits, seed prompts, BANNED_TERMS memorisation guard
+backend/triage.py              one submission x all channels at once (demo path);
+                               caches to data/submissions/classified/ = pre-processed mode
+scripts/ingest_submissions.py  bulk-ingest data/submissions/*.eml|*.msg
+scripts/precompute_submissions.py  warm the triage cache before a demo
+```
+- **Channels** (task `classify_sub`, same loop/notebook/git/HITL as emails; the ONLY
+  knob is `instructions`): `submission_type` `industry` `structure` `routing`
+  (single-label) · `lines` `risk_flags` (multi-label, set-valued macro-F1) ·
+  `attachment_doc_type` (per-attachment). Buckets live in `taxonomy.yaml` (editable
+  seed, NOT an official Zurich standard); seed prompts are GENERATED from its
+  descriptions.
+- **Data**: 8 real broker .eml in `data/submissions/` (gitignored — real PII; the
+  extracted/ and classified/ caches too). Labels: `ground_truth_submissions.csv` +
+  `ground_truth_doctypes.csv` (63 attachments). ⚠ Labels partly INFERRED — see
+  `docs/LABEL_REVIEW.md`; Moda + Alliance `type=Renewal` conflicts with their
+  "New Business" subjects (brief's decoy mapping, unconfirmed). NO MORE DATA IS
+  COMING — do not fabricate documents.
+- **Realism guards (deliberate — do not "fix" to make numbers look better):**
+  splits are GROUPED by submission (near-duplicate attachments never straddle
+  dev/test); `attachment_doc_type` is FILENAME-BLIND (with filenames the seed scores
+  a saturated 1.000 — "Auto Acord.pdf" announces the label); optimizer proposals
+  naming a specific account/broker/carrier are auto-rejected (`BANNED_TERMS`);
+  metrics score only labels observed in the split; majority-class floor per channel.
+- **Measured (gpt-4o-mini, held-out)**: `attachment_doc_type` seed 0.727 dev → 1 keep
+  → test macro-F1 **0.933** / acc 0.964 (n=28; majority floor 0.091) — the
+  statistically real headline. Submission-level channels run honestly but n=8
+  (dev 5 / test 3) resolves almost nothing: keeps are rare BY DESIGN; treat those
+  channels as live-demo capability, not stats. Warmed cache: attachments 56/63,
+  buckets 26/48 (misses concentrate in the unconfirmed decoy labels).
+- **API**: GET `/api/submissions`, POST `/api/classify_submission?submission_id&live=`
+  (live=false serves the cache = instant), `/api/upload` accepts .eml/.msg (25MB cap,
+  sanitised filename). UI: tabs grouped "Zurich Life" / "Commercial Submissions";
+  `SubmissionTriage` panel = picker + drop-zone + bucket cards + attachment index.
+
 ## Good next steps (core first)
 - Wire **precision/recall** into the dashboard (math already in events as `prf`).
 - Wire the **human-in-the-loop** review gate through api.py (SSE pause + /api/review)
