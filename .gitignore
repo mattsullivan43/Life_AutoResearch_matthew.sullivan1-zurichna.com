@@ -30,6 +30,11 @@ runs/solution_*.json
 # results_<channel>.tsv (the notebook) IS tracked on purpose — it's the demo memory.
 !runs/.gitkeep
 
+# ─── broker submissions: raw emails contain real PII — never commit ──────
+data/submissions/*.eml
+data/submissions/*.msg
+data/submissions/extracted/
+
 # ─── os / editor ──────────────────────────────────────────────────────────
 .DS_Store
 *.swp
