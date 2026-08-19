@@ -1,0 +1,7 @@
+exp_id	dev	test	status	sig	description
+1	0.803976	0.000000	keep	87dd16fb4cbb	[instructions] Broaden Supplemental questionnaire to include coverage specifications, narrowing Other.
+2	0.803976	0.000000	inconclusive	794a3a2208c9	[instructions] Exclude corrupted/unreadable documents from Other to reduce its over-firing.
+3	0.803976	0.000000	inconclusive	ad5366687675	[instructions] Exclude corrupted/unreadable documents from Other to reduce its over-firing.
+4	0.803976	0.000000	inconclusive	a2c654a33efd	[instructions] Exclude corrupted/unreadable documents from Other to prevent misclassification, narrowing the Other category.
+5	0.803976	0.000000	inconclusive	3ea9866fbe24	[instructions] Exclude corrupted/unreadable documents from Other to reduce its over-firing, narrowing the Other category.
+6	0.803976	0.800000	final	87dd16fb4cbb	held-out test of best (round 1)

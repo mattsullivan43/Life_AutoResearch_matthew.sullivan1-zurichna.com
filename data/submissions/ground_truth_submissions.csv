@@ -1,0 +1,9 @@
+submission_id,match,type,industry,structure,lines,routing,risk_flags
+polyfab,polyfab,New Business,Manufacturing,Single site,Property|General Liability|Commercial Auto|Workers' Comp|Umbrella/Excess,Standard–Middle Market,equipment breakdown
+expo,expo,Endorsement,Events/Hospitality,Single entity multi-site,Umbrella/Excess,Standard–Middle Market,
+gemini,gemini,New Business,Distribution/Wholesale,Single entity multi-site,Property|General Liability|Commercial Auto|Workers' Comp|Umbrella/Excess,CAT-Exposed,
+alliance,alliance,Renewal,Events/Hospitality,Multi-entity/subsidiaries,Property|General Liability|Commercial Auto|Workers' Comp,Referral–High Hazard,heavy fleet exposure
+beverly_wilcox,beverly,New Business,Real Estate (LRO),Multi-entity/subsidiaries,General Liability,Clean/Fast-track,
+moda,moda,Renewal,Retail/E-commerce,Multi-national (US + foreign),Property|General Liability|Commercial Auto|Workers' Comp|Umbrella/Excess|Foreign Package/International|Stock Throughput/Ocean Marine|Jewelers Block|HNOA,Standard–Middle Market,high-value inventory & transit
+tryon,tryon,New Business,Healthcare/Medical,Multi-entity/subsidiaries,Property|General Liability|Commercial Auto|Workers' Comp|Umbrella/Excess,Specialty–PE/M&A,needlestick/medical
+elsner,elsner,Renewal,Manufacturing,Single site,Property|General Liability|Commercial Auto|Umbrella/Excess|Inland Marine,Referral–Adverse Loss,large product-liability loss|adverse loss ratio

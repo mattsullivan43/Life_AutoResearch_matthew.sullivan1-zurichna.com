@@ -98,23 +98,44 @@ def _normalize(out):
             return c
     return "n/a"
 
-def build_llm_classifier(prompt_text, fewshot, model="claude-haiku-4-5-20251001", max_doc=4000, votes=1):
+def _normalize_generic(out, labels, multi):
+    """Map raw model output onto the channel's label set. Longest labels are
+    matched first so 'Umbrella/Excess' can't be shadowed by a shorter label that
+    happens to be its substring. No match -> '' / empty set (scored as wrong —
+    an unparseable answer must not silently become a default class)."""
+    low = (out or "").lower()
+    hits = [c for c in sorted(labels, key=len, reverse=True) if c.lower() in low]
+    if multi:
+        return frozenset(hits)          # "none" (or garbage) -> empty set
+    return hits[0] if hits else ""
+
+def build_llm_classifier(prompt_text, fewshot, model="claude-haiku-4-5-20251001", max_doc=4000,
+                         votes=1, labels=None, multi=False):
     """votes>1: classify each email `votes` times and majority-vote. (Tested: at
     temp=0 this does NOT meaningfully reduce the API's run-to-run jitter, so it
-    defaults to 1. The ~2% noise floor is inherent to the model API.)"""
+    defaults to 1. The ~2% noise floor is inherent to the model API.)
+
+    labels=None -> the legacy email channel (CATEGORIES, 'n/a' fallback).
+    labels=[...] -> generic channel; multi=True returns a frozenset of labels."""
     sys = prompt_text.replace("{FEWSHOT}", fewshot)
+    ask = ("Classify this document. Reply with every applicable label, separated by ' | ', "
+           "or 'none'." if multi else
+           "Classify this email. Reply with ONLY the category code." if labels is None else
+           "Classify this document. Reply with ONLY the label.")
+    fallback = "n/a" if labels is None else (frozenset() if multi else "")
     def one(doc, seed):
         for attempt in range(3):
             try:
                 m = _client().messages.create(
-                    model=model, max_tokens=12, system=sys, temperature=0, seed=seed,
-                    messages=[{"role": "user",
-                               "content": f"Classify this email. Reply with ONLY the category code.\n\n{doc}"}],
+                    model=model, max_tokens=100 if multi else 24, system=sys,
+                    temperature=0, seed=seed,
+                    messages=[{"role": "user", "content": f"{ask}\n\n{doc}"}],
                 )
-                return _normalize("".join(b.text for b in m.content if b.type == "text"))
+                out = "".join(b.text for b in m.content if b.type == "text")
+                return _normalize(out) if labels is None else _normalize_generic(out, labels, multi)
             except Exception:
-                if attempt == 2: return "n/a"
-        return "n/a"
+                if attempt == 2: return fallback
+        return fallback
     def classify(t):
         doc = t[:max_doc]
         from collections import Counter

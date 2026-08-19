@@ -6,12 +6,26 @@ the report prints each submission's content hash so a diff is instantly visible.
 
 Run:  .venv/bin/python -m scripts.ingest_submissions
 """
-import os, glob, json
+import os, csv, glob, json
 from backend import prepare
 from backend.ingest_attachments import load_submission, content_hash
 
 SUB_DIR = os.path.join(prepare.ROOT, "data", "submissions")
 OUT_DIR = os.path.join(SUB_DIR, "extracted")
+GT = os.path.join(SUB_DIR, "ground_truth_submissions.csv")
+
+
+def _id_for(path):
+    """Short id from the ground truth's `match` keyword (case-insensitive substring
+    of the filename), mirroring ingest.py's insensitive matching. Unmatched files
+    keep the generic filename slug so they still ingest."""
+    name = os.path.basename(path).lower()
+    if os.path.exists(GT):
+        with open(GT, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                if r["match"].lower() in name:
+                    return r["submission_id"]
+    return None
 
 
 def ingest_all():
@@ -20,7 +34,7 @@ def ingest_all():
                    + glob.glob(os.path.join(SUB_DIR, "*.msg")))
     out = []
     for p in files:
-        sub = load_submission(p)
+        sub = load_submission(p, submission_id=_id_for(p))
         with open(os.path.join(OUT_DIR, sub.submission_id + ".json"), "w",
                   encoding="utf-8") as f:
             json.dump(sub.model_dump(), f, indent=1)

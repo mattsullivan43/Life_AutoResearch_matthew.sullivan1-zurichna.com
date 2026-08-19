@@ -134,6 +134,101 @@ def rows_obj(scored, max_chars=180):
     return out
 
 
+# ---------- text-carrying rows (submission channels) ----------
+# Same contract as evaluate(), but rows carry their text inline instead of a file
+# in data/documents/. Handles single-label (pred/label = str) AND multi-label
+# (pred/label = frozenset). NB single-label macro-F1 over a fixed label set is the
+# multi-label formula with singleton sets, so one metric path serves both.
+
+def _as_set(x):
+    if isinstance(x, (set, frozenset)): return frozenset(x)
+    return frozenset([x]) if x else frozenset()
+
+def set_macro_f1(rows, labels=None):
+    """Macro-F1 where label/pred may be sets (multi-label) or strings (single).
+    Averaged over `labels` (default: labels observed in the truth — zero-support
+    classes are excluded so they can't pad or cap the score)."""
+    labs = sorted(labels) if labels else sorted({l for r in rows for l in _as_set(r["label"])})
+    per = {}
+    for L in labs:
+        tp = sum(1 for r in rows if L in _as_set(r["pred"]) and L in _as_set(r["label"]))
+        fp = sum(1 for r in rows if L in _as_set(r["pred"]) and L not in _as_set(r["label"]))
+        fn = sum(1 for r in rows if L not in _as_set(r["pred"]) and L in _as_set(r["label"]))
+        p = tp / (tp + fp) if tp + fp else 0.0
+        r_ = tp / (tp + fn) if tp + fn else 0.0
+        per[L] = (2 * p * r_ / (p + r_)) if (p + r_) else 0.0
+    return (sum(per.values()) / len(per)) if per else 0.0, per
+
+def set_prf(rows, labels=None):
+    """Per-label precision/recall/F1/support for set-valued rows (same shape as prf())."""
+    labs = sorted(labels) if labels else sorted({l for r in rows for l in _as_set(r["label"])})
+    per = {}
+    for L in labs:
+        tp = sum(1 for r in rows if L in _as_set(r["pred"]) and L in _as_set(r["label"]))
+        fp = sum(1 for r in rows if L in _as_set(r["pred"]) and L not in _as_set(r["label"]))
+        fn = sum(1 for r in rows if L not in _as_set(r["pred"]) and L in _as_set(r["label"]))
+        p = tp / (tp + fp) if tp + fp else 0.0
+        r_ = tp / (tp + fn) if tp + fn else 0.0
+        f1 = (2 * p * r_ / (p + r_)) if (p + r_) else 0.0
+        per[L] = {"precision": p, "recall": r_, "f1": f1,
+                  "support": sum(1 for r in rows if L in _as_set(r["label"]))}
+    n = len(per) or 1
+    macro = {"precision": sum(v["precision"] for v in per.values()) / n,
+             "recall": sum(v["recall"] for v in per.values()) / n,
+             "f1": sum(v["f1"] for v in per.values()) / n}
+    return {"per_class": per, "macro": macro}
+
+def evaluate_texts(classify_fn, rows, labels=None, max_workers=8):
+    """rows: [{file, label, text, ...}]. Returns (scored, exact_acc, macro_f1, per_class).
+    exact accuracy for multi-label = exact set match."""
+    from concurrent.futures import ThreadPoolExecutor
+    def run(r):
+        rr = dict(r); rr["pred"] = classify_fn(r["text"]); return rr
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        scored = list(ex.map(run, rows))
+    acc = sum(1 for r in scored if _as_set(r["pred"]) == _as_set(r["label"])) / len(scored)
+    mf1, per = set_macro_f1(scored, labels)
+    return scored, acc, mf1, per
+
+def paired_bootstrap_sets(rows_a, rows_b, labels, n_boot=2000, seed=17):
+    """paired_bootstrap generalised to set-valued predictions (multi-label channels
+    and the submission single-label channels). Same return shape."""
+    b = {r["file"]: r for r in rows_b}
+    t, pa, pb = [], [], []
+    for r in rows_a:
+        o = b.get(r["file"])
+        if o is None: continue
+        t.append(_as_set(r.get("label", r.get("true"))))
+        pa.append(_as_set(r["pred"])); pb.append(_as_set(o["pred"]))
+    n = len(t); labs = sorted(labels)
+    if n == 0 or not labs:
+        return {"n": n, "mf1_a": 0.0, "mf1_b": 0.0, "delta": 0.0,
+                "p_better": 0.0, "p_worse": 0.0, "ci": [0.0, 0.0]}
+    def mf1(idxs, preds):
+        tot = 0.0
+        for L in labs:
+            tp = fp = fn = 0
+            for i in idxs:
+                inp, int_ = L in preds[i], L in t[i]
+                if inp and int_: tp += 1
+                elif inp: fp += 1
+                elif int_: fn += 1
+            p = tp / (tp + fp) if tp + fp else 0.0
+            r = tp / (tp + fn) if tp + fn else 0.0
+            tot += (2 * p * r / (p + r)) if (p + r) else 0.0
+        return tot / len(labs)
+    whole = range(n)
+    a0, b0 = mf1(whole, pa), mf1(whole, pb)
+    rng = random.Random(seed)
+    deltas = sorted(mf1(idxs := [rng.randrange(n) for _ in range(n)], pb) - mf1(idxs, pa)
+                    for _ in range(n_boot))
+    wins = sum(1 for d in deltas if d > 0); losses = sum(1 for d in deltas if d < 0)
+    return {"n": n, "mf1_a": a0, "mf1_b": b0, "delta": b0 - a0,
+            "p_better": wins / len(deltas), "p_worse": losses / len(deltas),
+            "ci": [deltas[int(0.025 * len(deltas))],
+                   deltas[min(len(deltas) - 1, int(0.975 * len(deltas)))]]}
+
+
 # ---------- paired significance tests (the keep/discard decision) ----------
 # The metric is noisy (an LLM eval jitters run-to-run), so "candidate mean > incumbent
 # mean + fixed margin" is the wrong test: it depends on how many samples each side

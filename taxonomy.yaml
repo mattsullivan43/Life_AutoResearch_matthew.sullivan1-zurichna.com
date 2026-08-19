@@ -1,0 +1,93 @@
+# taxonomy.yaml — the submission-classification buckets (5 layers + risk flags)
+# and the attachment doc-type index. This is a PROPOSED SEED, not an official
+# Zurich appetite standard — edit freely; seed classifier prompts are generated
+# from the descriptions below, so better descriptions = a better starting prompt.
+#
+# mode: single = exactly one label per document; multi = zero or more (risk_flags)
+# or one or more (lines).
+
+submission_type:
+  label: "Type"
+  mode: single
+  categories:
+    New Business: a submission for an account new to the carrier (even if the account is renewing elsewhere)
+    Renewal: renewal of an account already written by the carrier, or renewal-term information for an existing relationship
+    Endorsement: a change to an already-logged submission or in-force policy (e.g. add a line of coverage mid-stream)
+    n/a: none of the above
+
+industry:
+  label: "Industry"
+  mode: single
+  categories:
+    Manufacturing: makes/fabricates physical products (plants, machining, assembly)
+    Distribution/Wholesale: distributes or wholesales goods (warehousing, logistics, supply)
+    Real Estate (LRO): lessor's risk only — owns/leases out buildings to tenants
+    Healthcare/Medical: medical practices, clinics, physician groups, healthcare services
+    Retail/E-commerce: sells to consumers, in-store or online
+    Events/Hospitality: trade shows, exhibitions, venues, hospitality operations
+
+lines:
+  label: "Lines of Business"
+  mode: multi          # one or more
+  categories:
+    Property: {}
+    General Liability: {}
+    Commercial Auto: {}
+    Workers' Comp: {}
+    Umbrella/Excess: {}
+    Inland Marine: {}
+    Boiler & Machinery/Equipment Breakdown: {}
+    Installation/Builders Risk: {}
+    Crime: {}
+    Foreign Package/International: {}
+    Stock Throughput/Ocean Marine: {}
+    Jewelers Block: {}
+    Kidnap & Ransom: {}
+    Products Liability: {}
+    Cyber: {}
+    HNOA: hired & non-owned auto only (no owned fleet)
+
+routing:
+  label: "Routing lane"
+  mode: single
+  categories:
+    Standard–Middle Market: ordinary middle-market risk, standard underwriting queue
+    Specialty–PE/M&A: private-equity or M&A involvement (deal-driven, MSO structures, brokered via an M&A practice)
+    Referral–Adverse Loss: loss history requires referral (large or frequent losses)
+    Referral–High Hazard: hazardous operations or heavy exposure requiring referral
+    CAT-Exposed: significant natural-catastrophe exposure (wind/quake/flood zones)
+    Clean/Fast-track: small, clean, single-line — quote quickly
+
+structure:
+  label: "Account Structure"
+  mode: single
+  categories:
+    Single site: one location, one entity
+    Single entity multi-site: one legal entity operating multiple locations
+    Multi-entity/subsidiaries: holding company or several related legal entities
+    Multi-national (US + foreign): exposures in the US plus at least one foreign country
+
+risk_flags:
+  label: "Risk Flags"
+  mode: multi          # zero or more
+  categories:
+    large product-liability loss: a significant products-liability claim in the loss history
+    adverse loss ratio: loss history materially worse than premium
+    heavy fleet exposure: large owned-auto fleet is a dominant exposure   # seed addition (brief: "heavy auto")
+    hazardous disposal: hazardous materials, waste or disposal operations
+    needlestick/medical: sharps / bloodborne-pathogen / medical-operations exposure
+    high-value inventory & transit: high-value stock, especially in transit (jewelry, luxury goods)
+    equipment breakdown: critical machinery whose breakdown halts operations
+
+attachment_doc_type:
+  label: "Attachment document type"
+  mode: single
+  categories:
+    ACORD form: standard ACORD application forms (125/126/130/140 etc.)
+    Statement of Values (SOV): schedule of locations/buildings/values; exposure workbooks with SOV schedules
+    Loss run: carrier-valued loss history, loss runs or loss summaries
+    Driver/vehicle schedule: lists of drivers and/or vehicles (VINs, DOBs, garaging)
+    Narrative/risk write-up: prose description of the account, operations or risk story
+    Supplemental questionnaire: carrier/broker questionnaires and supplemental applications
+    Broker cover letter: a standalone cover letter from the broker
+    Other: anything else (rent rolls, experience mods, coverage specs, financials)

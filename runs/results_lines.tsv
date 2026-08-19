@@ -1,0 +1,3 @@
+exp_id	dev	test	status	sig	description
+1	0.718254	0.000000	inconclusive	d2ad33b60fa2	[instructions] Added an explicit exclusion rule for 'Commercial Auto' to avoid over-firing. Now requires mention of owned vehicles or fleet coverage.
+2	0.742063	0.880000	final	9d0bb0f3cfdf	held-out test of best (round 0)

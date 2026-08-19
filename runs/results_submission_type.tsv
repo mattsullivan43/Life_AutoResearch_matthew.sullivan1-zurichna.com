@@ -1,0 +1,4 @@
+exp_id	dev	test	status	sig	description
+1	0.619048	0.000000	inconclusive	3e5807539193	[instructions] Broaden 'Renewal' criteria to catch under-firing by including terms like 'renewal', 'recurring', 'extension', or references to prior policy information.
+2	0.619048	0.000000	inconclusive	f20828c2e486	[instructions] Broaden 'Renewal' criteria by explicitly including phrases indicating continuation of existing coverage.
+3	0.619048	0.666667	final	273d4f5a9b09	held-out test of best (round 0)

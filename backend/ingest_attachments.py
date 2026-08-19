@@ -55,6 +55,8 @@ _PII_PATTERNS = [
     re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),                                            # SSN
     re.compile(r"\bFEIN[:\s#]*\d{2}-?\d{7}\b", re.I),                                # FEIN (labelled)
     re.compile(r"\b\d{2}-\d{7}\b"),                                                  # FEIN (bare)
+    re.compile(r"\b\d{9}\b"),        # 9-digit run: undashed FEIN/SSN/rating IDs. Deliberately
+                                     # broad — a stray redacted ID number costs nothing here
     re.compile(r"(?:\+1[\s.-]?)?\(?\b\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b"),             # US phone
     re.compile(r"\b\d{1,5}\s+[A-Z][A-Za-z]*(?:\s+[A-Z][A-Za-z]*){0,3}\s+"
                r"(?:Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Boulevard|Blvd|Lane|Ln|"

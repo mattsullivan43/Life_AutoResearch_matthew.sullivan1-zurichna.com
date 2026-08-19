@@ -23,7 +23,8 @@ import os, csv, json, re, hashlib
 from backend import prepare
 from backend import solution as sol
 from backend import gitlab
-from backend.classifier import _client
+from backend import submissions as subs
+from backend.classifier import _client, build_llm_classifier
 from backend.prepare import confusion_obj, rows_obj
 
 RUNS = os.path.join(prepare.ROOT, "runs")
@@ -80,9 +81,16 @@ STOP_AT = 0.999        # ceiling reached -> stop; no point running more experime
 _SAFE_CH = re.compile(r"^[A-Za-z0-9_-]+$")
 def valid_channel(ch):
     """A channel becomes a filesystem path — only allow known, slug-safe names."""
-    return isinstance(ch, str) and bool(_SAFE_CH.match(ch)) and (ch == "emails" or ch in sol.EXTRACT_CHANNELS)
+    return (isinstance(ch, str) and bool(_SAFE_CH.match(ch))
+            and (ch == "emails" or ch in sol.EXTRACT_CHANNELS or ch in subs.CHANNELS))
 
-def task_of(ch): return "classify" if ch == "emails" else "extract"
+def task_of(ch):
+    """classify     = the original email channel (few-shot pool + 3 knobs)
+       classify_sub = broker-submission channels (instructions-only knob, set metrics)
+       extract      = LLM-judge extraction channels"""
+    if ch == "emails": return "classify"
+    if ch in subs.CHANNELS: return "classify_sub"
+    return "extract"
 def notebook_path(ch):
     if not (isinstance(ch, str) and _SAFE_CH.match(ch)):   # never let `channel` escape RUNS/
         raise ValueError(f"invalid channel: {ch!r}")
@@ -141,15 +149,21 @@ def reset(ch):
 
 # ---------- the editable artifact: a SOLUTION dict of KNOBS (Karpathy's train.py) ----------
 def default_solution(ch):
-    if task_of(ch) == "classify":
+    t = task_of(ch)
+    if t == "classify":
         return sol.default_solution()                       # {instructions, shots_per_class, fewshot_seed}
+    if t == "classify_sub":
+        return {"instructions": subs.seed_instructions(ch)} # generated from taxonomy.yaml
     seed = open(os.path.join(sol.PROMPTS, sol.EXTRACT_CHANNELS[ch]["seed"]), encoding="utf-8").read()
     return {"instructions": seed}
 
 def display_prompt(ch, solution):
-    if task_of(ch) == "classify":
+    t = task_of(ch)
+    if t == "classify":
         _, _, pool = prepare.splits()
         return sol.display_prompt(solution, pool)           # fully-rendered prompt (few-shot inlined)
+    if t == "classify_sub":
+        return solution["instructions"]                     # no few-shot: the prompt IS the artifact
     _, schema = sol.load_extract(ch)
     return solution["instructions"].replace("{SCHEMA}", json.dumps(schema, indent=2))
 
@@ -210,6 +224,22 @@ USE THE NOTEBOOK: never repeat a DISCARD; build on a KEEP. Pick the single highe
 given the confusion/mistakes below. Return ONLY JSON, no prose:
 {"knob":"<instructions|shots_per_class|fewshot_seed>","value":<new value>,"description":"<what+why, one line>"}"""
 
+OPT_CLASSIFY_SUB = """You are an autonomous researcher optimising a broker-submission classifier
+for a commercial P&C insurer, in the exact style of Karpathy's autoresearch. You DO NOT write code.
+The classifier is a FIXED scaffold: it shows a fast LLM your <instructions> plus the submission text
+and asks for the label(s). The ONLY knob is the instructions text. Per experiment, make exactly ONE
+focused improvement (sharpen one label definition, add one disambiguation rule, fix one recurring
+error) — not a wholesale rewrite. Keep the label names EXACTLY as they are.
+
+HARD CONSTRAINT — no memorisation: the dev set is tiny, so rules that reference a specific account,
+company, broker or person (e.g. "if it mentions <some account>") would score perfectly on dev and be
+worthless in production. Any proposal containing a specific account/broker/carrier name is
+AUTOMATICALLY REJECTED and wastes the round. Write rules about GENERAL signals only: sender role,
+what is being asked, document types present, coverage terms, exposure characteristics.
+
+USE THE NOTEBOOK: never repeat a DISCARD; build on a KEEP. Return ONLY JSON, no prose:
+{"knob":"instructions","value":"<full revised instructions>","description":"<what+why, one line>"}"""
+
 OPT_EXTRACT = """You are an autonomous researcher improving an information-EXTRACTION prompt
 (it outputs JSON per a fixed schema, graded by an LLM judge), in the style of Karpathy's
 autoresearch. The prompt is the only knob. Make exactly ONE focused edit per experiment
@@ -230,6 +260,13 @@ def _apply(best, obj, task):
             try: new["fewshot_seed"] = int(val)
             except (TypeError, ValueError): pass
         elif knob == "instructions" and isinstance(val, str) and val.strip():
+            new["instructions"] = val.strip()
+    elif task == "classify_sub":
+        # instructions is the only knob, and the memorisation guard is enforced
+        # here, not just requested in the prompt: a banned proposal leaves `best`
+        # unchanged, which the dedup loop catches and re-proposes.
+        if knob == "instructions" and isinstance(val, str) and val.strip() \
+                and not subs.violates_ban(val):
             new["instructions"] = val.strip()
     else:
         if knob == "instructions" and isinstance(val, str) and val.strip() and "{SCHEMA}" in val:
@@ -252,7 +289,9 @@ def diagnose(prf, rows):
     n_pred = {}
     for r in rows:
         p = r.get("pred")
-        n_pred[p] = n_pred.get(p, 0) + 1
+        # multi-label rows carry a set of predictions; count each label's firing
+        for lab_ in (p if isinstance(p, (set, frozenset, list)) else [p]):
+            n_pred[lab_] = n_pred.get(lab_, 0) + 1
     lines = []
     for lab, v in per.items():
         sup, pred = v["support"], n_pred.get(lab, 0)
@@ -324,6 +363,9 @@ def propose(ch, best_solution, notebook, feedback, model, tried_solutions=None):
                f"  instructions:\n{best_solution.get('instructions', '')}\n\n"
                f"{_pool_note()}\n")
         sysmsg = OPT_CLASSIFY
+    elif task == "classify_sub":
+        cur = f"CURRENT INSTRUCTIONS:\n{best_solution.get('instructions', '')[:4000]}\n"
+        sysmsg = OPT_CLASSIFY_SUB
     else:
         cur = f"CURRENT INSTRUCTIONS:\n{best_solution.get('instructions', '')[:3000]}\n"
         sysmsg = OPT_EXTRACT
@@ -353,6 +395,10 @@ def _decide(task, inc_res, cand_res, confidence, ban_confidence=BAN_CONFIDENCE):
     if task == "classify":
         st = prepare.paired_bootstrap(inc_res["paired"], cand_res["paired"],
                                       n_boot=N_BOOT, labels=prepare.CATEGORIES)
+        st["mcnemar"] = prepare.mcnemar(inc_res["paired"], cand_res["paired"])
+    elif task == "classify_sub":
+        st = prepare.paired_bootstrap_sets(inc_res["paired"], cand_res["paired"],
+                                           labels=cand_res["labels"], n_boot=N_BOOT)
         st["mcnemar"] = prepare.mcnemar(inc_res["paired"], cand_res["paired"])
     else:
         st = prepare.paired_bootstrap_mean(inc_res["paired"], cand_res["paired"], n_boot=N_BOOT)
@@ -411,6 +457,54 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
                     + "\n\nMISCLASSIFIED examples:\n"
                     + "\n---\n".join(f"TRUE={r['true']} PRED={r['pred']}\n{r['snippet']}"
                                      for r in scored_dict["rows"] if not r["correct"])[:3500])
+    elif task == "classify_sub":
+        dev, test = subs.splits(channel)
+        labels = subs.scoring_labels(channel)
+        multi = subs.is_multi(channel)
+        pool = []                      # no few-shot: 8 submissions cannot spare exemplars
+        unit_label = subs.channel_def(channel)["label"]
+        truth_by_file = {r["file"]: r["label"] for r in list(dev) + list(test)}
+        def _fmt(x):                   # sets -> "A | B" for the UI/notebook; strings pass through
+            return x if isinstance(x, str) else (" | ".join(sorted(x)) or "(none)")
+        def score(solution, rows, passes=None):
+            f1s, accs, last = [], [], None
+            per_doc = {}
+            for _ in range(max(1, eval_passes if passes is None else passes)):
+                clf = build_llm_classifier(solution["instructions"], "", model=classifier_model,
+                                           max_doc=subs.VIEW_CAP + 2000, labels=labels, multi=multi)
+                # metric over labels observed in THIS row set (legacy-channel behaviour):
+                # a class with zero instances in the split can't be measured, so it must
+                # not count as f1=0 against the macro. The paired bootstrap keeps the
+                # full fixed label set — dev rows are identical for both systems.
+                scored, acc, mf1, per = prepare.evaluate_texts(clf, rows)
+                f1s.append(mf1); accs.append(acc); last = scored
+                for r in scored:
+                    per_doc.setdefault(r["file"], []).append(r["pred"])
+            scored = last
+            rows_view = sorted(
+                [{"file": r["file"], "true": _fmt(r["label"]), "pred": _fmt(r["pred"]),
+                  "correct": prepare._as_set(r["pred"]) == prepare._as_set(r["label"]),
+                  "snippet": r["text"].replace("\n", " ")[:180]} for r in scored],
+                key=lambda x: x["correct"])
+            prf = prepare.set_prf(scored)
+            return {"metric": sum(f1s) / len(f1s), "second": sum(accs) / len(accs),
+                    "rows": rows_view, "raw_rows": scored,
+                    # confusion only means something single-label
+                    "confusion": confusion_obj(scored) if not multi else None,
+                    "per_class": {k: v["f1"] for k, v in prf["per_class"].items()},
+                    "prf": prf, "labels": labels,
+                    "paired": prepare.consensus_rows(per_doc, truth_by_file),
+                    "display": solution["instructions"], "solution": solution}
+        def feedback(scored_dict, solution):
+            fb = diagnose(scored_dict.get("prf"), scored_dict.get("raw_rows") or [])
+            if scored_dict.get("confusion") is not None:
+                fb += ("\n\nDEV confusion (true rows / pred cols):\n"
+                       + prepare.confusion_str([{"label": r["label"], "pred": r["pred"]}
+                                                for r in scored_dict["raw_rows"]]))
+            fb += ("\n\nMISCLASSIFIED examples:\n"
+                   + "\n---\n".join(f"TRUE={r['true']} PRED={r['pred']}\n{r['snippet']}"
+                                    for r in scored_dict["rows"] if not r["correct"])[:3500])
+            return fb
     else:
         items, schema = sol.load_extract(channel)
         dev, test = sol.split_items(items)

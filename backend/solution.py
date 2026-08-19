@@ -30,15 +30,31 @@ EXTRACT_CHANNELS = {
 }
 
 def list_channels():
-    chans = [{"id": "emails", "label": "Emails", "task": "classify"}]
+    from backend import submissions as subs
+    chans = [{"id": "emails", "label": "Emails", "task": "classify", "group": "Zurich Life"}]
     for cid, c in EXTRACT_CHANNELS.items():
         ready = os.path.isdir(os.path.join(prepare.ROOT, c["dir"], c["docs"]))
-        chans.append({"id": cid, "label": c["label"], "task": "extract", "ready": ready})
+        chans.append({"id": cid, "label": c["label"], "task": "extract",
+                      "ready": ready, "group": "Zurich Life"})
+    sub_ready = subs.ready()
+    for cid in subs.CHANNELS:
+        chans.append({"id": cid, "label": subs.channel_def(cid)["label"],
+                      "task": "classify_sub", "ready": sub_ready,
+                      "multi": subs.is_multi(cid), "group": "Commercial Submissions"})
     return chans
 
 def channel_status(cid):
     if cid == "emails":
         return None
+    from backend import submissions as subs
+    if cid in subs.CHANNELS:
+        dev, test = subs.splits(cid)
+        d = subs.channel_def(cid)
+        return {"id": cid, "label": d["label"], "task": "classify_sub",
+                "multi": d["multi"], "categories": list(d["categories"]),
+                "n": len(dev) + len(test), "dev": len(dev), "test": len(test),
+                "unit": "attachment" if cid == "attachment_doc_type" else "submission",
+                "baseline": subs.majority_baseline(cid)}
     items, schema = load_extract(cid)
     dev, test = split_items(items)
     c = EXTRACT_CHANNELS[cid]
