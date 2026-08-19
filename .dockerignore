@@ -9,8 +9,6 @@ frontend/node_modules
 frontend/dist
 runs/lab
 runs/*.jsonl
-runs/results_*.tsv
-runs/solution_*.json
 runs/best_prompt.txt
 .git
 *.zip
@@ -19,6 +17,4 @@ zurich*.png
 # (ground_truth_*.csv are labels only and DO ship with data/.)
 data/submissions/*.eml
 data/submissions/*.msg
-data/submissions/extracted
-data/submissions/classified
 AutoResearch_Project_Breakdown.pdf
