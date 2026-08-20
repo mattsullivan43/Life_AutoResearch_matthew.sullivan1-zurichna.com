@@ -350,3 +350,9 @@ details.internals > summary:hover { color: var(--ink); }
 
 .result-banner.warn { border-color: #e2ceA0; background: #fbf7ec; }
 .result-banner.warn .rb-nums { color: var(--amber); }
+
+/* practice-signal chart lives behind a closed drawer — one score on the page */
+details.chart-drawer { border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: var(--shadow-sm); padding: 14px 18px; align-self: start; }
+details.chart-drawer > summary { cursor: pointer; font-size: 12px; font-weight: 600; color: var(--muted); list-style: none; font-family: var(--mono); }
+details.chart-drawer > summary:hover { color: var(--ink); }
+details.chart-drawer[open] > summary { margin-bottom: 10px; }

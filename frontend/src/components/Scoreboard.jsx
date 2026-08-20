@@ -30,7 +30,7 @@ export default function Scoreboard({ refreshKey = 0 }) {
         <table className="preds">
           <thead><tr>
             <th>layer</th><th>practice / unseen docs</th><th>majority floor</th>
-            <th>best on practice</th><th>result on unseen</th><th>kept / tried</th>
+            <th>result on unseen</th><th>kept / tried</th>
           </tr></thead>
           <tbody>
             {rows.map((r) => (
@@ -38,7 +38,6 @@ export default function Scoreboard({ refreshKey = 0 }) {
                 <td className="code" style={{ fontWeight: 700 }}>{r.label}{r.multi ? ' (multi)' : ''}</td>
                 <td className="code">{r.dev} / {r.test}</td>
                 <td className="code">{pct(r.floor)}</td>
-                <td className="code">{pct(r.best_dev)}</td>
                 <td className="code" style={{ fontWeight: 700 }}>{unseen(r)}</td>
                 <td className="code">{r.keeps} / {r.experiments}</td>
               </tr>

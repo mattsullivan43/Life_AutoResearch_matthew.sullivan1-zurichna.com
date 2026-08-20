@@ -258,7 +258,6 @@ export default function App() {
           {isSub ? (
             <>
               <div className="stat"><div className="lab">Majority-class floor</div><div className="num">{chStatus?.baseline ? pct(chStatus.baseline.mf1) : '—'}</div></div>
-              <div className="stat"><div className="lab">Best on practice set</div><div className="num">{bestF1 != null ? pct(bestF1) : '—'}</div></div>
               <div className="stat"><div className="lab">Final · unseen docs</div>
                 {/* at n<=12 a percentage is fake precision — show the raw count */}
                 <div className="num hl">{finalInfo == null ? '—'
@@ -270,14 +269,12 @@ export default function App() {
           ) : isEmails ? (
             <>
               <div className="stat"><div className="lab">Simple keyword floor</div><div className="num">{baseline ? pct(baseline.mf1) : '—'}</div></div>
-              <div className="stat"><div className="lab">Best on practice set</div><div className="num">{bestF1 != null ? pct(bestF1) : '—'}</div></div>
               <div className="stat"><div className="lab">Final · unseen emails</div><div className="num hl">{finalScore != null ? pct(finalScore) : '—'}</div></div>
               <div className="stat"><div className="lab">Practice / unseen docs</div><div className="num">{status ? status.splits.dev : '—'}<small> / {status ? status.splits.test : '—'}</small></div></div>
               <div className="stat"><div className="lab">Categories</div><div className="num">{status ? status.categories.length : '—'}</div></div>
             </>
           ) : (
             <>
-              <div className="stat"><div className="lab">Best on practice set</div><div className="num">{bestF1 != null ? pct(bestF1) : '—'}</div></div>
               <div className="stat"><div className="lab">Final · unseen docs</div><div className="num hl">{finalScore != null ? pct(finalScore) : '—'}</div></div>
               <div className="stat"><div className="lab">Field accuracy</div><div className="num">{metrics ? pct(metrics.field_accuracy) : '—'}</div></div>
               <div className="stat"><div className="lab">Practice / unseen</div><div className="num">{chStatus ? chStatus.dev : '—'}<small> / {chStatus ? chStatus.test : '—'}</small></div></div>
@@ -368,8 +365,13 @@ export default function App() {
               </div>
             </div>
           </div>
-          <ScoreChart data={chart} baseline={isEmails ? baseline?.mf1 : null}
-            metric={task === 'extract' ? 'LLM-judge score' : 'macro-F1'} />
+          {/* the practice signal is engineer detail — closed by default so the
+              page never shows two competing "scores" side by side */}
+          <details className="chart-drawer">
+            <summary>engine internals — per-round practice signal (not the score) ▸</summary>
+            <ScoreChart data={chart} baseline={isEmails ? baseline?.mf1 : null}
+              metric={task === 'extract' ? 'LLM-judge score' : 'macro-F1'} />
+          </details>
         </div>
 
         {/* the run's verdict on UNSEEN docs — three honest states, counts first at tiny n */}
