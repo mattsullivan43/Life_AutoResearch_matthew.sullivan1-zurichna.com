@@ -356,3 +356,4 @@ details.chart-drawer { border: 1px solid var(--rule); border-radius: 12px; backg
 details.chart-drawer > summary { cursor: pointer; font-size: 12px; font-weight: 600; color: var(--muted); list-style: none; font-family: var(--mono); }
 details.chart-drawer > summary:hover { color: var(--ink); }
 details.chart-drawer[open] > summary { margin-bottom: 10px; }
+details.chart-drawer { height: 100%; }

@@ -367,8 +367,8 @@ export default function App() {
           </div>
           {/* the practice signal is engineer detail — closed by default so the
               page never shows two competing "scores" side by side */}
-          <details className="chart-drawer">
-            <summary>engine internals — per-round practice signal (not the score) ▸</summary>
+          <details className="chart-drawer" open={running || chart.length > 0}>
+            <summary>engine internals — per-round practice signal (not the score)</summary>
             <ScoreChart data={chart} baseline={isEmails ? baseline?.mf1 : null}
               metric={task === 'extract' ? 'LLM-judge score' : 'macro-F1'} />
           </details>
