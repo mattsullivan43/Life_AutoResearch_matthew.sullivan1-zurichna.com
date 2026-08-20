@@ -82,6 +82,13 @@ def _bad_channel(channel):
         return JSONResponse(status_code=400, content={"error": f"invalid channel: {channel}"})
     return None
 
+# SSE anti-buffering pad: corporate inspection proxies (Zscaler etc.) buffer
+# streamed responses until a size threshold; a ~4KB comment after every event
+# forces a flush so the dashboard updates per-event instead of all-at-the-end.
+# EventSource ignores comment lines entirely.
+SSE_PAD = ": " + "." * 4096 + "\n\n"
+
+
 # ---- human-in-the-loop review registry (spec #3) ----
 # run_id -> {"event": threading.Event, "decision": bool|None}
 _REVIEWS = {}
@@ -223,7 +230,7 @@ def classify_submission_stream(submission_id: str, live: bool = False):
     def gen():
         try:
             for ev in triage.stream_classify(submission_id, prov["classifier_model"], live=live):
-                yield f"data: {json.dumps(ev)}\n\n"
+                yield f"data: {json.dumps(ev)}\n\n{SSE_PAD}"
         except Exception as e:
             yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
     return StreamingResponse(gen(), media_type="text/event-stream",
@@ -355,11 +362,11 @@ def run(iterations: int = 12, channel: str = "emails", hitl: bool = False, warm:
             try:
                 kind, payload = q.get(timeout=15)
             except _q.Empty:
-                yield ": ping\n\n"          # heartbeat — keeps the stream alive through CloudFront
+                yield f": ping\n\n{SSE_PAD}"          # heartbeat — keeps the stream alive through proxies
                 continue
             if kind == "done":
                 break
-            yield f"data: {json.dumps(payload)}\n\n"
+            yield f"data: {json.dumps(payload)}\n\n{SSE_PAD}"
         _REVIEWS.pop(run_id, None)
 
     return StreamingResponse(gen(), media_type="text/event-stream",
