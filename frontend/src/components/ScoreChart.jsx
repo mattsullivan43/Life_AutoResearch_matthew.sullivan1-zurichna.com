@@ -16,8 +16,8 @@ export default function ScoreChart({ data, baseline, unseen, metric = 'macro-F1'
   return (
     <div className="block">
       <div className="head">
-        <h3>Internal training signal · per round</h3>
-        <span className="sub">practice set only — NOT the reported score (that's Final · unseen) · solid = this round · dashed = best kept · ● adopted · {metric}</span>
+        <h3>Training signal + unseen staircase · per round</h3>
+        <span className="sub">blue = practice (internal) · GREEN = UNSEEN, measured at start / each keep / end — the real score · ● adopted · {metric}</span>
       </div>
       <div className="body" style={{ height: 300 }}>
         {!has ? (
@@ -64,6 +64,11 @@ export default function ScoreChart({ data, baseline, unseen, metric = 'macro-F1'
                 strokeWidth={1.5} strokeDasharray="5 3" dot={false} isAnimationActive={false} />
               <Line type="monotone" dataKey="dev_mf1" name="dev_mf1" stroke="#012796"
                 strokeWidth={2.5} dot={<AcceptDot />} activeDot={{ r: 5 }} isAnimationActive={false} />
+              {/* the UNSEEN staircase: points exist only where the exam was
+                  actually sat (run start, after each keep, end) — steps between */}
+              <Line type="stepAfter" dataKey="unseen_mf1" name="UNSEEN" stroke="#0a7d4d"
+                strokeWidth={2.5} connectNulls dot={{ r: 5, fill: '#0a7d4d', stroke: '#fff', strokeWidth: 1.5 }}
+                isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
         )}

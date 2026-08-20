@@ -575,6 +575,13 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
 
     base_exp = len(read_notebook(channel))
     res = score(best, dev)
+    # UNSEEN diagnostic staircase: measured at run start, again after each KEEP
+    # (strictly AFTER the keep/discard decision is locked — it never feeds back),
+    # and at the end. Between keeps the artifact is unchanged, so its unseen
+    # score is by definition unchanged: candidates are NEVER scored on unseen
+    # (that would turn the exam into a second practice set).
+    yield {"type": "note", "text": f"measuring the starting prompt on the {len(test)} unseen docs (diagnostic — decisions never see this)…"}
+    test0 = score(best, test)
     best_m, best_res, best_iter = res["metric"], res, 0
     # Two DIFFERENT numbers, deliberately. best_m is the incumbent's FRESH re-measurement
     # each round — the right input to the paired decision and to STOP_AT. best_locked is the
@@ -603,7 +610,7 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
         start["synth"] = len(pool)
     yield start
 
-    def emit(itr, r, accepted, desc, reviewed=None, typ="iter", stats=None, verdict=None):
+    def emit(itr, r, accepted, desc, reviewed=None, typ="iter", stats=None, verdict=None, unseen=None):
         ev = {"type": typ, "iter": itr, "dev_mf1": r["metric"], "dev_acc": r["second"],
               "accepted": accepted, "best_mf1": best_locked, "incumbent_mf1": best_m,
               "best_iter": best_iter,
@@ -617,11 +624,13 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
             ev["stats"] = stats
         if verdict is not None:
             ev["verdict"] = verdict
+        if unseen is not None:                    # the diagnostic staircase point
+            ev["unseen_mf1"] = unseen
         if typ == "review":
             ev["cand_mf1"] = r["metric"]
         return ev
 
-    yield emit(0, best_res, None, "current best (baseline)")
+    yield emit(0, best_res, None, "current best (baseline)", unseen=test0["metric"])
 
     stopped_early = False
     for i in range(1, iterations + 1):
@@ -699,6 +708,7 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
                 # signature is not permanently banned on statistical grounds.
                 verdict = "rejected"
         accepted = verdict == "keep"
+        unseen_pt = None
 
         # literal git keep/discard (Karpathy steps 3/8/9): commit the attempt, then
         # leave it (keep = advance branch) or reset --hard HEAD~1 (discard).
@@ -711,18 +721,22 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
             gitlab.save_best(channel, best, {"dev_metric": res["metric"], "iter": i,
                                              "description": desc, "sig": sig,
                                              "channel": channel, "task": task})
+            # staircase point: the newly-kept prompt on unseen — measured only
+            # AFTER the keep is decided and persisted, purely diagnostic
+            yield {"type": "note", "text": f"round {i}: KEPT — measuring the new best on the {len(test)} unseen docs (diagnostic)…"}
+            unseen_pt = score(cand, test)["metric"]
         else:
             gitlab.discard(channel)
         # `inconclusive` and `rejected` are written as themselves, NOT as `discard`, so
         # tried_signatures() does not ban them across future runs.
         append_notebook(channel, base_exp + i, res["metric"], 0.0, verdict, desc, sig)
-        yield emit(i, res, accepted, desc, reviewed=reviewed, stats=stats, verdict=verdict)
+        yield emit(i, res, accepted, desc, reviewed=reviewed, stats=stats, verdict=verdict, unseen=unseen_pt)
 
     # final — honest score on the held-out test set. If the run banked a keep,
     # ALSO score the STARTING solution on test so the UI can show a true
     # before/after on unseen documents (same rows, same passes).
     fin = score(best, test)
-    fin0 = score(initial, test) if best_iter > 0 else None
+    fin0 = test0                 # the run-start unseen measurement is the honest "before"
     # Persist the best unconditionally at end of run, even when best_iter == 0 (nothing
     # beat the seed). Without this the next run has nothing to warm-start from and
     # repeats the identical search from scratch — which is exactly what was happening.
@@ -736,8 +750,8 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
           "n": len(test), "split": "UNSEEN · final", "rows": fin["rows"], "best_prompt": fin["display"],
           "task": task, "stopped_early": stopped_early,
           "improved": best_iter > 0,
-          "before_mf1": fin0["metric"] if fin0 else fin["metric"],
-          "before_acc": fin0["second"] if fin0 else fin["second"],
+          "before_mf1": fin0["metric"],
+          "before_acc": fin0["second"],
           "best_saved_to": os.path.relpath(best_file, prepare.ROOT)}
     for k in ("confusion", "per_class", "prf", "metrics", "solution"):
         if fin.get(k) is not None: ev[k] = fin[k]

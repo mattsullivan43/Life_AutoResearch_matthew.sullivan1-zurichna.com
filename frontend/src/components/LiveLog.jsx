@@ -45,6 +45,7 @@ export default function LiveLog({ lines, running }) {
                 <span className="lab">{l.accepted === null ? 'Seed baseline' : `Experiment ${l.iter}`}</span>
                 <span className="score">{pct(l.f1)}</span>
                 <span className="muted">practice</span>
+                {l.unseen != null && <span style={{ color: 'var(--good)', fontWeight: 700, fontSize: 12 }}>UNSEEN {pct(l.unseen)}</span>}
                 {l.accepted !== null && <span className="muted">best {pct(l.best)}</span>}
                 {l.p != null && <span className="muted">p(better) {Math.round(l.p * 100)}%</span>}
                 {l.prompt && (

@@ -121,7 +121,7 @@ export default function App() {
           addLog({ kind: 'plain', text: ev.warm_start ? 'continuing from the saved best prompt (cumulative)' : 'starting fresh from the seed prompt' })
           addLog({ kind: 'plain', text: `tune on ${ev.dev} ${isSub ? (channel === 'attachment_doc_type' ? 'attachments' : 'submissions') : task === 'extract' ? 'documents' : 'emails'} · at the END, the best prompt is scored ONCE on ${ev.test} UNSEEN ${isSub ? (channel === 'attachment_doc_type' ? 'attachments' : 'submissions') : task === 'extract' ? 'documents' : 'emails'} · ${task === 'extract' ? 'graded by an AI judge' : 'graded against human labels'}` })
         } else if (ev.type === 'iter') {
-          setChart((c) => [...c, { iter: ev.iter, dev_mf1: ev.dev_mf1, best_mf1: ev.best_mf1, accepted: ev.accepted === true }])
+          setChart((c) => [...c, { iter: ev.iter, dev_mf1: ev.dev_mf1, best_mf1: ev.best_mf1, accepted: ev.accepted === true, unseen_mf1: ev.unseen_mf1 ?? null }])
           if (ev.per_class) setPerClass(ev.per_class)
           if (ev.confusion) setConfusion(ev.confusion)
           if (ev.rows) setRows(ev.rows)
@@ -129,7 +129,7 @@ export default function App() {
           if (ev.solution) { setSolution(ev.solution); setSolStatus(ev.accepted === true ? 'kept — new best' : ev.accepted === false ? 'candidate (discarded)' : 'baseline') }
           setSplit(`practice set · round ${ev.iter}`); setBestF1(ev.best_mf1)
           if (ev.accepted === true && ev.candidate_prompt) setPrompts((p) => ({ ...p, best: ev.candidate_prompt }))
-          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description, verdict: ev.verdict, p: ev.stats?.p_better, prompt: ev.candidate_prompt, inc: ev.incumbent_prompt })
+          addLog({ kind: 'iter', iter: ev.iter, f1: ev.dev_mf1, accepted: ev.accepted, best: ev.best_mf1, desc: ev.description, verdict: ev.verdict, p: ev.stats?.p_better, prompt: ev.candidate_prompt, inc: ev.incumbent_prompt, unseen: ev.unseen_mf1 })
         } else if (ev.type === 'review') {
           setReview({ runId: runIdRef.current, iter: ev.iter, cand: ev.cand_mf1, best: ev.best_mf1,
             prompt: ev.candidate_prompt })
