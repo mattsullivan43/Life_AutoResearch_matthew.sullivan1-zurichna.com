@@ -258,6 +258,13 @@ and asks for the label(s). The ONLY knob is the instructions text. Per experimen
 focused improvement (sharpen one label definition, add one disambiguation rule, fix one recurring
 error) — not a wholesale rewrite. Keep the label names EXACTLY as they are.
 
+THE CLASSIFIER IS FORCED-CHOICE: every document receives exactly ONE label (or label set),
+always. It cannot skip, exclude, or refuse a document. NEVER write rules like "exclude
+corrupted/unreadable documents" — that instruction is impossible to execute and wastes the
+round. If sparse, garbled or ambiguous documents are being mislabelled, say WHICH label such
+documents should receive instead (e.g. "a document that is mostly tabular claim rows with
+dollar amounts is a Loss run even when the text is fragmentary").
+
 VARY YOUR STRATEGY across experiments — do not fixate on one idea. Strategies that count as
 different: (a) add decisive CONTENT signals to one label ("a loss run shows claim numbers,
 reserves, valuation dates"); (b) an explicit tie-break rule between two confusable labels;
