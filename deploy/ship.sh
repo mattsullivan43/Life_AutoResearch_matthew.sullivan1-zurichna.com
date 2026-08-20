@@ -18,6 +18,17 @@ COPYFILE_DISABLE=1 tar czf /tmp/autoresearch.tgz \
   --exclude '*.eml' --exclude '*.msg' .
 
 SSHOPTS="-o StrictHostKeyChecking=accept-new -o ConnectTimeout=15"
+
+# refuse to deploy while an optimization run is streaming — the container
+# restart would kill it mid-flight. Override with FORCE=1.
+if [ "${FORCE:-0}" != "1" ]; then
+  ACTIVE=$(ssh $SSHOPTS -i "$KEY" "$USER@$HOST" \
+    "docker logs autoresearch --since 90s 2>&1 | grep -c 'GET /api/run' || true" 2>/dev/null | tail -1)
+  if [ "${ACTIVE:-0}" -gt 0 ] 2>/dev/null; then
+    echo "⚠  a run hit /api/run in the last 90s — deploy would kill it. Re-run with FORCE=1 to override."
+    exit 1
+  fi
+fi
 scp $SSHOPTS -i "$KEY" /tmp/autoresearch.tgz "$USER@$HOST:~/"
 scp $SSHOPTS -i "$KEY" deploy/remote_build_run.sh "$USER@$HOST:~/"
 ssh $SSHOPTS -i "$KEY" "$USER@$HOST" "bash ~/remote_build_run.sh"
