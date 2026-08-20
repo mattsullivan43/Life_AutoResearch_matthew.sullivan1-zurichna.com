@@ -363,17 +363,21 @@ def run(iterations: int = 12, channel: str = "emails", hitl: bool = False, warm:
                 q.put(("done", None))
 
         threading.Thread(target=worker, daemon=True).start()
-        while True:
-            try:
-                kind, payload = q.get(timeout=15)
-            except _q.Empty:
-                yield f": ping\n\n{SSE_PAD}"          # heartbeat — keeps the stream alive through proxies
-                continue
-            if kind == "done":
-                break
-            yield f"data: {json.dumps(payload)}\n\n{SSE_PAD}"
-        _REVIEWS.pop(run_id, None)
-        _ACTIVE_RUNS["n"] = max(0, _ACTIVE_RUNS["n"] - 1)
+        try:
+            while True:
+                try:
+                    kind, payload = q.get(timeout=15)
+                except _q.Empty:
+                    yield f": ping\n\n{SSE_PAD}"      # heartbeat — keeps the stream alive through proxies
+                    continue
+                if kind == "done":
+                    break
+                yield f"data: {json.dumps(payload)}\n\n{SSE_PAD}"
+        finally:
+            # a client disconnect cancels this generator mid-yield (GeneratorExit);
+            # without the finally the active-run counter leaked and blocked deploys
+            _REVIEWS.pop(run_id, None)
+            _ACTIVE_RUNS["n"] = max(0, _ACTIVE_RUNS["n"] - 1)
 
     return StreamingResponse(gen(), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
