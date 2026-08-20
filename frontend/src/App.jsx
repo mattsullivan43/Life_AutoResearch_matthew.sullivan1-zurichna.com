@@ -369,7 +369,8 @@ export default function App() {
               page never shows two competing "scores" side by side */}
           <details className="chart-drawer" open={running || chart.length > 0}>
             <summary>engine internals — per-round practice signal (not the score)</summary>
-            <ScoreChart data={chart} baseline={isEmails ? baseline?.mf1 : null}
+            <ScoreChart data={chart}
+              baseline={isEmails ? baseline?.mf1 : isSub ? chStatus?.baseline?.mf1 : null}
               unseen={runResult ? runResult.afterMf1 : null}
               metric={task === 'extract' ? 'LLM-judge score' : 'macro-F1'} />
           </details>
