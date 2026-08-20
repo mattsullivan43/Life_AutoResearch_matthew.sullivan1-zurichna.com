@@ -286,9 +286,9 @@ export default function App() {
         </div>}
 
         {!BROKER_ONLY && <div className="explainer">
-          <b>How to read this:</b> the loop <b>tunes</b> its prompt on a practice set to score higher there.
-          The number that counts is the <b>“Final · unseen”</b> score — measured on documents it never trained on, so it reflects
-          real-world performance. The two sets are different documents, so their scores can differ in either direction — the unseen score is the honest one.
+          <b>One number counts: “Final · unseen.”</b> Everything else on this page — the per-round chart, the
+          experiment scores — is the engine’s internal practice-set signal, shown so you can watch it work.
+          Only the unseen score (documents the loop never trained on) is ever reported as the result.
         </div>}
 
         {/* broker submission triage — the Commercial Submissions demo panel */}

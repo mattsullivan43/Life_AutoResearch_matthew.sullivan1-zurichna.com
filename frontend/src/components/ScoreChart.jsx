@@ -16,8 +16,8 @@ export default function ScoreChart({ data, baseline, metric = 'macro-F1' }) {
   return (
     <div className="block">
       <div className="head">
-        <h3>Score on the practice set · per round</h3>
-        <span className="sub">solid = this round · dashed = best kept · ● adopted · {metric}</span>
+        <h3>Internal training signal · per round</h3>
+        <span className="sub">practice set only — NOT the reported score (that's Final · unseen) · solid = this round · dashed = best kept · ● adopted · {metric}</span>
       </div>
       <div className="body" style={{ height: 300 }}>
         {!has ? (
