@@ -46,6 +46,7 @@ export default function App() {
   const [finalScore, setFinalScore] = useState(null)   // honest score on unseen set
   const [finalInfo, setFinalInfo] = useState(null)     // {mf1, acc, n} — counts beat % at tiny n
   const [runResult, setRunResult] = useState(null)     // BEFORE -> AFTER on unseen, the run's verdict
+  const [sbKey, setSbKey] = useState(0)                 // bump -> scoreboard refetches
   const [notebook, setNotebook] = useState([])         // persistent research log
   const [solution, setSolution] = useState(null)       // the editable artifact
   const [solStatus, setSolStatus] = useState('')
@@ -149,7 +150,7 @@ export default function App() {
           setFinalInfo({ mf1: ev.test_mf1, acc: ev.test_acc, n: ev.n })
           setRunResult({ improved: ev.improved, beforeMf1: ev.before_mf1, beforeAcc: ev.before_acc,
             afterMf1: ev.test_mf1, afterAcc: ev.test_acc, n: ev.n, bestIter: ev.best_iter })
-          setRunning(false); setReview(null)
+          setRunning(false); setReview(null); setSbKey((k) => k + 1)
           addLog({ kind: 'final', text: `FINAL — score on UNSEEN data: ${pct(ev.test_mf1)} (the honest number; best from round ${ev.best_iter})${ev.stopped_early ? ' · stopped early: hit the 100% ceiling' : ''}` })
           getBestPrompt(channel).then(setPrompts).catch(() => {})
           getNotebook(channel).then((d) => setNotebook(d.experiments || [])).catch(() => {})
@@ -299,7 +300,7 @@ export default function App() {
             <SubmissionTriage />
             <div className="seclab"><span className="tick" /><h2>Layer scoreboard</h2>
               <span className="hint">every layer's real numbers — floor, current best, honest unseen result, improvements kept</span></div>
-            <Scoreboard />
+            <Scoreboard refreshKey={sbKey} />
           </>
         )}
 

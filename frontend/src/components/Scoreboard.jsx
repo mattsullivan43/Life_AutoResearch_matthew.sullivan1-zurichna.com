@@ -7,11 +7,12 @@ import { getScoreboard } from '../api'
 // many improvements the loop has ever banked on that layer.
 const pct = (x) => (x == null ? '—' : `${(x * 100).toFixed(1)}%`)
 
-export default function Scoreboard() {
+export default function Scoreboard({ refreshKey = 0 }) {
   const [rows, setRows] = useState(null)
+  // refetch on mount AND whenever a run finishes (App bumps refreshKey on `final`)
   useEffect(() => {
     getScoreboard().then((d) => setRows(d.rows)).catch(() => {})
-  }, [])
+  }, [refreshKey])
   if (!rows) return null
   const unseen = (r) => {
     if (r.unseen_mf1 == null) return '—'
