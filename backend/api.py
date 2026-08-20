@@ -67,10 +67,14 @@ async def _auth(request, call_next):
     return await call_next(request)
 
 
+_ACTIVE_RUNS = {"n": 0}     # live SSE optimization runs (deploy guard checks this)
+
+
 @app.get("/api/auth_config")
 def auth_config():
-    """Public — lets the SPA configure its Cognito login screen."""
-    return auth.config()
+    """Public — lets the SPA configure its Cognito login screen. Also carries the
+    active-run count so the deploy script can refuse to restart mid-run."""
+    return {**auth.config(), "runs_active": _ACTIVE_RUNS["n"]}
 
 ROOT = prepare.ROOT
 RUNS = os.path.join(ROOT, "runs")
@@ -341,6 +345,7 @@ def run(iterations: int = 12, channel: str = "emails", hitl: bool = False, warm:
         # emit a heartbeat during long/quiet experiments. Without this, CloudFront
         # (or any proxy) drops the SSE connection on idle gaps.
         import queue as _q
+        _ACTIVE_RUNS["n"] += 1
         yield f"data: {json.dumps({'type': 'run_id', 'run_id': run_id, 'hitl': hitl})}\n\n"
         q = _q.Queue()
 
@@ -368,6 +373,7 @@ def run(iterations: int = 12, channel: str = "emails", hitl: bool = False, warm:
                 break
             yield f"data: {json.dumps(payload)}\n\n{SSE_PAD}"
         _REVIEWS.pop(run_id, None)
+        _ACTIVE_RUNS["n"] = max(0, _ACTIVE_RUNS["n"] - 1)
 
     return StreamingResponse(gen(), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})

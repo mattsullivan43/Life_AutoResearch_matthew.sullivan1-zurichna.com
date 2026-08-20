@@ -20,12 +20,13 @@ COPYFILE_DISABLE=1 tar czf /tmp/autoresearch.tgz \
 SSHOPTS="-o StrictHostKeyChecking=accept-new -o ConnectTimeout=15"
 
 # refuse to deploy while an optimization run is streaming — the container
-# restart would kill it mid-flight. Override with FORCE=1.
+# restart would kill it mid-flight. The app exposes a live counter on the
+# public auth_config endpoint. Override with FORCE=1.
 if [ "${FORCE:-0}" != "1" ]; then
   ACTIVE=$(ssh $SSHOPTS -i "$KEY" "$USER@$HOST" \
-    "docker logs autoresearch --since 90s 2>&1 | grep -c 'GET /api/run' || true" 2>/dev/null | tail -1)
+    "curl -s -m 5 localhost/api/auth_config | grep -o '\"runs_active\": *[0-9]*' | grep -o '[0-9]*' || echo 0" 2>/dev/null | tail -1)
   if [ "${ACTIVE:-0}" -gt 0 ] 2>/dev/null; then
-    echo "⚠  a run hit /api/run in the last 90s — deploy would kill it. Re-run with FORCE=1 to override."
+    echo "⚠  ${ACTIVE} optimization run(s) live right now — deploy would kill them. FORCE=1 to override."
     exit 1
   fi
 fi
