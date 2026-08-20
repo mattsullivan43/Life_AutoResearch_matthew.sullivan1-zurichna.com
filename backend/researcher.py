@@ -625,7 +625,12 @@ def run(channel="emails", iterations=12, classifier_model="claude-haiku-4-5-2025
 
     stopped_early = False
     for i in range(1, iterations + 1):
-        if best_m >= STOP_AT:        # ceiling hit — stop, don't waste experiments
+        # Ceiling rule: stop only when the practice set is big enough for a perfect
+        # score to MEAN something. On a 5-doc set, 100% is trivially reachable by
+        # overfit, and stopping silently bricked the layer: a 12-round run executed
+        # zero rounds with no explanation (observed on Account Structure).
+        if best_m >= STOP_AT and len(dev) >= 20:
+            yield {"type": "note", "text": f"practice score is {best_m:.0%} — ceiling reached, stopping early"}
             stopped_early = True
             break
         nb = read_notebook(channel)
