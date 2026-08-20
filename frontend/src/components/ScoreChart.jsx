@@ -11,7 +11,7 @@ function AcceptDot({ cx, cy, payload }) {
 
 const asPct = (v) => `${Math.round(v * 100)}%`
 
-export default function ScoreChart({ data, baseline, metric = 'macro-F1' }) {
+export default function ScoreChart({ data, baseline, unseen, metric = 'macro-F1' }) {
   const has = data && data.length > 0
   return (
     <div className="block">
@@ -49,6 +49,12 @@ export default function ScoreChart({ data, baseline, metric = 'macro-F1' }) {
                 labelFormatter={(l) => `iteration ${l}`}
                 contentStyle={{ borderRadius: 8, border: '1px solid #e8e4da', fontSize: 12, boxShadow: '0 8px 24px -12px rgba(8,20,48,.25)' }}
               />
+              {/* the honest number, measured ONCE at end of run — never per round,
+                  or the unseen set would stop being unseen */}
+              {unseen != null && (
+                <ReferenceLine y={unseen} stroke="#0a7d4d" strokeWidth={1.5}
+                  label={{ value: `UNSEEN ${asPct(unseen)} — measured once at end`, position: 'insideTopRight', fontSize: 10.5, fill: '#0a7d4d', fontWeight: 700 }} />
+              )}
               {baseline != null && (
                 <ReferenceLine y={baseline} stroke="#b89455" strokeDasharray="4 4"
                   label={{ value: `floor ${asPct(baseline)}`, position: 'insideBottomRight', fontSize: 10, fill: '#8a6d34' }} />

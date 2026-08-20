@@ -370,6 +370,7 @@ export default function App() {
           <details className="chart-drawer" open={running || chart.length > 0}>
             <summary>engine internals — per-round practice signal (not the score)</summary>
             <ScoreChart data={chart} baseline={isEmails ? baseline?.mf1 : null}
+              unseen={runResult ? runResult.afterMf1 : null}
               metric={task === 'extract' ? 'LLM-judge score' : 'macro-F1'} />
           </details>
         </div>
