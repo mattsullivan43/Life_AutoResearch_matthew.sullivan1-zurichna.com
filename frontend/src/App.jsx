@@ -145,7 +145,7 @@ export default function App() {
           if (ev.rows) setRows(ev.rows)
           if (ev.metrics) setMetrics(ev.metrics)
           if (ev.solution) { setSolution(ev.solution); setSolStatus('best · final') }
-          setSplit('UNSEEN emails · final'); setBestF1(ev.best_mf1); setFinalScore(ev.test_mf1)
+          setSplit(`UNSEEN ${isSub ? (channel === 'attachment_doc_type' ? 'attachments' : 'submissions') : task === 'extract' ? 'documents' : 'emails'} · final`); setBestF1(ev.best_mf1); setFinalScore(ev.test_mf1)
           setFinalInfo({ mf1: ev.test_mf1, acc: ev.test_acc, n: ev.n })
           setRunResult({ improved: ev.improved, beforeMf1: ev.before_mf1, beforeAcc: ev.before_acc,
             afterMf1: ev.test_mf1, afterAcc: ev.test_acc, n: ev.n, bestIter: ev.best_iter })
@@ -288,7 +288,7 @@ export default function App() {
         {!BROKER_ONLY && <div className="explainer">
           <b>How to read this:</b> the loop <b>tunes</b> its prompt on a practice set to score higher there.
           The number that counts is the <b>“Final · unseen”</b> score — measured on documents it never trained on, so it reflects
-          real-world performance. The practice score is always a bit higher (it studied those examples); the unseen score is the honest one.
+          real-world performance. The two sets are different documents, so their scores can differ in either direction — the unseen score is the honest one.
         </div>}
 
         {/* broker submission triage — the Commercial Submissions demo panel */}
