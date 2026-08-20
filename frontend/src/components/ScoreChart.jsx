@@ -45,7 +45,9 @@ export default function ScoreChart({ data, baseline, unseen, metric = 'macro-F1'
                 tickLine={false} axisLine={false} tickFormatter={asPct} tickMargin={6}
               />
               <Tooltip
-                formatter={(v, n) => [asPct(v), n === 'dev_mf1' ? 'candidate' : 'best kept']}
+                formatter={(v, n) => [asPct(v),
+                  n === 'UNSEEN' || n === 'unseen_mf1' ? 'UNSEEN (the score)'
+                  : n === 'dev_mf1' ? 'practice · candidate' : 'practice · best kept']}
                 labelFormatter={(l) => `iteration ${l}`}
                 contentStyle={{ borderRadius: 8, border: '1px solid #e8e4da', fontSize: 12, boxShadow: '0 8px 24px -12px rgba(8,20,48,.25)' }}
               />
